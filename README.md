@@ -4,24 +4,27 @@ We have 4 weeks: Average 1 phase per week
 
 Phase 1: Proposal: Dataset and Topic Selection
 	
-	One Page Paper with the following:
-		-> Dataset and topic: Craigslist cars trucks data:
-                  	-> Choose a Title, a detailed description, and the specification of the chosen dataset
-	Prepare and clean the dataset so that you can answer question with the dataset
-	Questions and Goals: At least 5 questions, what you are going to do to meet your goals and to answer questions. What visualization may help you seek results?
-     	  	-> Question Ideas (at least 5):
+One Page Paper with the following:
+-> Dataset and topic: Craigslist cars trucks data:
+        -> Choose a Title, a detailed description, and the specification of the chosen dataset
+-> Prepare and clean the dataset so that you can answer question with the dataset
+-> Questions and Goals: 
+	-> At least 5 questions
+	-> What you are going to do to meet your goals and to answer questions?
+	-> What visualization may help you seek results?
+     		-> Question Ideas (at least 5):
 
-          During which time of the day is a vehicle most likely to be posted on Craiglist by state?
+          		During which time of the day is a vehicle most likely to be posted on Craiglist by state?
 
-          What is the distribution of manufacturers for each region on Craigslist?
+         		 What is the distribution of manufacturers for each region on Craigslist?
 
-          Which Manufacturer is most likely to be published at a price of 0?
+         		 Which Manufacturer is most likely to be published at a price of 0?
 
-          What is the relationship of mileage to price for each car model?
+         		 What is the relationship of mileage to price for each car model?
 
-          What is the relationship between title and price?
+        		 What is the relationship between title and price?
 
-          What visualization might help you to get the seek results?
+		  	 What visualization might help you to get the seek results?
      
 Preparing and cleaning data
 
