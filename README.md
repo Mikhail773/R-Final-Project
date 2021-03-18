@@ -3,11 +3,13 @@ Data Analytics Final Project
 We have 4 weeks: Average 1 phase per week
 
 Phase 1: Proposal: Dataset and Topic Selection
-          One Page Paper with the following:
-               Dataset and topic: Craigslist cars trucks data:
-                    Choose a Title, a detailed description, and the specification of the chosen dataset
-
-     Question Ideas (at least 5):
+	
+	One Page Paper with the following:
+		-> Dataset and topic: Craigslist cars trucks data:
+                  	-> Choose a Title, a detailed description, and the specification of the chosen dataset
+	Prepare and clean the dataset so that you can answer question with the dataset
+	Questions and Goals: At least 5 questions, what you are going to do to meet your goals and to answer questions. What visualization may help you seek results?
+     	  	-> Question Ideas (at least 5):
 
           During which time of the day is a vehicle most likely to be posted on Craiglist by state?
 
