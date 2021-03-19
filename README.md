@@ -32,8 +32,10 @@ We have 4 weeks: Average 1 phase per week
 
 
 			     - What is the relationship of mileage to price for each car model?
+			     
 
 			     - What is the relationship between title and price?
+			     
 	
 	* What you are going to do to meet your goals and to answer questions?
 	
