@@ -2,11 +2,11 @@
 Data Analytics Final Project
 We have 4 weeks: Average 1 phase per week
 
-Phase 1: Proposal: Dataset and Topic Selection
+## Phase 1: Proposal: Dataset and Topic Selection
 	
-One Page Paper with the following:
+**One Page Paper with the following:**
 
--> Dataset and topic: Craigslist cars trucks data:
+	   Dataset and topic: Craigslist cars trucks data:
         -> Choose a Title, a detailed description, and the specification of the chosen dataset
 -> Prepare and clean the dataset so that you can answer question with the dataset
 -> Questions and Goals: 
@@ -29,7 +29,7 @@ One Page Paper with the following:
      
 Preparing and cleaning data
 
-Phase 2: Analysis and Modeling: Convince Zakariya Qawaqneh we can finish project using graphs
+## Phase 2: Analysis and Modeling: Convince Zakariya Qawaqneh we can finish project using graphs
 
      Have zip file containing:
 
@@ -39,8 +39,7 @@ Phase 2: Analysis and Modeling: Convince Zakariya Qawaqneh we can finish project
 
      A typed page(Not R markdown?) what we have done, what we still have to do, and description of initial results/outcomes
 
-
-Phase 3: Final Results: Use R Markdown (How do we want to share this file?)
+## Phase 3: Final Results: Use R Markdown (How do we want to share this file?)
 
      Project report: 1000-1500 lines in R Markdown: https://www.youtube.com/watch?v=DNS7i2m4sB0
 
@@ -69,7 +68,7 @@ Phase 3: Final Results: Use R Markdown (How do we want to share this file?)
      Final outcomes and Analysis
 
 
-Phase 4: Presentation.
+## Phase 4: Presentation.
 
      10 Minutes enforced (Google slides?, Alternate speaking every other slide?)
 
