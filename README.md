@@ -5,6 +5,7 @@ We have 4 weeks: Average 1 phase per week
 Phase 1: Proposal: Dataset and Topic Selection
 	
 One Page Paper with the following:
+
 -> Dataset and topic: Craigslist cars trucks data:
         -> Choose a Title, a detailed description, and the specification of the chosen dataset
 -> Prepare and clean the dataset so that you can answer question with the dataset
