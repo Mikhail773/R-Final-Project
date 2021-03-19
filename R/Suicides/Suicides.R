@@ -1,5 +1,0 @@
-library(tidyverse)
-Suicides <- read_csv("Suicides.csv")
-View(Suicides)
-ggplot(Suicides, aes(age,fill = country)) + geom_bar()
-ggplot(Suicides, aes(x=gdp_per_capita)) + geom_point()
