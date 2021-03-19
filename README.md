@@ -19,25 +19,21 @@ We have 4 weeks: Average 1 phase per week
 3. Questions and Goals: 
 	
 	* At least 5 questions
-	+ Question Ideas (at least 5):
+	
+			+ Question Ideas (at least 5):
 
-                        - During which time of the day is a vehicle most likely to be posted on Craiglist by state?
-
-
-
-                        - What is the distribution of manufacturers for each region on Craigslist?
+			     - During which time of the day is a vehicle most likely to be posted on Craiglist by state?
 
 
-
-                        - Which Manufacturer is most likely to be published at a price of 0?
-
+			     - What is the distribution of manufacturers for each region on Craigslist?
 
 
-                        - What is the relationship of mileage to price for each car model?
+			     - Which Manufacturer is most likely to be published at a price of 0?
 
 
+			     - What is the relationship of mileage to price for each car model?
 
-                        - What is the relationship between title and price?
+			     - What is the relationship between title and price?
 	
 	* What you are going to do to meet your goals and to answer questions?
 	
@@ -67,51 +63,52 @@ The process followed to clean up the data the different solutions you applied to
 
 The machine learning patterns used and your outcomes
 
-     Full discussion about these topics:
+Full discussion about these topics:
+     
 
-	* Abstract: Provide one paragraph giving a short description about your project and your findings.
+* Abstract: Provide one paragraph giving a short description about your project and your findings.
 
-     	* Introduction: This section should be divided into sub-sections. 
+* Introduction: This section should be divided into sub-sections. 
      	
-     		- In this section you should write detail information (overviews) about the problem you are working on.
+     - In this section you should write detail information (overviews) about the problem you are working on.
+     
+     - Why you chose this problem (motivations and related work)?
      		
-     		- Why you chose this problem (motivations and related work)?
-     		
-     		- What you are going to do to solve the problems (your goals).
+     - What you are going to do to solve the problems (your goals).
 
-     	* Initial goals: 
+* Initial goals: 
      	
-     	 	- What is your goal?
+     - What is your goal?
      	 	
-     	 	- What the questions you are trying to answer about your dataset?(At least 5)
+     - What the questions you are trying to answer about your dataset?(At least 5)
 
-     	* Dataset: 
+* Dataset: 
      	
-     	 	- The source of your dataset
+     - The source of your dataset
      	 	
-     	 	- Description of your dataset structure
+     - Description of your dataset structure
      	 	
-     	 	- How did you clean up your dataset?
+     - How did you clean up your dataset?
      	 	
-     	 	- Any things related to the used dataset.
+     - Any things related to the used dataset.
 
-     	* Data Analysis and Modeling: 
+* Data Analysis and Modeling: 
      	
-     	 	- What visualizations methods used to analyze your data from different point of views?
+     - What visualizations methods used to analyze your data from different point of views?
      	 	
-     	 	- What are the machine learning techniques you used and why (justify your decisions)? 
+     - What are the machine learning techniques you used and why (justify your decisions)? 
      	 	
-     	 	- How did you reach these conclusions?
-
-     	* Final outcomes and Analysis: 
+     - How did you reach these conclusions?
+     
+* Final outcomes and Analysis: 
      	
-     	 	- What are the results you obtained about the data?
+     - What are the results you obtained about the data?
      	 	 
-     	 	- Make a comparison between results obtained using different ML methods. 
+     - Make a comparison between results obtained using different ML methods. 
      	 	
-     	 	 	+ What are the answers for you proposed questions about the data?
+     	+ What are the answers for you proposed questions about the data?
      	 	 	
-     	 	 	+ What are your justifications for your answers?
+     	+ What are your justifications for your answers?
 
 
 ## Phase 4: Presentation.
