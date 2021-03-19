@@ -16,5 +16,5 @@ colnames(vehicles)
 colnames(vehicles_edited)
 View(vehicles_edited %>% count(manufacturer))
 vehicles_edited
-row_number(vehicles_edited$Date)
+# Update Graph
 ggplot(vehicles_edited) + geom_bar(aes(manufacturer, fill = state))
