@@ -1,0 +1,30 @@
+ddecker                 Template for a double decker plot. A double
+                        decker plot is composed of a sequence of spines
+                        in the same direction, with the final spine in
+                        the opposite direction.
+find_col_level          Find the first level which has columns.
+find_row_level          Find the first level which has rows.
+fluct                   Fluctation partitioning.
+flucts                  Template for a fluctuation diagram.
+happy                   Data related to happiness from the general
+                        social survey.
+hbar                    Horizontal bar partition: width constant,
+                        height varies.
+hspine                  Horizontal spine partition: height constant,
+                        width varies.
+mosaic                  Template for a mosaic plot. A mosaic plot is
+                        composed of spines in alternating directions.
+nested                  Template for a nested barchart. A nested bar is
+                        just a sequence of bars in the same direction.
+prodplot                Create a product plot
+scale_x_product         Generate an x-scale for ggplot2 graphics.
+scale_y_product         Generate a y-scale for ggplot2 graphics.
+spine                   Spine partition: divide longest dimesion.
+stacked                 Template for a stacked bar chart. A stacked bar
+                        chart starts with a bar and then continues with
+                        spines in the opposite direction.
+tile                    Tree map partitioning.
+vbar                    Vertical bar partition: height constant, width
+                        varies.
+vspine                  Vertical spine partition: width constant,
+                        height varies.
