@@ -1,4 +1,11 @@
 # R-Final-Project
+**_When you are done with a section use tildes in the readme file to cross it out as completed_**
+
+It's done as such:
+
+~~ "Insert Text" ~~   
+.... Just remove the space between the text and tildes on both sides
+
 Data Analytics Final Project
 We have 4 weeks: Average 1 phase per week
 
