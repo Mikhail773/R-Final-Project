@@ -78,32 +78,49 @@ The machine learning patterns used and your outcomes
      	 	
      	 	- What the questions you are trying to answer about your dataset?(At least 5)
 
-     	* Dataset
+     	* Dataset: 
+     	
+     	 	- The source of your dataset
+     	 	
+     	 	- Description of your dataset structure
+     	 	
+     	 	- How did you clean up your dataset?
+     	 	
+     	 	- Any things related to the used dataset.
 
-     	* Data Analysis and Modeling
+     	* Data Analysis and Modeling: 
+     	
+     	 	- What visualizations methods used to analyze your data from different point of views?
+     	 	
+     	 	- What are the machine learning techniques you used and why (justify your decisions)? 
+     	 	
+     	 	- How did you reach these conclusions?
 
-     	* Final outcomes and Analysis
+     	* Final outcomes and Analysis: 
+     	
+     	 	- What are the results you obtained about the data?
+     	 	 
+     	 	- Make a comparison between results obtained using different ML methods. 
+     	 	
+     	 	 	+ What are the answers for you proposed questions about the data?
+     	 	 	
+     	 	 	+ What are your justifications for your answers?
 
 
 ## Phase 4: Presentation.
 
-     10 Minutes enforced (Google slides?, Alternate speaking every other slide?)
+**10 Minutes enforced (Google slides?, Alternate speaking every other slide?)**
 
+### Submission: 
+Submit zip file with the following in it:
 
-     Submission: Submit zip file with the following in it:
+Dataset
 
-     Dataset
+Code of project (R code)
 
-     Code of project (R code)
+Project report 
 
-     Project report 
-
-     (Not typed page?)
-
-
-     Questions for Zakariya Qawaqneh:
-
-     Phase 2 typed page: Do we use R markdown? If not do we include it in the submission zip?
+(Not typed page?)
 
 
 
