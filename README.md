@@ -26,21 +26,21 @@ We have 4 weeks: Average 1 phase per week
 
 			     - What is the distribution of manufacturers for each region on Craigslist?
 
-			     - What is the relationship of mileage to price for each car model?
+			     - //What is the relationship of mileage to price for each car model?
 
-			     - What is the relationship of mileage to price for each car model?
+			     - //What is the relationship of mileage to price for each car model?
 			     
 			     - What is the relationship between title and price?
 			     
 			     - What is the most popular model by state? (ml)
 			     
-			     - What is the average age of vehicle? (ml)
+			     - //What is the average age of vehicle? (ml)
 			     
-			     - What is the average age of vehicle by state? (ml)
+			     - //What is the average age of vehicle by state? (ml)
 			     
 			     - What is the average asking price? (ml)
 			     
-			     - What is the average mileage? (ml)
+			     - //What is the average mileage? (ml)
 			     	
 	* What you are going to do to meet your goals and to answer questions?
 	
