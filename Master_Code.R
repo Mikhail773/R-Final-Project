@@ -1,6 +1,6 @@
 library(tidyverse)
 # Read vehicles.csv
-vehicles <- read_csv("/home/mikhail/Documents/Database/Project/vehicles.csv")
+vehicles <- read_csv("vehicles.csv")
 View(vehicles)
 
 # Create new columns for date and time
