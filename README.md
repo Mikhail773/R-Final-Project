@@ -26,10 +26,8 @@ We have 4 weeks: Average 1 phase per week
 
 			     - What is the distribution of manufacturers for each region on Craigslist?
 
-			     - //What is the relationship of mileage to price for each car model?
-
-			     - //What is the relationship of mileage to price for each car model?
-			     
+			     - What is the relationship of mileage to price for each car model?
+		     
 			     - What is the relationship between title and price?
 			     
 			     - What is the most popular model by state? (ml)
@@ -40,13 +38,27 @@ We have 4 weeks: Average 1 phase per week
 			     
 			     - What is the average asking price? (ml)
 			     
-			     - //What is the average mileage? (ml)
+			     - What is the average mileage? (ml)
 			     	
+			+ Questions From New Car Dataset:
+			
+			     - What is the distribution of manufacturers for each region?
+			     
+			     - What is the most popular model by region? 
+			     
+			     - What is the average age of vehicle? (ml)
+			    
+			     - What is the average age of vehicle by state? (ml)
+			   
+			     - What is the average asking price? (ml)
+			     
+			     - What is the average mileage? (ml)
+			   
+			     - What is the relationship between engine type and engine capacity
+
 	* What you are going to do to meet your goals and to answer questions?
 	
-	* What visualization may help you seek results?
-	
-     		
+	* What visualization may help you seek results?  		
 
 ## Phase 2: Analysis and Modeling: 
 In this phase you should have your final dataset, try to answer the questions you have from your database. You should start the process of analyzing the database by visualizing lot of plots and using ML methods for finding the initial results. In this phase every team based on the initial results and finding they get, **have to convince me that they have the ability to finish their project.**
