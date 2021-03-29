@@ -1,9 +1,11 @@
 library(tidyverse)
-# Read cars.csv
+#Read csv
 cars <- read_csv("Car/Data 2/cars.csv")
 #car_data_edited <- select(car_data, -5) 
 colSums(is.na(cars))
 View(cars)
-cars_edited <- select(cars, -12 & -20:-29)
+cars_edited <- select(cars, -8 & -12 & -(19:29))
 View(cars_edited)
 colSums(is.na(cars_edited))
+View(cars_edited %>% count(model_name))
+View(cars_edited %>% count(manufacturer_name))
