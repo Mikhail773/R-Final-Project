@@ -52,11 +52,13 @@ We have 4 weeks: Average 1 phase per week
 			   
 			     - What is the average asking price? (ml)
 			     
-			     - What is the average mileage? (ml)
+			     - What is the average odemeter reading? (ml)
 			   
 			     - What is the relationship between engine type and engine capacity?
 			     
 			     - What is the relationship between Year Produced and Price?
+			     - g
+			     - Manufacturer Origin Distribution
 
 
 
