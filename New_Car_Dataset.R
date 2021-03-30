@@ -38,13 +38,21 @@ colSums(is.na(cars_edited))
 View(cars_edited %>% count(model_name))
 View(cars_edited %>% count(manufacturer_name))
 View(cars_edited %>% count(location_region))
+View(cars_edited %>% count(year_produced))
 
 summary(cars_edited)
 ggplot(cars_edited,aes(location_region, manufacturer_name)) + geom_count()
-ggplot(cars_edited,aes(year_produced, price_usd)) + geom_point()
 
+ggplot(cars_edited,aes(year_produced, price_usd)) + geom_point() + geom_smooth()
+
+ggplot(cars_edited, aes(price_usd, ..density..)) + geom_freqpoly(binwidth = 500)
 ggplot(cars_edited, aes(price_usd)) + geom_boxplot()
 
 cars_edited %>% group_by(manufacturer_name) %>% summarize(mean(price_usd)) %>% View()
 
-ggplot(cars_edited,aes(color)) + geom_bar(aes(fill = location_region))                  
+ggplot(cars_edited,aes(color)) + geom_bar(aes(fill = location_region))
+
+ggplot(cars_edited,aes(odometer_value, price_usd)) + geom_point(aes(color = is_exchangeable)) + geom_smooth()
+
+ggplot(cars_edited,aes(year_produced, price_usd)) + geom_point(aes(color = body_type)) + geom_smooth()
+                      
