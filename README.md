@@ -44,22 +44,25 @@ We have 4 weeks: Average 1 phase per week
 			
 			     - What is the distribution of manufacturers for each region?
 			     
-			     - What is the most popular model by region? 
+			     - What is the most popular model by region? (First 2 questions can be combined)
 			     
-			     - What is the average age of vehicle? (ml)
-			    
-			     - What is the average age of vehicle by state? (ml)
-			   
-			     - What is the average asking price? (ml)
+			     - What is the average age of vehicle (By region?)?
+			    		   
+			     - What is the average asking price? 
 			     
-			     - What is the average odemeter reading? (ml)
+			     - What is the relationship between odometer and price(Fill in with whether its exhangeable)? 
 			   
 			     - What is the relationship between engine type and engine capacity?
 			     
 			     - What is the relationship between Year Produced and Price?
-			     - g
+			     
 			     - Manufacturer Origin Distribution
-
+			     
+			     - Distribution of Engine type for each region and by car type?
+			    
+			     - Distribution of colors to body type
+			     - f
+			    
 
 
 	* What you are going to do to meet your goals and to answer questions?
