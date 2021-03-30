@@ -61,9 +61,7 @@ We have 4 weeks: Average 1 phase per week
 			     - Distribution of Engine type for each region and by car type?
 			    
 			     - Distribution of colors to body type
-			     - f
-			    
-
+			   
 
 	* What you are going to do to meet your goals and to answer questions?
 	
