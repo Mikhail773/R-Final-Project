@@ -46,7 +46,6 @@ ggplot(cars_edited,aes(location_region, manufacturer_name)) + geom_count()
 ggplot(cars_edited,aes(year_produced, price_usd)) + geom_point() + geom_smooth()
 
 ggplot(cars_edited, aes(price_usd, ..density..)) + geom_freqpoly(binwidth = 500)
-ggplot(cars_edited, aes(price_usd)) + geom_boxplot()
 
 cars_edited %>% group_by(manufacturer_name) %>% summarize(mean(price_usd)) %>% View()
 
@@ -55,4 +54,11 @@ ggplot(cars_edited,aes(color)) + geom_bar(aes(fill = location_region))
 ggplot(cars_edited,aes(odometer_value, price_usd)) + geom_point(aes(color = is_exchangeable)) + geom_smooth()
 
 ggplot(cars_edited,aes(year_produced, price_usd)) + geom_point(aes(color = body_type)) + geom_smooth()
-                      
+
+ggplot(cars_edited) + geom_point(mapping = aes(x = odometer_value, y = price_usd, color = engine_fuel))
+
+group_by(cars_edited, body_type) %>% summarise(price_mean = mean(price_usd)) -> mean_cars
+
+ggplot(cars_edited) + geom_boxplot(mapping = aes(x=reorder(body_type,price_usd), y=price_usd))
+
+ggplot(cars_edited) + geom_point(mapping = aes(x = body_type, y = price_usd, color = engine_fuel))
