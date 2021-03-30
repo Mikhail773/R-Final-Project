@@ -1,6 +1,5 @@
 library(tidyverse)
 cars <- read_csv("cars.csv")
-car_data_edited <- select(car_data, -5) 
 colSums(is.na(cars))
 View(cars)
 cars_edited <- select(cars, -8 & -12 & -(19:29))
