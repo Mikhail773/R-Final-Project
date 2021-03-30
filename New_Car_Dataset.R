@@ -2,7 +2,7 @@ library(tidyverse)
 cars <- read_csv("cars.csv")
 colSums(is.na(cars))
 View(cars)
-cars_edited <- select(cars, -8 & -12 & -(19:29))
+cars_edited <- select(cars, -8 & -(12:13) & -(19:29))
 View(cars_edited)
 
 cars_edited <- cars_edited %>% mutate(location_region = recode(cars_edited$location_region,
