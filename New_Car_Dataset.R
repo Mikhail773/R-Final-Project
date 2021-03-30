@@ -15,23 +15,28 @@ cars_edited <- cars_edited %>% mutate(location_region = recode(cars_edited$locat
 ))
 
 cars_edited <- cars_edited %>% mutate(manufacturer_name = recode(cars_edited$manufacturer_name,
-                                                               'ВАЗ' = "AvtoVAZ",
-                                                               'ГАЗ' = "GAZ",
-                                                               'ЗАЗ' = "ZAZ",
-                                                               'Москвич' = "Moskvitch",
-                                                               'УАЗ'  = "UAZ"
+             'ВАЗ' = "AvtoVAZ",
+             'ГАЗ' = "GAZ",
+             'ЗАЗ' = "ZAZ",
+             'Москвич' = "Moskvitch",
+             'УАЗ'  = "UAZ"
 ))
-View(cars_edited)
 
 cars_edited <- cars_edited %>% mutate(model_name = recode(cars_edited$model_name,
-                                                                 'Таврия' = "Tavria",
-                                                                 '968м' = "968M",
-                                                                 'Соболь' = "Sobol",
-                                                                 'Луидор' = "Luidor",
-                                                                 'ВИС'  = "VIS"
+             'Таврия' = "Tavria",
+             '968м' = "968M",
+             'Соболь' = "Sobol",
+             'Луидор' = "Luidor",
+             'ВИС'  = "VIS"
 ))
-View(cars_edited)
 
+cars_edited <- cars_edited %>% mutate(engine_fuel = recode(cars_edited$engine_fuel,
+
+             'gas' = "gasoline",
+
+))
+
+View(cars_edited)
 
 colSums(is.na(cars_edited))
 View(cars_edited %>% count(model_name))
