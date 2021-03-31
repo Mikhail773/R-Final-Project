@@ -81,26 +81,84 @@ View(cars_edited %>% count(year_produced))
 #
 # Plotting the data
 #
+# 1) BALLOON PLOT: Amount of cars(by manufacturer name) in a region
+#
+# 2) SCATTER PLOT: Price of a car according to its year produced
+#
+# 3) LINE GRAPH: Amount of cars(density) according to it's price 
+#
+# 4) BAR GRAPH: Number of cars in specific colors(10 red cars, 8 blue cars etc.) by region 
+#
+# 5) SCATTER PLOT: Price of a car according to it's millage(odometer) 
+#
+# 6) SCATTER PLOT: Price of a car according to it's year producted AND body type
+#
+# 7) SCATTER PLOT: Price of a car according to it's Odometer AND engine fuel
+#
+# 8) BOX PLOT: outliers with body type and price
+#
+# 9) ?: Correlation between car body type, price, AND engine fuel
+#
+
 
 summary(cars_edited)
+
+# 1) Graph to show the amount of cars(by manufacturer name) in a region BALLOON PLOT 
 ggplot(cars_edited,aes(location_region, manufacturer_name)) + geom_count()
 
+
+# 2) Graph to show the price of a car according to its year produced SCATTER PLOT
 ggplot(cars_edited,aes(year_produced, price_usd)) + geom_point() + geom_smooth()
 
+
+# 3) Graph to show the amount of cars(density) according to it's price LINE GRAPH
 ggplot(cars_edited, aes(price_usd, ..density..)) + geom_freqpoly(binwidth = 500)
 
+
+#Group cars by manufacturer, and get it's mean price
 cars_edited %>% group_by(manufacturer_name) %>% summarize(mean(price_usd)) %>% View()
 
+
+# 4) Graph to show the number of cars in specific colors(10 red cars, 8 blue cars etc.) by region BAR GRAPH
 ggplot(cars_edited,aes(color)) + geom_bar(aes(fill = location_region))
 
+
+# 5) Graph to show the price of a car according to it's millage(odometer) SCATTER PLOT
 ggplot(cars_edited,aes(odometer_value, price_usd)) + geom_point(aes(color = is_exchangeable)) + geom_smooth()
 
+
+# 6)Graph to show the price of a car according to it's year producted AND body type SCATTER PLOT
 ggplot(cars_edited,aes(year_produced, price_usd)) + geom_point(aes(color = body_type)) + geom_smooth()
 
+
+# 7) Graph to show the price of a car according to it's Odometer AND engine fuel SCATTER PLOT
 ggplot(cars_edited) + geom_point(mapping = aes(x = odometer_value, y = price_usd, color = engine_fuel))
 
+
+# Group by car body type and get it's mean price
 group_by(cars_edited, body_type) %>% summarise(price_mean = mean(price_usd)) -> mean_cars
 
+# 8) Graph to show the outliers with body type and price BOX PLOT
 ggplot(cars_edited) + geom_boxplot(mapping = aes(x=reorder(body_type,price_usd), y=price_usd))
 
+# 9) Graph to show the correlation between car body type, price, AND engine fuel
 ggplot(cars_edited) + geom_point(mapping = aes(x = body_type, y = price_usd, color = engine_fuel))
+
+
+##############################################################################################################
+#
+# Clean up
+#
+
+# Clear plots
+dev.off()
+
+# Clear environment
+rm(list = ls())
+
+# Clear packages
+detach("package:datasets", unload = TRUE)  # For base
+
+# Clear console
+cat("\014")
+
