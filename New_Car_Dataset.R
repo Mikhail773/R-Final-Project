@@ -1,10 +1,35 @@
-library(tidyverse)
-cars <- read_csv("cars.csv")
-colSums(is.na(cars))
-View(cars)
-cars_edited <- select(cars, -8 & -(12:13) & -(19:29))
-View(cars_edited)
+###################################################################################################
+#
+# CSC 335 Project: Used Cars Market in Belarus
+#
 
+#Import all the library's we are using
+library(tidyverse)
+
+
+###################################################################################################
+#
+# Evaluate the data
+#
+
+#Read our dataset into the cars var
+cars <- read_csv("cars.csv")
+
+#check the na's in the dataset
+colSums(is.na(cars))
+View(cars) #view the data
+
+
+###################################################################################################
+#
+# Edit(modify) the data
+#
+
+#Removing unnecessary columns from cars. Store that data in cars_edited
+cars_edited <- select(cars, -8 & -(12:13) & -(19:29))
+View(cars_edited) #view the data
+
+#Recode foreign language into their English meaning (location_region)
 cars_edited <- cars_edited %>% mutate(location_region = recode(cars_edited$location_region,
              'Брестская обл.' = "Brest Region",
              'Витебская обл.' = "Vitebsk Region",
@@ -14,6 +39,7 @@ cars_edited <- cars_edited %>% mutate(location_region = recode(cars_edited$locat
              'Могилевская обл.' = "Mogilev Region"
 ))
 
+#Recode foreign language into their English meaning (manufacturer_name)
 cars_edited <- cars_edited %>% mutate(manufacturer_name = recode(cars_edited$manufacturer_name,
              'ВАЗ' = "AvtoVAZ",
              'ГАЗ' = "GAZ",
@@ -22,6 +48,7 @@ cars_edited <- cars_edited %>% mutate(manufacturer_name = recode(cars_edited$man
              'УАЗ'  = "UAZ"
 ))
 
+#Recode foreign language into their English meaning (model_name)
 cars_edited <- cars_edited %>% mutate(model_name = recode(cars_edited$model_name,
              'Таврия' = "Tavria",
              '968м' = "968M",
@@ -30,19 +57,30 @@ cars_edited <- cars_edited %>% mutate(model_name = recode(cars_edited$model_name
              'ВИС'  = "VIS"
 ))
 
+#Recode foreign language into their English meaning (engine_fuel)
 cars_edited <- cars_edited %>% mutate(engine_fuel = recode(cars_edited$engine_fuel,
 
              'gas' = "gasoline",
 
 ))
 
-View(cars_edited)
+#view the changes the mutate made
+View(cars_edited) 
 
-colSums(is.na(cars_edited))
-View(cars_edited %>% count(model_name))
+#Check if there are na's in the cars_edited
+colSums(is.na(cars_edited)) 
+
+#Getting the unique entries and displaying how often they appear
+View(cars_edited %>% count(model_name)) 
 View(cars_edited %>% count(manufacturer_name))
 View(cars_edited %>% count(location_region))
 View(cars_edited %>% count(year_produced))
+
+
+###################################################################################################
+#
+# Plotting the data
+#
 
 summary(cars_edited)
 ggplot(cars_edited,aes(location_region, manufacturer_name)) + geom_count()
