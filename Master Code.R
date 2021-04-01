@@ -65,13 +65,13 @@ cars_edited <- cars_edited %>% mutate(engine_fuel = recode(cars_edited$engine_fu
 ))
 
 #view the changes the mutate made
-View(cars_edited) 
+View(cars_edited)
 
 #Check if there are na's in the cars_edited
-colSums(is.na(cars_edited)) 
+colSums(is.na(cars_edited))
 
 #Getting the unique entries and displaying how often they appear
-View(cars_edited %>% count(model_name)) 
+View(cars_edited %>% count(model_name))
 View(cars_edited %>% count(manufacturer_name))
 View(cars_edited %>% count(location_region))
 View(cars_edited %>% count(year_produced))
@@ -85,11 +85,11 @@ View(cars_edited %>% count(year_produced))
 #
 # 2) SCATTER PLOT: Price of a car according to its year produced
 #
-# 3) LINE GRAPH: Amount of cars(density) according to it's price 
+# 3) LINE GRAPH: Amount of cars(density) according to it's price
 #
-# 4) BAR GRAPH: Number of cars in specific colors(10 red cars, 8 blue cars etc.) by region 
+# 4) BAR GRAPH: Number of cars in specific colors(10 red cars, 8 blue cars etc.) by region
 #
-# 5) SCATTER PLOT: Price of a car according to it's millage(odometer) 
+# 5) SCATTER PLOT: Price of a car according to it's millage(odometer)
 #
 # 6) SCATTER PLOT: Price of a car according to it's year producted AND body type
 #
@@ -103,7 +103,7 @@ View(cars_edited %>% count(year_produced))
 
 summary(cars_edited)
 
-# 1) Graph to show the amount of cars(by manufacturer name) in a region BALLOON PLOT 
+# 1) Graph to show the amount of cars(by manufacturer name) in a region BALLOON PLOT
 ggplot(cars_edited,aes(location_region, manufacturer_name)) + geom_count()
 
 
@@ -144,7 +144,6 @@ ggplot(cars_edited) + geom_boxplot(mapping = aes(x=reorder(body_type,price_usd),
 # 9) Graph to show the correlation between car body type, price, AND engine fuel
 ggplot(cars_edited) + geom_point(mapping = aes(x = body_type, y = price_usd, color = engine_fuel))
 
-
 ##############################################################################################################
 #
 # Clean up
@@ -161,4 +160,3 @@ detach("package:datasets", unload = TRUE)  # For base
 
 # Clear console
 cat("\014")
-
