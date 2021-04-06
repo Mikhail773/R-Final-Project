@@ -85,7 +85,7 @@ Outlier_List_Values <- function(df, na.rm = TRUE){
   OutVals = boxplot(df, plot = FALSE)$out
 }
 
-#Show the outlier indexes of each continuous variable
+#Show the outlier indexes and values of each continuous variable
 Cars_continuous <- select(cars_edited, 5 | 6 | 9 | 12 | 15:17)
 View(Cars_continuous)
 map(Cars_continuous, Outlier_List_Index)
