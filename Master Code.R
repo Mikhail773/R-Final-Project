@@ -72,6 +72,27 @@ View(cars_edited)
 #Check if there are na's in the cars_edited
 colSums(is.na(cars_edited))
 
+# List of Outliers
+
+Outlier_List <- function(df, na.rm = TRUE){
+  Upper_Fence <- quantile(df,0.75, na.rm = TRUE) + IQR(df, na.rm = TRUE) * 1.5
+  which(df > Upper_Fence)
+}
+
+# Show the outlier indexes of each continuous variable
+Cars_continuous <- select(cars_edited, 5 | 6 | 9 | 12 | 15:17)
+View(Cars_continuous)
+map(Cars_continuous, Outlier_List)
+
+# Display a Boxplot for each continuous variable
+ggplot(cars_edited) + geom_boxplot(mapping = aes(odometer_value))
+ggplot(cars_edited) + geom_boxplot(mapping = aes(year_produced))
+ggplot(cars_edited) + geom_boxplot(mapping = aes(engine_capacity))
+ggplot(cars_edited) + geom_boxplot(mapping = aes(price_usd))
+ggplot(cars_edited) + geom_boxplot(mapping = aes(number_of_photos))
+ggplot(cars_edited) + geom_boxplot(mapping = aes(up_counter))
+ggplot(cars_edited) + geom_boxplot(mapping = aes(duration_listed))
+
 #Getting the unique entries and displaying how often they appear
 View(cars_edited %>% count(model_name))
 View(cars_edited %>% count(manufacturer_name))
@@ -145,25 +166,6 @@ ggplot(cars_edited) + geom_boxplot(mapping = aes(x=reorder(body_type,price_usd),
 
 # 9) Graph to show the correlation between car body type, price, AND engine fuel
 ggplot(cars_edited) + geom_point(mapping = aes(x = body_type, y = price_usd, color = engine_fuel))
-
-# List of Outliers
-Outlier_List <- function(df, na.rm = TRUE){
-  Upper_Fence <- quantile(df,0.75, na.rm = TRUE) + IQR(df, na.rm = TRUE) * 1.5
-  which(df > Upper_Fence)
-}
-
-# Show the outlier indexes of each continuous variable
-Cars_continuous <- select(cars_edited, 5 | 6 | 9 | 12 | 15:17)
-View(Cars_continuous)
-map(Cars_continuous, Outlier_List)
-
-ggplot(cars_edited) + geom_boxplot(mapping = aes(odometer_value))
-ggplot(cars_edited) + geom_boxplot(mapping = aes(year_produced))
-ggplot(cars_edited) + geom_boxplot(mapping = aes(engine_capacity))
-ggplot(cars_edited) + geom_boxplot(mapping = aes(price_usd))
-ggplot(cars_edited) + geom_boxplot(mapping = aes(number_of_photos))
-ggplot(cars_edited) + geom_boxplot(mapping = aes(up_counter))
-ggplot(cars_edited) + geom_boxplot(mapping = aes(duration_listed))
 
 ##############################################################################################################
 #
