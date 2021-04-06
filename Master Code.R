@@ -72,19 +72,25 @@ View(cars_edited)
 #Check if there are na's in the cars_edited
 colSums(is.na(cars_edited))
 
-# List of Outliers
-
-Outlier_List <- function(df, na.rm = TRUE){
+#List of Outliers
+Outlier_List_Index <- function(df, na.rm = TRUE){
   Upper_Fence <- quantile(df,0.75, na.rm = TRUE) + IQR(df, na.rm = TRUE) * 1.5
-  which(df > Upper_Fence)
+  Lower_Fence <- quantile(df,0.75, na.rm = TRUE) - IQR(df, na.rm = TRUE) * 1.5
+  which(df > Upper_Fence | df < Lower_Fence)
 }
 
-# Show the outlier indexes of each continuous variable
+Outlier_List_Values <- function(df, na.rm = TRUE){
+  Upper_Fence <- quantile(df,0.75, na.rm = TRUE) + IQR(df, na.rm = TRUE) * 1.5
+  Lower_Fence <- quantile(df,0.75, na.rm = TRUE) - IQR(df, na.rm = TRUE) * 1.5
+  OutVals = boxplot(df, plot = FALSE)$out
+}
+
+#Show the outlier indexes of each continuous variable
 Cars_continuous <- select(cars_edited, 5 | 6 | 9 | 12 | 15:17)
 View(Cars_continuous)
-map(Cars_continuous, Outlier_List)
+map(Cars_continuous, Outlier_List_Index)
+map(Cars_continuous, Outlier_List_Values)
 
-# Display a Boxplot for each continuous variable
 ggplot(cars_edited) + geom_boxplot(mapping = aes(odometer_value))
 ggplot(cars_edited) + geom_boxplot(mapping = aes(year_produced))
 ggplot(cars_edited) + geom_boxplot(mapping = aes(engine_capacity))
@@ -98,7 +104,6 @@ View(cars_edited %>% count(model_name))
 View(cars_edited %>% count(manufacturer_name))
 View(cars_edited %>% count(location_region))
 View(cars_edited %>% count(year_produced))
-
 
 ###################################################################################################
 #
