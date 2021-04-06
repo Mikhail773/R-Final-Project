@@ -147,15 +147,23 @@ ggplot(cars_edited) + geom_boxplot(mapping = aes(x=reorder(body_type,price_usd),
 ggplot(cars_edited) + geom_point(mapping = aes(x = body_type, y = price_usd, color = engine_fuel))
 
 # List of Outliers
-Outlier_List <- function(df, na.rm = TRUE){
+Outlier_List_Index <- function(df, na.rm = TRUE){
   Upper_Fence <- quantile(df,0.75, na.rm = TRUE) + IQR(df, na.rm = TRUE) * 1.5
-  which(df > Upper_Fence)
+  Lower_Fence <- quantile(df,0.75, na.rm = TRUE) - IQR(df, na.rm = TRUE) * 1.5
+  which(df > Upper_Fence | df < Lower_Fence)
+}
+
+Outlier_List_Values <- function(df, na.rm = TRUE){
+  Upper_Fence <- quantile(df,0.75, na.rm = TRUE) + IQR(df, na.rm = TRUE) * 1.5
+  Lower_Fence <- quantile(df,0.75, na.rm = TRUE) - IQR(df, na.rm = TRUE) * 1.5
+  OutVals = boxplot(df, plot = FALSE)$out
 }
 
 # Show the outlier indexes of each continuous variable
 Cars_continuous <- select(cars_edited, 5 | 6 | 9 | 12 | 15:17)
 View(Cars_continuous)
-map(Cars_continuous, Outlier_List)
+map(Cars_continuous, Outlier_List_Index)
+map(Cars_continuous, Outlier_List_Values)
 
 ggplot(cars_edited) + geom_boxplot(mapping = aes(odometer_value))
 ggplot(cars_edited) + geom_boxplot(mapping = aes(year_produced))
