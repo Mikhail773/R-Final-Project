@@ -146,6 +146,22 @@ ggplot(cars_edited) + geom_boxplot(mapping = aes(x=reorder(body_type,price_usd),
 # 9) Graph to show the correlation between car body type, price, AND engine fuel
 ggplot(cars_edited) + geom_point(mapping = aes(x = body_type, y = price_usd, color = engine_fuel))
 
+# List of Outliers
+boxplot(cars_edited$odometer_value, plot = FALSE)$out
+ggplot(cars_edited) + geom_boxplot(mapping = aes(odometer_value))
+boxplot(cars_edited$year_produced, plot = FALSE)$out
+ggplot(cars_edited) + geom_boxplot(mapping = aes(year_produced))
+boxplot(cars_edited$engine_capacity, plot = FALSE)$out
+ggplot(cars_edited) + geom_boxplot(mapping = aes(engine_capacity))
+boxplot(cars_edited$price_usd,plot = FALSE)$out
+ggplot(cars_edited) + geom_boxplot(mapping = aes(price_usd))
+boxplot(cars_edited$number_of_photos, plot = FALSE)$out
+ggplot(cars_edited) + geom_boxplot(mapping = aes(number_of_photos))
+boxplot(cars_edited$up_counter, plot = FALSE)$out
+ggplot(cars_edited) + geom_boxplot(mapping = aes(up_counter))
+boxplot(cars_edited$duration_listed, plot = FALSE)$out
+ggplot(cars_edited) + geom_boxplot(mapping = aes(duration_listed))
+
 ##############################################################################################################
 #
 # Clean up
