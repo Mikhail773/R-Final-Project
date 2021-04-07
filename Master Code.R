@@ -33,37 +33,37 @@ View(cars_edited) #view the data
 
 #Recode foreign language into their English meaning (location_region)
 cars_edited <- cars_edited %>% mutate(location_region = recode(cars_edited$location_region,
-             'Брестская обл.' = "Brest Region",
-             'Витебская обл.' = "Vitebsk Region",
-             'Гомельская обл.' = "Gomel Region",
-             'Гродненская обл.' = "Grodno Region",
-             'Минская обл.'  = "Minsk Region",
-             'Могилевская обл.' = "Mogilev Region"
+                                                               'Брестская обл.' = "Brest Region",
+                                                               'Витебская обл.' = "Vitebsk Region",
+                                                               'Гомельская обл.' = "Gomel Region",
+                                                               'Гродненская обл.' = "Grodno Region",
+                                                               'Минская обл.'  = "Minsk Region",
+                                                               'Могилевская обл.' = "Mogilev Region"
 ))
 
 #Recode foreign language into their English meaning (manufacturer_name)
 cars_edited <- cars_edited %>% mutate(manufacturer_name = recode(cars_edited$manufacturer_name,
-             'ВАЗ' = "AvtoVAZ",
-             'ГАЗ' = "GAZ",
-             'ЗАЗ' = "ZAZ",
-             'Москвич' = "Moskvitch",
-             'УАЗ'  = "UAZ"
+                                                                 'ВАЗ' = "AvtoVAZ",
+                                                                 'ГАЗ' = "GAZ",
+                                                                 'ЗАЗ' = "ZAZ",
+                                                                 'Москвич' = "Moskvitch",
+                                                                 'УАЗ'  = "UAZ"
 ))
 
 #Recode foreign language into their English meaning (model_name)
 cars_edited <- cars_edited %>% mutate(model_name = recode(cars_edited$model_name,
-             'Таврия' = "Tavria",
-             '968м' = "968M",
-             'Соболь' = "Sobol",
-             'Луидор' = "Luidor",
-             'ВИС'  = "VIS"
+                                                          'Таврия' = "Tavria",
+                                                          '968м' = "968M",
+                                                          'Соболь' = "Sobol",
+                                                          'Луидор' = "Luidor",
+                                                          'ВИС'  = "VIS"
 ))
 
 #Recode foreign language into their English meaning (engine_fuel)
 cars_edited <- cars_edited %>% mutate(engine_fuel = recode(cars_edited$engine_fuel,
-
-             'gas' = "gasoline",
-
+                                                           
+                                                           'gas' = "gasoline",
+                                                           
 ))
 
 #view the changes the mutate made
@@ -87,23 +87,40 @@ Outlier_List_Values <- function(df, na.rm = TRUE){
 
 #Show the outlier indexes and values of each continuous variable
 Cars_continuous <- select(cars_edited, 5 | 6 | 9 | 12 | 15:17)
-View(Cars_continuous)
 map(Cars_continuous, Outlier_List_Index)
 map(Cars_continuous, Outlier_List_Values)
 
-ggplot(cars_edited) + geom_boxplot(mapping = aes(odometer_value))
-ggplot(cars_edited) + geom_boxplot(mapping = aes(year_produced))
-ggplot(cars_edited) + geom_boxplot(mapping = aes(engine_capacity))
-ggplot(cars_edited) + geom_boxplot(mapping = aes(price_usd))
-ggplot(cars_edited) + geom_boxplot(mapping = aes(number_of_photos))
-ggplot(cars_edited) + geom_boxplot(mapping = aes(up_counter))
-ggplot(cars_edited) + geom_boxplot(mapping = aes(duration_listed))
-
-#Getting the unique entries and displaying how often they appear
+#Investigating Variables: Getting the unique entries and displaying how often they appear
+ggplot(cars_edited, mapping = aes(y=manufacturer_name)) + geom_histogram(stat ="count") + geom_text(stat = "count", aes(label = after_stat(count)), hjust = -1)
 View(cars_edited %>% count(model_name))
-View(cars_edited %>% count(manufacturer_name))
-View(cars_edited %>% count(location_region))
+ggplot(cars_edited,mapping = aes(x=transmission)) + geom_bar(stat ="count") + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+ggplot(cars_edited,mapping = aes(x=color)) + geom_bar(stat ="count") + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+ggplot(cars_edited) + geom_boxplot(mapping = aes(odometer_value))
+ggplot(cars_edited) + geom_histogram(mapping = aes(odometer_value))
 View(cars_edited %>% count(year_produced))
+ggplot(cars_edited) + geom_boxplot(mapping = aes(year_produced))
+ggplot(cars_edited) + geom_histogram(mapping = aes(year_produced))
+ggplot(cars_edited, aes(x=engine_fuel), stat ="count") + geom_bar(mapping = aes(fill = engine_type))  + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+ggplot(cars_edited, aes(x=engine_type), stat ="count") + geom_bar()  + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+View(cars_edited %>% count(engine_capacity))
+ggplot(cars_edited) + geom_boxplot(mapping = aes(engine_capacity))
+ggplot(cars_edited) + geom_histogram(mapping = aes(engine_capacity)) 
+ggplot(cars_edited, mapping = aes(x=body_type), stat ="count") + geom_bar() + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+ggplot(cars_edited, mapping = aes(x=drivetrain), stat ="count") + geom_bar() + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+View(cars_edited %>% count(price_usd))
+ggplot(cars_edited) + geom_boxplot(mapping = aes(price_usd))
+ggplot(cars_edited) + geom_histogram(mapping = aes(price_usd)) 
+ggplot(cars_edited,mapping = aes(x=is_exchangeable)) + geom_bar(stat ="count") + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+ggplot(cars_edited,mapping = aes(x=location_region)) + geom_bar(stat ="count") + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+View(cars_edited %>% count(number_of_photos))
+ggplot(cars_edited) + geom_boxplot(mapping = aes(number_of_photos))
+ggplot(cars_edited) + geom_histogram(mapping = aes(number_of_photos)) 
+View(cars_edited %>% count(up_counter))
+ggplot(cars_edited) + geom_boxplot(mapping = aes(up_counter))
+ggplot(cars_edited) + geom_histogram(mapping = aes(up_counter)) 
+View(cars_edited %>% count(duration_listed))
+ggplot(cars_edited) + geom_boxplot(mapping = aes(duration_listed))
+ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed)) 
 
 ###################################################################################################
 #
