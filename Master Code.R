@@ -182,6 +182,8 @@ ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
 #
 # 9) ?: Correlation between car body type, price, AND engine fuel
 #
+# 10) SCATTER PLOT: Price of a car according to it's photo count
+#
 
 
 summary(cars_edited)
@@ -227,6 +229,10 @@ ggplot(cars_edited) + geom_boxplot(mapping = aes(x = reorder(body_type, price_us
 
 # 9) Graph to show the correlation between car body type, price, AND engine fuel
 ggplot(cars_edited) + geom_point(mapping = aes(x = body_type, y = price_usd, color = engine_fuel))
+
+# 10 ) Graph to show the price of a car according to it's number of photos incl. engine fuel SCATTER PLOT
+ggplot(cars_edited) + geom_point(mapping = aes(x = number_of_photos, y = price_usd, color = engine_fuel))
+
 
 ##############################################################################################################
 #
