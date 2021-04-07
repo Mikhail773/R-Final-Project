@@ -84,41 +84,81 @@ View(cars_edited)
 colSums(is.na(cars_edited))
 
 # Thresholds for Outliers
-Outlier_List_Fences <- function(df, na.rm = TRUE) {
-  Lower_Fence <-
-    quantile(df, 0.25, na.rm = TRUE) - IQR(df, na.rm = TRUE) * 1.5
-  Upper_Fence <-
-    quantile(df, 0.75, na.rm = TRUE) + IQR(df, na.rm = TRUE) * 1.5
-  if (Lower_Fence < 0)
-    sprintf("Upper Fence: %f", Upper_Fence)
-  else
+Outlier_List_Fences <- function(df) {
+  df <- na.omit(df)
+  Q <- quantile(df, probs = c(.25, .75))
+  iqr <- IQR(df)
+  Lower_Fence <- Q[1] - iqr * 1.5
+  Upper_Fence <- Q[2] + iqr * 1.5
+  if (Lower_Fence > min(df) & Upper_Fence < max(df))
     sprintf("Lower Fence: %f: Upper Fence: %f", Lower_Fence, Upper_Fence)
+  else if (Lower_Fence < min(df))
+    sprintf("Upper Fence: %f", Upper_Fence)
+  else if (Upper_Fence > max(df))
+    sprintf("Lower Fence: %f", Lower_Fence)
+  else
+    print("DataFrame has no valid outliers")
 }
 
-
-Outlier_List_Index <- function(df, na.rm = TRUE) {
-  Lower_Fence <-
-    quantile(df, 0.25, na.rm = TRUE) - IQR(df, na.rm = TRUE) * 1.5
-  Upper_Fence <-
-    quantile(df, 0.75, na.rm = TRUE) + IQR(df, na.rm = TRUE) * 1.5
+# Functions for Outlier Index and Values
+Outlier_List_Index <- function(df) {
+  df <- na.omit(df)
+  Q <- quantile(df, probs = c(.25, .75))
+  iqr <- IQR(df)
+  Lower_Fence <- Q[1] - iqr * 1.5
+  Upper_Fence <- Q[2] + iqr * 1.5
   which(df > Upper_Fence | df < Lower_Fence)
 }
 
-Outlier_List_Values <- function(df, na.rm = TRUE) {
-  Lower_Fence <-
-    quantile(df, 0.25, na.rm = TRUE) - IQR(df, na.rm = TRUE) * 1.5
-  Upper_Fence <-
-    quantile(df, 0.75, na.rm = TRUE) + IQR(df, na.rm = TRUE) * 1.5
-  OutVals = boxplot(df, plot = FALSE)$out
+Outlier_List_Values <- function(df) {
+  df <- na.omit(df)
+  outliers <- boxplot(df, plot = FALSE)$out
 }
-
-
 
 #Show the outlier indexes and values of each continuous variable
 Cars_continuous <- select(cars_edited, 5 | 6 | 9 | 12 | 15:17)
 map(Cars_continuous, Outlier_List_Fences)
-map(Cars_continuous, Outlier_List_Index)
-map(Cars_continuous, Outlier_List_Values)
+#map(Cars_continuous, Outlier_List_Index)
+#map(Cars_continuous, Outlier_List_Values)
+
+#Function to Sift out Outliers
+Outlier_Sifter <- function(df, na.rm = TRUE) {
+  Q <- quantile(df[1], probs = c(.25, .75), na.rm = TRUE)
+  iqr <- IQR(df[[1]], na.rm = TRUE)
+  eliminated <-
+    subset(df, df[1] > (Q[1] - 1.5 * iqr) &
+             df[1] < (Q[2] + 1.5 * iqr))
+}
+
+# Create Columns without Outliers for each Continous Attribute
+odometer_value_Without_Outliers <-
+  Outlier_Sifter(select(Cars_continuous, odometer_value))
+View(odometer_value_Without_Outliers)
+
+year_produced_without_outliers <-
+  Outlier_Sifter(select(Cars_continuous, year_produced))
+View(year_produced_without_outliers)
+
+engine_capacity_without_outliers <-
+  Outlier_Sifter(select(Cars_continuous, engine_capacity), na.rm = TRUE)
+View(engine_capacity_without_outliers)
+
+price_usd_without_outliers <-
+  Outlier_Sifter(select(Cars_continuous, price_usd))
+View(price_usd_without_outliers)
+
+number_of_photos_without_outliers <-
+  Outlier_Sifter(select(Cars_continuous, number_of_photos))
+View(number_of_photos_Without_Outliers)
+
+
+
+
+#Summary of Attributes with Outliers
+summary(Cars_continuous)
+
+#Summary of Attributes without Outliers
+
 
 #Investigating Variables: Getting the unique entries and displaying how often they appear
 ggplot(cars_edited, mapping = aes(y = manufacturer_name)) + geom_histogram(stat =
