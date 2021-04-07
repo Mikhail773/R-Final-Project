@@ -170,6 +170,7 @@ summary(price_usd_without_outliers)
 summary(number_of_photos_without_outliers)
 summary(up_counter_without_outliers)
 summary(duration_listed_without_outliers)
+
 #Investigating Variables: Getting the unique entries and displaying how often they appear
 ggplot(cars_edited, mapping = aes(y = manufacturer_name)) + geom_histogram(stat =
                                                                              "count") + geom_text(stat = "count", aes(label = after_stat(count)), hjust = -1)
