@@ -1,0 +1,44 @@
+Phase 2 Tasks:
+Everyone:
+Visualize a ton of different variable combinations to see what outliers look like and get a gist of what variables impact price and/or each other.
+Document your code and every way you have tried to answer the Question
+Keep a Weekly update of what you have done
+Work on final Goal Question
+
+Note: The plots and tests are just ideas. They may not work for our data and you should defintely try other stuff out to get the best analysis done
+
+Emma Doyle: 
+First 2 Questions in the Phase 1 Document:
+What impact does a region have on price? 
+	Box Plot, One-Way Anova 
+What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?   
+	Pie Graph/Box Plot, One-Way Anova/ Kruskal-Wallis rank sum test 
+
+Reid Hoffmeier:
+Next 2 Questions:
+What is the relationship between odometer and price?  
+    Scatter Plot/Box-Plot, Simple Regression Analysis 
+Does the number of photos a vehicle has impact the selling price?  
+    Scatter Plot, Simple Regression Analysis  
+
+Matthew Lane:
+Next 2 Questions:
+Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?  
+    Simple Regression Analysis  
+Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?  
+    Mosaic Plot/ Chi-Squared Test, Two-Way ANOVA /Kruskal-Wallis rank sum test 
+
+Mikhail Mikhaylov:
+Next 2 Questions:
+What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?    
+    Dplyr count with group_by to find the most popular model by region. One-Way ANOVA Test/ Kruskal-Wallis rank sum test.   
+What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?    
+    Bar graph, Two-Way ANOVA/ Kruskal-Wallis rank sum test 
+
+Brandon Strong:
+The goal is to find which variables have the largest impact on the selling price of a vehicle and to create an accurate predictive model for the selling price of a used car in Belarus? 
+Analyze the insights gained from the previous questions to create a predictive model. 
+
+You will have to coordinate our questions to attempt to create a final model (We will all help)
+Code Maintenance
+Writing down how we have attempted our questions on RMarkdown
