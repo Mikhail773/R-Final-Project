@@ -151,15 +151,25 @@ number_of_photos_without_outliers <-
   Outlier_Sifter(select(Cars_continuous, number_of_photos))
 View(number_of_photos_Without_Outliers)
 
+up_counter_without_outliers <-
+  Outlier_Sifter(select(Cars_continuous, up_counter))
+View(up_counter_without_outliers)
 
-
+duration_listed_without_outliers <-
+  Outlier_Sifter(select(Cars_continuous, duration_listed ))
+View(duration_listed_Without_Outliers)
 
 #Summary of Attributes with Outliers
 summary(Cars_continuous)
 
 #Summary of Attributes without Outliers
-
-
+summary(odometer_value_Without_Outliers)
+summary(year_produced_without_outliers)
+summary(engine_capacity_without_outliers)
+summary(price_usd_without_outliers)
+summary(number_of_photos_without_outliers)
+summary(up_counter_without_outliers)
+summary(duration_listed_without_outliers)
 #Investigating Variables: Getting the unique entries and displaying how often they appear
 ggplot(cars_edited, mapping = aes(y = manufacturer_name)) + geom_histogram(stat =
                                                                              "count") + geom_text(stat = "count", aes(label = after_stat(count)), hjust = -1)
