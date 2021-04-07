@@ -72,21 +72,34 @@ View(cars_edited)
 #Check if there are na's in the cars_edited
 colSums(is.na(cars_edited))
 
-#List of Outliers
-Outlier_List_Index <- function(df, na.rm = TRUE){
+# Thresholds for Outliers
+Outlier_List_Fences <- function(df, na.rm = TRUE){
+  Lower_Fence <- quantile(df,0.25, na.rm = TRUE) - IQR(df, na.rm = TRUE) * 1.5
   Upper_Fence <- quantile(df,0.75, na.rm = TRUE) + IQR(df, na.rm = TRUE) * 1.5
-  Lower_Fence <- quantile(df,0.75, na.rm = TRUE) - IQR(df, na.rm = TRUE) * 1.5
+  if(Lower_Fence < 0)
+    sprintf("Upper Fence: %f", Upper_Fence)
+  else
+    sprintf("Lower Fence: %f: Upper Fence: %f", Lower_Fence, Upper_Fence)
+}
+
+
+Outlier_List_Index <- function(df, na.rm = TRUE){
+  Lower_Fence <- quantile(df,0.25, na.rm = TRUE) - IQR(df, na.rm = TRUE) * 1.5
+  Upper_Fence <- quantile(df,0.75, na.rm = TRUE) + IQR(df, na.rm = TRUE) * 1.5
   which(df > Upper_Fence | df < Lower_Fence)
 }
 
 Outlier_List_Values <- function(df, na.rm = TRUE){
+  Lower_Fence <- quantile(df,0.25, na.rm = TRUE) - IQR(df, na.rm = TRUE) * 1.5
   Upper_Fence <- quantile(df,0.75, na.rm = TRUE) + IQR(df, na.rm = TRUE) * 1.5
-  Lower_Fence <- quantile(df,0.75, na.rm = TRUE) - IQR(df, na.rm = TRUE) * 1.5
   OutVals = boxplot(df, plot = FALSE)$out
 }
 
+
+
 #Show the outlier indexes and values of each continuous variable
 Cars_continuous <- select(cars_edited, 5 | 6 | 9 | 12 | 15:17)
+map(Cars_continuous, Outlier_List_Fences)
 map(Cars_continuous, Outlier_List_Index)
 map(Cars_continuous, Outlier_List_Values)
 
