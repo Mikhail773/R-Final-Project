@@ -182,21 +182,21 @@ ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
 #
 # Plotting the data
 #
-# (Emma Doyle) 1) BALLOON PLOT: What impact does a region have on price?
+# (Emma Doyle) 1) Box Plots, Bar Graph, ANOVA?: What impact does a region have on price?
 #
-# (Emma Doyle) 2) SCATTER PLOT: What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
+# (Emma Doyle) 2) Pie Graph/Box Plot, One-Way Anova?: What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
 #
-# (Reid Hoffmeier) 3) LINE GRAPH: What is the relationship between odometer and price?
+# (Reid Hoffmeier) 3) Scatter Plot/Box-Plot, Simple Regression Analysis: What is the relationship between odometer and price?
 #
-# (Reid Hoffmeier) 4) BAR GRAPH: Does the number of photos a vehicle has impact the selling price?
+# (Reid Hoffmeier) 4) Scatter Plot, Simple Regression Analysis: Does the number of photos a vehicle has impact the selling price?
 #
-# (Matthew Lane) 5) SCATTER PLOT: Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
+# (Matthew Lane) 5) Scatter Plot, Simple Regression Analysis: Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
 #
-# (Matthew Lane) 6) SCATTER PLOT: Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
+# (Matthew Lane) 6) Mosaic Plot/ Chi-Squared Test, Two-Way ANOVA: Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
 #
-# (Mikhail Mikhaylov )7) What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
+# (Mikhail Mikhaylov) 7) Dplyr count with group_by, One-Way Anova: What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
 #
-# (Mikhail Mikhaylov) 8) What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?
+# (Mikhail Mikhaylov) 8) Bar graph, Two-Way ANOVA/ : What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?
 #
 # (Everyone) Goal:
 # Gain insights into which variables have the largest impact on selling price of a vehicle.
@@ -222,7 +222,7 @@ ggplot(cars_edited, aes(price_usd, ..density..)) + geom_freqpoly(binwidth = 500)
 ggplot(cars_edited_without_outliers, aes(price_usd, ..density..)) + geom_freqpoly(binwidth = 500)
 
 #Group cars by manufacturer, and get it's mean price
-cars_edited %>% group_by(manufacturer_name) %>% summarize(mean(price_usd)) %>% View()
+cars_edited %>% group_by(manufacturer_na me) %>% summarize(mean(price_usd)) %>% View()
 
 
 # 4) Graph to show the number of cars in specific colors(10 red cars, 8 blue cars etc.) by region BAR GRAPH
