@@ -12,7 +12,7 @@ library(tidyverse)
 # Evaluate the data
 #
 
-#Read our dataset into the cars var
+#Read our dataset into the cars variable
 cars <- read_csv("cars.csv")
 
 #check the na's in the dataset
@@ -207,8 +207,10 @@ ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
 # 10) SCATTER PLOT: Price of a car according to it's photo count
 #
 
-
+#Summarize our dataset
 summary(cars_edited)
+
+#Summarize dataset without outliers
 summary(cars_edited_without_outliers)
 
 # 1) Graph to show the amount of cars(by manufacturer name) in a region BALLOON PLOT
