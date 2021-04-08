@@ -182,25 +182,25 @@ ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
 #
 # Plotting the data
 #
-# 1) BALLOON PLOT: Amount of cars(by manufacturer name) in a region
+# (Emma Doyle) 1) BALLOON PLOT: What impact does a region have on price?
 #
-# 2) SCATTER PLOT: Price of a car according to its year produced
+# (Emma Doyle) 2) SCATTER PLOT: What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
 #
-# 3) LINE GRAPH: Amount of cars(density) according to it's price
+# (Reid Hoffmeier) 3) LINE GRAPH: What is the relationship between odometer and price?
 #
-# 4) BAR GRAPH: Number of cars in specific colors(10 red cars, 8 blue cars etc.) by region
+# (Reid Hoffmeier) 4) BAR GRAPH: Does the number of photos a vehicle has impact the selling price?
 #
-# 5) SCATTER PLOT: Price of a car according to it's millage(odometer)
+# (Matthew Lane) 5) SCATTER PLOT: Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
 #
-# 6) SCATTER PLOT: Price of a car according to it's year producted AND body type
+# (Matthew Lane) 6) SCATTER PLOT: Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
 #
-# 7) SCATTER PLOT: Price of a car according to it's Odometer AND engine fuel
+# (Mikhail Mikhaylov )7) What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
 #
-# 8) BOX PLOT: outliers with body type and price
+# (Mikhail Mikhaylov) 8) What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?
 #
-# 9) ?: Correlation between car body type, price, AND engine fuel
-#
-# 10) SCATTER PLOT: Price of a car according to it's photo count
+# (Everyone) Goal:
+# Gain insights into which variables have the largest impact on selling price of a vehicle.
+# Create a predictive model based on these insights to create a predictive model.
 #
 
 #Summarize our dataset
