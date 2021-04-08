@@ -81,7 +81,10 @@ cars_edited <-
 View(cars_edited)
 
 #Check if there are na's in the cars_edited
-colSums(is.na(cars_edited))
+cars_edited <- colSums(is.na(cars_edited))
+
+# Check for Duplicates and remove them
+cars_edited %>% distinct() %>% View()
 
 # Thresholds for Outliers
 Outlier_List_Fences <- function(df) {
@@ -163,7 +166,7 @@ View(duration_listed_without_outliers)
 #Summary of Attributes with Outliers
 summary(Cars_continuous)
 
-#Summary of Attributes without Outliers
+#Summary of Attricars_edited %>% distinct() %>% View()butes without Outliers
 summary(odometer_value_Without_Outliers)
 summary(year_produced_without_outliers)
 summary(engine_capacity_without_outliers)
