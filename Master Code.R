@@ -6,7 +6,6 @@
 #Import all the library's we are using
 library(tidyverse)
 
-
 ###################################################################################################
 #
 # Evaluate the data
@@ -18,7 +17,6 @@ cars <- read_csv("cars.csv")
 #check the na's in the dataset
 colSums(is.na(cars))
 View(cars) #view the data
-
 
 ###################################################################################################
 #
@@ -73,9 +71,7 @@ cars_edited <-
 
 #Recode foreign language into their English meaning (engine_fuel)
 cars_edited <-
-  cars_edited %>% mutate(engine_fuel = recode(cars_edited$engine_fuel,
-
-                                              'gas' = "gasoline", ))
+  cars_edited %>% mutate(engine_fuel = recode(cars_edited$engine_fuel, 'gas' = "gasoline", ))
 
 #Check if there are na's in the cars_edited
 colSums(is.na(cars_edited))
