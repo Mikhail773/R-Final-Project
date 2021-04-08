@@ -28,7 +28,7 @@ View(cars) #view the data
 #Removing unnecessary columns from cars. Store that data in cars_edited
 # -(19) is a column that shows the number of times a car has been upped. This column not descriptive and has been removed
 # -(20:29) are boolean columns for various features. There is no description of what these features are and for that reason they have been omitted.
-cars_edited <- select(cars,-8 & -(12:13) & -(20:29))
+cars_edited <- select(cars, -8 & -(12:13) & -(20:29))
 View(cars_edited) #view the data
 
 #Recode foreign language into their English meaning (location_region)
@@ -75,20 +75,19 @@ cars_edited <-
 cars_edited <-
   cars_edited %>% mutate(engine_fuel = recode(cars_edited$engine_fuel,
 
-                                              'gas' = "gasoline",))
+                                              'gas' = "gasoline", ))
+
+#Check if there are na's in the cars_edited
+colSums(is.na(cars_edited))
+
+# Check for Duplicates and remove them
+cars_edited <- cars_edited %>% distinct()
 
 #view the changes the mutate made
 View(cars_edited)
 
-#Check if there are na's in the cars_edited
-cars_edited <- colSums(is.na(cars_edited))
-
-# Check for Duplicates and remove them
-cars_edited %>% distinct() %>% View()
-
 # Thresholds for Outliers
 Outlier_List_Fences <- function(df) {
-  df <- na.omit(df)
   Q <- quantile(df, probs = c(.25, .75))
   iqr <- IQR(df)
   Lower_Fence <- Q[1] - iqr * 1.5
@@ -105,7 +104,6 @@ Outlier_List_Fences <- function(df) {
 
 # Functions for Outlier Index and Values
 Outlier_List_Index <- function(df) {
-  df <- na.omit(df)
   Q <- quantile(df, probs = c(.25, .75))
   iqr <- IQR(df)
   Lower_Fence <- Q[1] - iqr * 1.5
@@ -114,66 +112,35 @@ Outlier_List_Index <- function(df) {
 }
 
 Outlier_List_Values <- function(df) {
-  df <- na.omit(df)
   outliers <- boxplot(df, plot = FALSE)$out
 }
 
 #Show the outlier indexes and values of each continuous variable
-Cars_continuous <- select(cars_edited, 5 | 6 | 9 | 12 | 15:17)
+Cars_continuous <- select(cars_edited, 5 | 6 | 12 | 15:17)
 map(Cars_continuous, Outlier_List_Fences)
-#map(Cars_continuous, Outlier_List_Index)
-#map(Cars_continuous, Outlier_List_Values)
-
-#Function to Sift out Outliers
-Outlier_Sifter <- function(df, attribute, na.rm = TRUE) {
-  data_output <- as.numeric(unlist(df[ , attribute]))
-  outliers <- boxplot(data_output, plot=FALSE)$out
-  df[-which(data_output %in% outliers),]
-}
-
-# Create Columns without Outliers for each Continuous Attribute
-odometer_value_Without_Outliers <- cars_edited %>%
-  Outlier_Sifter("odometer_value")
-View(odometer_value_Without_Outliers)
-
-year_produced_without_outliers <-cars_edited %>%
-  Outlier_Sifter("year_produced")
-View(year_produced_without_outliers)
-
-engine_capacity_without_outliers <- cars_edited %>%
-  Outlier_Sifter("engine_capacity")
-View(engine_capacity_without_outliers)
-
-price_usd_without_outliers <-cars_edited %>%
-  Outlier_Sifter("price_usd")
-View(price_usd_without_outliers)
-
-number_of_photos_without_outliers <- cars_edited %>%
-  Outlier_Sifter("number_of_photos")
-View(number_of_photos_without_outliers)
-
-up_counter_without_outliers <- cars_edited %>%
-  Outlier_Sifter("up_counter")
-View(up_counter_without_outliers)
-
-duration_listed_without_outliers <- cars_edited %>%
-  Outlier_Sifter("duration_listed")
-View(duration_listed_without_outliers)
+map(Cars_continuous, Outlier_List_Index)
+map(Cars_continuous, Outlier_List_Values)
 
 # DataSet with all outliers removed entirely
+# List of Outliers for every Continuous Variable
+my_list <- map(Cars_continuous, Outlier_List_Values)
+View(my_list)
 
+# Remove all outliers from the dataframe
+cars_edited_without_outliers <-  cars_edited
+cars_edited_without_outliers <-  cars_edited_without_outliers[! cars_edited_without_outliers$odometer_value %in% my_list[[1]],]
+cars_edited_without_outliers <-  cars_edited_without_outliers[! cars_edited_without_outliers$year_produced %in% my_list[[2]],]
+cars_edited_without_outliers <-  cars_edited_without_outliers[! cars_edited_without_outliers$price_usd %in% my_list[[3]],]
+cars_edited_without_outliers <-  cars_edited_without_outliers[! cars_edited_without_outliers$number_of_photos %in% my_list[[4]],]
+cars_edited_without_outliers <-  cars_edited_without_outliers[! cars_edited_without_outliers$up_counter %in% my_list[[5]],]
+cars_edited_without_outliers <-  cars_edited_without_outliers[! cars_edited_without_outliers$duration_listed %in% my_list[[6]],]
+View(cars_edited_without_outliers)
 
 #Summary of Attributes with Outliers
 summary(Cars_continuous)
 
-#Summary of Attricars_edited %>% distinct() %>% View()butes without Outliers
-summary(odometer_value_Without_Outliers)
-summary(year_produced_without_outliers)
-summary(engine_capacity_without_outliers)
-summary(price_usd_without_outliers)
-summary(number_of_photos_without_outliers)
-summary(up_counter_without_outliers)
-summary(duration_listed_without_outliers)
+#Summary of Attributes_without Outliers
+summary(cars_edited_without_outliers)
 
 #Investigating Variables: Getting the unique entries and displaying how often they appear
 ggplot(cars_edited, mapping = aes(y = manufacturer_name)) + geom_histogram(stat =
@@ -191,7 +158,7 @@ ggplot(cars_edited, aes(x = engine_fuel), stat = "count") + geom_bar(mapping = a
 ggplot(cars_edited, aes(x = engine_type), stat = "count") + geom_bar()  + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
 View(cars_edited %>% count(engine_capacity))
 ggplot(cars_edited) + geom_boxplot(mapping = aes(engine_capacity))
-ggplot(cars_edited) + geom_histogram(mapping = aes(engine_capacity))
+ggplot(cars_edited) + geom_bar(mapping = aes(engine_capacity))
 ggplot(cars_edited,
        mapping = aes(x = body_type),
        stat = "count") + geom_bar() + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
@@ -242,6 +209,7 @@ ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
 
 
 summary(cars_edited)
+summary(cars_edited_without_outliers)
 
 # 1) Graph to show the amount of cars(by manufacturer name) in a region BALLOON PLOT
 ggplot(cars_edited, aes(location_region, manufacturer_name)) + geom_count()
@@ -272,8 +240,8 @@ ggplot(cars_edited, aes(year_produced, price_usd)) + geom_point(aes(color = body
 
 
 # 7) Graph to show the price of a car according to it's Odometer AND engine fuel SCATTER PLOT
-ggplot(cars_edited) + geom_point(mapping = aes(x = odometer_value, y = price_usd, color = engine_fuel))
-
+ggplot(cars_edited, mapping = aes(x = odometer_value, y = price_usd)) + geom_point() + geom_smooth()
+ggplot(cars_edited_without_outliers, mapping = aes(x = odometer_value, y = price_usd)) + geom_point() + geom_smooth()
 
 # Group by car body type and get it's mean price
 group_by(cars_edited, body_type) %>% summarise(price_mean = mean(price_usd)) -> mean_cars
