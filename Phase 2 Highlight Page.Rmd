@@ -1,0 +1,40 @@
+---
+title: "Cars Analysis and Modeling"
+author: "Group 1"
+date: "3/31/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+This will be to show our code
+```{r}
+
+```
+
+This will be to show our graphs
+```{r pressure, echo=FALSE}
+
+```
+
+
+## Dataset used
+description of our dataset
+
+## Questions 
+Questions that we want answered from our dataset
+
+## Data cleaning
+How we cleaned our data
+
+## Graphs
+What graphs we chose to solve our questions and why
+
+## Results
+Our answers to our questions based on the graphs
+
+## Completed
+
+## To do list
