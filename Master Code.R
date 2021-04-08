@@ -122,42 +122,43 @@ map(Cars_continuous, Outlier_List_Fences)
 #map(Cars_continuous, Outlier_List_Values)
 
 #Function to Sift out Outliers
-Outlier_Sifter <- function(df, na.rm = TRUE) {
-  Q <- quantile(df[1], probs = c(.25, .75), na.rm = TRUE)
-  iqr <- IQR(df[[1]], na.rm = TRUE)
-  eliminated <-
-    subset(df, df[1] > (Q[1] - 1.5 * iqr) &
-             df[1] < (Q[2] + 1.5 * iqr))
+Outlier_Sifter <- function(df, attribute, na.rm = TRUE) {
+  data_output <- as.numeric(unlist(df[ , attribute]))
+  outliers <- boxplot(data_output, plot=FALSE)$out
+  df[-which(data_output %in% outliers),]
 }
 
-# Create Columns without Outliers for each Continous Attribute
-odometer_value_Without_Outliers <-
-  Outlier_Sifter(select(Cars_continuous, odometer_value))
+# Create Columns without Outliers for each Continuous Attribute
+odometer_value_Without_Outliers <- cars_edited %>%
+  Outlier_Sifter("odometer_value")
 View(odometer_value_Without_Outliers)
 
-year_produced_without_outliers <-
-  Outlier_Sifter(select(Cars_continuous, year_produced))
+year_produced_without_outliers <-cars_edited %>%
+  Outlier_Sifter("year_produced")
 View(year_produced_without_outliers)
 
-engine_capacity_without_outliers <-
-  Outlier_Sifter(select(Cars_continuous, engine_capacity), na.rm = TRUE)
+engine_capacity_without_outliers <- cars_edited %>%
+  Outlier_Sifter("engine_capacity")
 View(engine_capacity_without_outliers)
 
-price_usd_without_outliers <-
-  Outlier_Sifter(select(Cars_continuous, price_usd))
+price_usd_without_outliers <-cars_edited %>%
+  Outlier_Sifter("price_usd")
 View(price_usd_without_outliers)
 
-number_of_photos_without_outliers <-
-  Outlier_Sifter(select(Cars_continuous, number_of_photos))
-View(number_of_photos_Without_Outliers)
+number_of_photos_without_outliers <- cars_edited %>%
+  Outlier_Sifter("number_of_photos")
+View(number_of_photos_without_outliers)
 
-up_counter_without_outliers <-
-  Outlier_Sifter(select(Cars_continuous, up_counter))
+up_counter_without_outliers <- cars_edited %>%
+  Outlier_Sifter("up_counter")
 View(up_counter_without_outliers)
 
-duration_listed_without_outliers <-
-  Outlier_Sifter(select(Cars_continuous, duration_listed ))
-View(duration_listed_Without_Outliers)
+duration_listed_without_outliers <- cars_edited %>%
+  Outlier_Sifter("duration_listed")
+View(duration_listed_without_outliers)
+
+# DataSet with all outliers removed entirely
+
 
 #Summary of Attributes with Outliers
 summary(Cars_continuous)
@@ -261,7 +262,7 @@ ggplot(cars_edited, aes(color)) + geom_bar(aes(fill = location_region))
 
 # 5) Graph to show the price of a car according to it's millage(odometer) SCATTER PLOT
 ggplot(cars_edited, aes(odometer_value, price_usd)) + geom_point(aes(color = is_exchangeable)) + geom_smooth()
-
+ggplot(cars_edited, aes(odometer_value_Without_Outliers, price_usd)) + geom_point(aes(color = is_exchangeable)) + geom_smooth()
 
 # 6)Graph to show the price of a car according to it's year producted AND body type SCATTER PLOT
 ggplot(cars_edited, aes(year_produced, price_usd)) + geom_point(aes(color = body_type)) + geom_smooth()
