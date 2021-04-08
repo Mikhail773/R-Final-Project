@@ -28,7 +28,7 @@ View(cars) #view the data
 #Removing unnecessary columns from cars. Store that data in cars_edited
 # -(19) is a column that shows the number of times a car has been upped. This column not descriptive and has been removed
 # -(20:29) are boolean columns for various features. There is no description of what these features are and for that reason they have been omitted.
-cars_edited <- select(cars, -8 & -(12:13) & -(20:29))
+cars_edited <- select(cars,-8 & -(12:13) & -(20:29))
 View(cars_edited) #view the data
 
 #Recode foreign language into their English meaning (location_region)
@@ -75,7 +75,7 @@ cars_edited <-
 cars_edited <-
   cars_edited %>% mutate(engine_fuel = recode(cars_edited$engine_fuel,
 
-                                              'gas' = "gasoline", ))
+                                              'gas' = "gasoline",))
 
 #Check if there are na's in the cars_edited
 colSums(is.na(cars_edited))
@@ -128,12 +128,18 @@ View(my_list)
 
 # Remove all outliers from the dataframe
 cars_edited_without_outliers <-  cars_edited
-cars_edited_without_outliers <-  cars_edited_without_outliers[! cars_edited_without_outliers$odometer_value %in% my_list[[1]],]
-cars_edited_without_outliers <-  cars_edited_without_outliers[! cars_edited_without_outliers$year_produced %in% my_list[[2]],]
-cars_edited_without_outliers <-  cars_edited_without_outliers[! cars_edited_without_outliers$price_usd %in% my_list[[3]],]
-cars_edited_without_outliers <-  cars_edited_without_outliers[! cars_edited_without_outliers$number_of_photos %in% my_list[[4]],]
-cars_edited_without_outliers <-  cars_edited_without_outliers[! cars_edited_without_outliers$up_counter %in% my_list[[5]],]
-cars_edited_without_outliers <-  cars_edited_without_outliers[! cars_edited_without_outliers$duration_listed %in% my_list[[6]],]
+cars_edited_without_outliers <-
+  cars_edited_without_outliers[!cars_edited_without_outliers$odometer_value %in% my_list[[1]], ]
+cars_edited_without_outliers <-
+  cars_edited_without_outliers[!cars_edited_without_outliers$year_produced %in% my_list[[2]], ]
+cars_edited_without_outliers <-
+  cars_edited_without_outliers[!cars_edited_without_outliers$price_usd %in% my_list[[3]], ]
+cars_edited_without_outliers <-
+  cars_edited_without_outliers[!cars_edited_without_outliers$number_of_photos %in% my_list[[4]], ]
+cars_edited_without_outliers <-
+  cars_edited_without_outliers[!cars_edited_without_outliers$up_counter %in% my_list[[5]], ]
+cars_edited_without_outliers <-
+  cars_edited_without_outliers[!cars_edited_without_outliers$duration_listed %in% my_list[[6]], ]
 View(cars_edited_without_outliers)
 
 #Summary of Attributes with Outliers
@@ -243,7 +249,8 @@ ggplot(cars_edited, aes(year_produced, price_usd)) + geom_point(aes(color = body
 
 # 7) Graph to show the price of a car according to it's Odometer AND engine fuel SCATTER PLOT
 ggplot(cars_edited, mapping = aes(x = odometer_value, y = price_usd)) + geom_point() + geom_smooth()
-ggplot(cars_edited_without_outliers, mapping = aes(x = odometer_value, y = price_usd)) + geom_point() + geom_smooth()
+ggplot(cars_edited_without_outliers,
+       mapping = aes(x = odometer_value, y = price_usd)) + geom_point() + geom_smooth()
 
 # Group by car body type and get it's mean price
 group_by(cars_edited, body_type) %>% summarise(price_mean = mean(price_usd)) -> mean_cars
