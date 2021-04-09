@@ -202,7 +202,7 @@ ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
 # Gain insights into which variables have the largest impact on selling price of a vehicle.
 # Create a predictive model based on these insights to create a predictive model.
 #
-
+ 
 #Summarize our dataset
 summary(cars_edited)
 
