@@ -188,7 +188,6 @@ ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
 #
 # (Reid Hoffmeier) 3) Scatter Plot/Box-Plot, Simple Regression Analysis: What is the relationship between odometer and price?
 # 
-# 
 # (Reid Hoffmeier) 4) Scatter Plot, Simple Regression Analysis: Does the number of photos a vehicle has impact the selling price?
 #
 # (Matthew Lane) 5) Scatter Plot, Simple Regression Analysis: Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
