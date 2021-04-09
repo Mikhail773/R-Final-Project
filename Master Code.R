@@ -187,7 +187,7 @@ ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
 # (Emma Doyle) 2) Pie Graph/Box Plot, One-Way Anova?: What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
 #
 # (Reid Hoffmeier) 3) Scatter Plot/Box-Plot, Simple Regression Analysis: What is the relationship between odometer and price?
-# sup. Lets test shenanigans
+# 
 # 
 # (Reid Hoffmeier) 4) Scatter Plot, Simple Regression Analysis: Does the number of photos a vehicle has impact the selling price?
 #
