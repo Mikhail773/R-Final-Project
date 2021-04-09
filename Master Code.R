@@ -222,7 +222,7 @@ ggplot(cars_edited, aes(price_usd, ..density..)) + geom_freqpoly(binwidth = 500)
 ggplot(cars_edited_without_outliers, aes(price_usd, ..density..)) + geom_freqpoly(binwidth = 500)
 
 #Group cars by manufacturer, and get it's mean price
-cars_edited %>% group_by(manufacturer_na me) %>% summarize(mean(price_usd)) %>% View()
+cars_edited %>% group_by(manufacturer_name) %>% summarize(mean(price_usd)) %>% View()
 
 
 # 4) Graph to show the number of cars in specific colors(10 red cars, 8 blue cars etc.) by region BAR GRAPH
