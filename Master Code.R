@@ -5,7 +5,6 @@
 
 #Import all the library's we are using
 library(tidyverse)
-
 ###################################################################################################
 #
 # Evaluate the data
@@ -196,7 +195,19 @@ ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
 #
 # (Mikhail Mikhaylov) 7) Dplyr count with group_by, One-Way Anova: What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
 #
-# (Mikhail Mikhaylov) 8) Bar graph, Two-Way ANOVA/ : What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?
+# Finding out model popularity
+models_sorted <- cars_edited %>% count(model_name) %>% arrange(desc(n)) # Most popular is Passat
+models_sorted_More_than_30 <- cars_edited %>% count(model_name) %>% arrange(desc(n)) %>% filter(n > 30) # Most popular is Passat
+View(models_sorted_More_than_30)
+
+ggplot(cars_edited) + geom_point(aes(y = model_name, x = price_usd))
+
+model <- kruskal.test(price_usd ~ model_name, data=cars_edited)
+summary(model)
+TukeyHSD(model) %>% View()
+
+# (Mikhail Mikhaylov) 8) Bar graph, Two-Way ANOVA/ : What is the average age of each vehicle manufacturer 
+# and whether the manufacturer changes how the production year impacts the selling price?
 #
 # (Everyone) Goal:
 # Gain insights into which variables have the largest impact on selling price of a vehicle.
@@ -273,3 +284,4 @@ detach("package:datasets", unload = TRUE)  # For base
 
 # Clear console
 cat("\014")
+
