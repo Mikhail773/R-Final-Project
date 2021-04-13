@@ -5,6 +5,8 @@
 
 #Import all the library's we are using
 library(tidyverse)
+library(e1071)
+library(car)
 ###################################################################################################
 #
 # Evaluate the data
@@ -201,6 +203,23 @@ View(models_sorted)
 
 ggplot(cars_edited) + geom_point(aes(y = model_name, x = price_usd))
 
+model_price <- lm(log(price_usd) ~ model_name + year_produced, data = cars_edited)
+
+summary(model_price)
+
+# Check Linearity
+plot(model_price, 1)
+#Check Homogeneity
+plot(model_price, 3)
+# Normality of residuals
+plot(model_price, 2)
+# Outliers and high levarage points
+plot(model_price, 5)
+# Cook's distance
+plot(model_price, 4)
+
+
+
 # (Mikhail Mikhaylov) 8) Bar graph, Two-Way ANOVA/ : What is the average age of each vehicle manufacturer
 # and whether the manufacturer changes how the production year impacts the selling price?
 manufacturer_year <- group_by(cars_edited, manufacturer_name)
@@ -210,6 +229,9 @@ View(manufacturer_year_averages)
 ggplot(manufacturer_year_averages) + geom_point(aes(x = manufacturer_name, y = average))
 
 ggplot(cars_edited) + geom_point(aes(x = year_produced, y = price_usd, color = manufacturer_name))
+
+
+
 
 cars_edited %>% count(manufacturer_name) %>% View()
 cars_edited$manufacturer_name <- as.factor(cars_edited$manufacturer_name)
@@ -236,8 +258,80 @@ pairwise.wilcox.test(cars_edited$price_usd, cars_edited$manufacturer_name,
 # Create a predictive model based on these insights to create a predictive model.
 #
 
+model1 <- lm(price_usd ~ odometer_value
+            + year_produced
+            + number_of_photos
+            + duration_listed
+            + up_counter
+            + is_exchangeable
+            + location_region
+            + body_type
+            + transmission
+            + color
+            + engine_type
+            + engine_fuel
+            + engine_capacity
+            + model_name
+            + manufacturer_name
+            ,cars_edited)
+summary(model)
+
+# Check Linearity
+plot(model, 1)
+#Check Homogeneity
+plot(model, 3)
+
+model2 <- lm(log(price_usd) ~ odometer_value
+             + year_produced
+             + number_of_photos
+             + duration_listed
+             + up_counter
+             + location_region
+             + body_type
+             + transmission
+             + color
+             + engine_type
+             + engine_fuel
+             + engine_capacity
+             + odometer_value
+             + model_name
+             ,cars_edited)
+summary(model2)
+
+vif(model2)
+
+# Check Linearity
+plot(model2, 1)
+#Check Homogeneity
+plot(model2, 3)
+# Normality of residuals
+plot(model2, 2)
+# Outliers and high levarage points
+plot(model2, 5)
+# Cook's distance
+plot(model, 4)
+
+modelSVM <- svm(price_usd ~ odometer_value ,cars_edited)
+summary(modelSVM)
+
+predictedY <- predict(modelSVM, cars_edited)
+points(cars_edited$odometer_value, predictedY, col = "red", pch=4)
+
+
+colnames(cars_edited)
+
+# [1] "manufacturer_name" "model_name"        "transmission"      "color"             "odometer_value"
+# [6] "year_produced"     "engine_fuel"       "engine_type"       "engine_capacity"   "body_type"
+# [11] "drivetrain"        "price_usd"         "is_exchangeable"   "location_region"   "number_of_photos"
+# [16] "up_counter"        "duration_listed"
+
+
+
 #Summarize our dataset
 summary(cars_edited)
+
+
+
 
 #Summarize dataset without outliers
 summary(cars_edited_without_outliers)
