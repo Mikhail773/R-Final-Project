@@ -70,7 +70,7 @@ cars_edited <-
 
 #Recode foreign language into their English meaning (engine_fuel)
 cars_edited <-
-  cars_edited %>% mutate(engine_fuel = recode(cars_edited$engine_fuel, 'gas' = "gasoline", ))
+  cars_edited %>% mutate(engine_fuel = recode(cars_edited$engine_fuel, 'gas' = "compressed natural gas", ))
 
 #Check if there are na's in the cars_edited
 colSums(is.na(cars_edited))
@@ -186,7 +186,7 @@ ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
 # (Emma Doyle) 2) Pie Graph/Box Plot, One-Way Anova?: What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
 #
 # (Reid Hoffmeier) 3) Scatter Plot/Box-Plot, Simple Regression Analysis: What is the relationship between odometer and price?
-# 
+#
 # (Reid Hoffmeier) 4) Scatter Plot, Simple Regression Analysis: Does the number of photos a vehicle has impact the selling price?
 #
 # (Matthew Lane) 5) Scatter Plot, Simple Regression Analysis: Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
@@ -197,23 +197,45 @@ ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
 #
 # Finding out model popularity
 models_sorted <- cars_edited %>% count(model_name) %>% arrange(desc(n)) # Most popular is Passat
-models_sorted_More_than_30 <- cars_edited %>% count(model_name) %>% arrange(desc(n)) %>% filter(n > 30) # Most popular is Passat
-View(models_sorted_More_than_30)
+View(models_sorted)
 
 ggplot(cars_edited) + geom_point(aes(y = model_name, x = price_usd))
 
-model <- kruskal.test(price_usd ~ model_name, data=cars_edited)
-summary(model)
-TukeyHSD(model) %>% View()
-
-# (Mikhail Mikhaylov) 8) Bar graph, Two-Way ANOVA/ : What is the average age of each vehicle manufacturer 
+# (Mikhail Mikhaylov) 8) Bar graph, Two-Way ANOVA/ : What is the average age of each vehicle manufacturer
 # and whether the manufacturer changes how the production year impacts the selling price?
-#
+manufacturer_year <- group_by(cars_edited, manufacturer_name)
+manufacturer_year_averages <- summarise(manufacturer_year, average = mean(year_produced, na.rm = TRUE))
+View(manufacturer_year_averages)
+
+ggplot(manufacturer_year_averages) + geom_point(aes(x = manufacturer_name, y = average))
+
+ggplot(cars_edited) + geom_point(aes(x = year_produced, y = price_usd, color = manufacturer_name))
+
+cars_edited %>% count(manufacturer_name) %>% View()
+cars_edited$manufacturer_name <- as.factor(cars_edited$manufacturer_name)
+
+manufacturer_list <- unique(cars_edited$manufacturer_name)
+
+# Test if variances across groups are homogeneous
+bartlett.test(price_usd ~ manufacturer_name, data = cars_edited)
+# They are not. Can't use ANOVA
+
+# Check if Manufacturer Names are ordered
+levels(cars_edited$manufacturer_name)
+
+# Do Kruskal Test instead of ANOVA
+kruskal.test(price_usd ~ manufacturer_name, data = cars_edited)
+# p-value is less than 0.05, we can conclude there are significant differences between the manufacturers
+
+# Check where the differences are
+pairwise.wilcox.test(cars_edited$price_usd, cars_edited$manufacturer_name,
+                     p.adjust.method = "BH")
+
 # (Everyone) Goal:
 # Gain insights into which variables have the largest impact on selling price of a vehicle.
 # Create a predictive model based on these insights to create a predictive model.
 #
- 
+
 #Summarize our dataset
 summary(cars_edited)
 
