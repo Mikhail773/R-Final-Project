@@ -222,7 +222,7 @@ ggplot(cars_edited, aes(price_usd, ..density..)) + geom_freqpoly(binwidth = 500)
 ggplot(cars_edited_without_outliers, aes(price_usd, ..density..)) + geom_freqpoly(binwidth = 500)
 
 #Group cars by manufacturer, and get it's mean price
-cars_edited %>% group_by(manufacturer_na me) %>% summarize(mean(price_usd)) %>% View()
+cars_edited %>% group_by(manufacturer_name) %>% summarize(mean(price_usd)) %>% View()
 
 
 # 4) Graph to show the number of cars in specific colors(10 red cars, 8 blue cars etc.) by region BAR GRAPH
@@ -248,7 +248,7 @@ group_by(cars_edited, body_type) %>% summarise(price_mean = mean(price_usd)) -> 
 ggplot(cars_edited) + geom_boxplot(mapping = aes(x = reorder(body_type, price_usd), y =
                                                    price_usd))
 ggplot(cars_edited_without_outliers) + geom_boxplot(mapping = aes(x = reorder(body_type, price_usd), y =
-                                                   price_usd))
+                                                                    price_usd))
 # 9) Graph to show the correlation between car body type, price, AND engine fuel
 ggplot(cars_edited) + geom_point(mapping = aes(x = body_type, y = price_usd, color = engine_fuel))
 ggplot(cars_edited_without_outliers) + geom_point(mapping = aes(x = body_type, y = price_usd, color = engine_fuel))
