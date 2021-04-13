@@ -5,7 +5,6 @@
 
 #Import all the library's we are using
 library(tidyverse)
-
 ###################################################################################################
 #
 # Evaluate the data
@@ -187,7 +186,7 @@ ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
 # (Emma Doyle) 2) Pie Graph/Box Plot, One-Way Anova?: What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
 #
 # (Reid Hoffmeier) 3) Scatter Plot/Box-Plot, Simple Regression Analysis: What is the relationship between odometer and price?
-#
+# 
 # (Reid Hoffmeier) 4) Scatter Plot, Simple Regression Analysis: Does the number of photos a vehicle has impact the selling price?
 #
 # (Matthew Lane) 5) Scatter Plot, Simple Regression Analysis: Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
@@ -196,13 +195,25 @@ ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
 #
 # (Mikhail Mikhaylov) 7) Dplyr count with group_by, One-Way Anova: What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
 #
-# (Mikhail Mikhaylov) 8) Bar graph, Two-Way ANOVA/ : What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?
+# Finding out model popularity
+models_sorted <- cars_edited %>% count(model_name) %>% arrange(desc(n)) # Most popular is Passat
+models_sorted_More_than_30 <- cars_edited %>% count(model_name) %>% arrange(desc(n)) %>% filter(n > 30) # Most popular is Passat
+View(models_sorted_More_than_30)
+
+ggplot(cars_edited) + geom_point(aes(y = model_name, x = price_usd))
+
+model <- kruskal.test(price_usd ~ model_name, data=cars_edited)
+summary(model)
+TukeyHSD(model) %>% View()
+
+# (Mikhail Mikhaylov) 8) Bar graph, Two-Way ANOVA/ : What is the average age of each vehicle manufacturer 
+# and whether the manufacturer changes how the production year impacts the selling price?
 #
 # (Everyone) Goal:
 # Gain insights into which variables have the largest impact on selling price of a vehicle.
 # Create a predictive model based on these insights to create a predictive model.
 #
-
+ 
 #Summarize our dataset
 summary(cars_edited)
 
@@ -273,3 +284,4 @@ detach("package:datasets", unload = TRUE)  # For base
 
 # Clear console
 cat("\014")
+
