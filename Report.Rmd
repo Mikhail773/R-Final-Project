@@ -68,7 +68,7 @@ the machine learning patterns used and your outcomes
 
 
 
-## Data Analsis and Modeling
+## Data Analysis and Modeling
 
 
 
