@@ -74,9 +74,6 @@ cars_edited <-
 cars_edited <-
   cars_edited %>% mutate(engine_fuel = recode(cars_edited$engine_fuel, 'gas' = "compressed natural gas", ))
 
-#Check if there are na's in the cars_edited
-colSums(is.na(cars_edited))
-
 # Check for Duplicates and remove them
 cars_edited <- cars_edited %>% distinct()
 
