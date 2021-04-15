@@ -178,28 +178,29 @@ ggplot(cars_edited) + geom_point(mapping = aes(x = number_of_photos, y = price_u
 #
 # Finding out model popularity
 
-models_sorted <-
-  cars_edited %>% count(model_name) %>% arrange(desc(n)) # Most popular is Passat
+models_sorted <- cars_edited %>% count(model_name) %>% arrange(desc(n)) # Most popular is Passat
 View(models_sorted)
 
 ggplot(cars_edited) + geom_point(aes(y = model_name, x = price_usd))
 
-model_price <-
-  lm(log(price_usd) ~ model_name + year_produced, data = cars_edited)
-
+model_price <- aov(price_usd ~ model_name + year_produced, data = cars_edited)
 summary(model_price)
+TukeyHSD(model_price)
 
 # (Mikhail Mikhaylov) 8) Bar graph, Two-Way ANOVA/ : What is the average age of each vehicle manufacturer
 # and whether the manufacturer changes how the production year impacts the selling price?
 
 manufacturer_year <- group_by(cars_edited, manufacturer_name)
-manufacturer_year_averages <-
-  summarise(manufacturer_year, average = mean(year_produced, na.rm = TRUE))
+manufacturer_year_averages <- summarise(manufacturer_year, average = mean(year_produced, na.rm = TRUE))
 View(manufacturer_year_averages)
 
 ggplot(manufacturer_year_averages) + geom_point(aes(x = manufacturer_name, y = average))
 
 ggplot(cars_edited) + geom_point(aes(x = year_produced, y = price_usd, color = manufacturer_name))
+
+manufacturer_price <- lm(price_usd ~ manufacturer_name + year_produced, data = cars_edited)
+summary(manufacturer_price)
+vif(manufacturer_price)
 
 # (Everyone) Goal:
 # Gain insights into which variables have the largest impact on selling price of a vehicle.
