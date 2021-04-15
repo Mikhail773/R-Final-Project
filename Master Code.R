@@ -7,7 +7,7 @@
 library(tidyverse)
 library(e1071)
 library(car)
-
+library(Metrics)
 ###################################################################################################
 #
 # Evaluate the data
@@ -209,14 +209,22 @@ ggplot(cars_edited) + geom_point(mapping = aes(x = number_of_photos, y = price_u
 #
 # Finding out model popularity
 
-models_sorted <- cars_edited %>% count(model_name) %>% arrange(desc(n)) # Most popular is Passat
+models_counted <- cars_edited %>% count(model_name) %>% arrange(desc(n)) # Most popular is Passat
+View(models_counted)
+models_sorted <- group_by(cars_edited, model_name)
 View(models_sorted)
+models_sorted_averages <- summarise(models_sorted, average_price_usd = mean(price_usd))
+View(models_sorted_averages)
+models_sorted_averages_with_cnt <- models_sorted_averages %>% mutate(counts = cars_edited %>% count(model_name) %>% select(2))
+View(models_sorted_averages_with_cnt)
 
 ggplot(cars_edited) + geom_point(aes(y = model_name, x = price_usd))
 
-model_price <- aov(price_usd ~ model_name + year_produced, data = cars_edited)
+model_price <- aov(average_price_usd ~ model_name + counts.n, data = models_sorted_averages_with_cnt)
 summary(model_price)
+#
 TukeyHSD(model_price)
+
 
 # (Mikhail Mikhaylov) 8) Bar graph, Two-Way ANOVA/ : What is the average age of each vehicle manufacturer
 # and whether the manufacturer changes how the production year impacts the selling price?
@@ -256,7 +264,7 @@ model1 <- lm(
   ,
   train
 )
-summary(model)
+summary(model1)
 
 model2 <- lm(
   log(price_usd) ~ odometer_value
@@ -283,11 +291,8 @@ vif(model2)
 modelSVM <- svm(price_usd ~ odometer_value , cars_edited)
 summary(modelSVM)
 
-predictedY <- predict(modelSVM, cars_edited)
-points(cars_edited$odometer_value,
-       predictedY,
-       col = "red",
-       pch = 4)
+prediction <- predict(model1, test, type= "response")
+rmse(test$price_usd, prediction)
 
 colnames(cars_edited)
 
