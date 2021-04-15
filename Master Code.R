@@ -5,9 +5,10 @@
 
 #Import all the library's we are using
 library(tidyverse)
-library(e1071)
-library(car)
-library(Metrics)
+library(e1071) #SVM
+library(car) #predict
+library(Metrics) #rmse
+library(caret) #partiiton
 ###################################################################################################
 #
 # Evaluate the data
@@ -92,12 +93,13 @@ View(cars_edited)
 
 ###################################################################################################
 # Split Dataset into Training and Testing for our Models
-index <- sample(seq(1, 2), size = nrow(cars_edited), replace = TRUE, prob = c(.8, .2))
-train <- cars_edited[index == 1,]
-test <- cars_edited[index == 2,]
+set.seed(123)
+training.samples <- cars_edited$manufacturer_name %>% createDataPartition(p = 0.8, list = FALSE)
+train.data <- cars_edited[training.samples,]
+test.data <- cars_edited[-training.samples,]
 
-View(train)
-View(test)
+View(train.data)
+View(test.data)
 
 ###################################################################################################
 
