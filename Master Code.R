@@ -87,31 +87,45 @@ View(cars_edited)
 #Investigating Variables:
 ggplot(cars_edited, mapping = aes(y = manufacturer_name)) + geom_histogram(stat ="count") + geom_text(stat = "count", aes(label = after_stat(count)), hjust = -1)
 View(cars_edited %>% count(model_name))
+
 ggplot(cars_edited, mapping = aes(x = transmission)) + geom_bar(stat = "count") + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+
 ggplot(cars_edited, mapping = aes(x = color)) + geom_bar(stat = "count") + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+
 ggplot(cars_edited) + geom_boxplot(mapping = aes(odometer_value))
 ggplot(cars_edited) + geom_histogram(mapping = aes(odometer_value))
+
 View(cars_edited %>% count(year_produced))
 ggplot(cars_edited) + geom_boxplot(mapping = aes(year_produced))
 ggplot(cars_edited) + geom_histogram(mapping = aes(year_produced))
+
 ggplot(cars_edited, aes(x = engine_fuel), stat = "count") + geom_bar(mapping = aes(fill = engine_type))  + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
 ggplot(cars_edited, aes(x = engine_type), stat = "count") + geom_bar()  + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+
 View(cars_edited %>% count(engine_capacity))
 ggplot(cars_edited) + geom_boxplot(mapping = aes(engine_capacity))
 ggplot(cars_edited) + geom_bar(mapping = aes(engine_capacity))
+
 ggplot(cars_edited, mapping = aes(x = body_type), stat = "count") + geom_bar() + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+
 ggplot(cars_edited, mapping = aes(x = drivetrain), stat = "count") + geom_bar() + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+
 View(cars_edited %>% count(price_usd))
 ggplot(cars_edited) + geom_boxplot(mapping = aes(price_usd))
 ggplot(cars_edited) + geom_histogram(mapping = aes(price_usd))
+
 ggplot(cars_edited, mapping = aes(x = is_exchangeable)) + geom_bar(stat = "count") + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+
 ggplot(cars_edited, mapping = aes(x = location_region)) + geom_bar(stat = "count") + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+
 View(cars_edited %>% count(number_of_photos))
 ggplot(cars_edited) + geom_boxplot(mapping = aes(number_of_photos))
 ggplot(cars_edited) + geom_histogram(mapping = aes(number_of_photos))
+
 View(cars_edited %>% count(up_counter))
 ggplot(cars_edited) + geom_boxplot(mapping = aes(up_counter))
 ggplot(cars_edited) + geom_histogram(mapping = aes(up_counter))
+
 View(cars_edited %>% count(duration_listed))
 ggplot(cars_edited) + geom_boxplot(mapping = aes(duration_listed))
 ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
