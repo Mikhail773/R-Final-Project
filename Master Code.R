@@ -16,8 +16,6 @@ library(car)
 #Read our dataset into the cars variable
 cars <- read_csv("cars.csv")
 
-#check the na's in the dataset
-colSums(is.na(cars))
 View(cars) #view the data
 
 ###################################################################################################
@@ -75,6 +73,16 @@ cars_edited <-
 #Recode foreign language into their English meaning (engine_fuel)
 cars_edited <-
   cars_edited %>% mutate(engine_fuel = recode(cars_edited$engine_fuel, 'gas' = "compressed natural gas"))
+
+
+
+#Check the na's in the dataset
+colSums(is.na(cars))
+# NA is in the categorical attribute engine-capacity
+
+# Lets arbitrarily pick 999 to denote NA. (Engine-Capacity is categorical so this can be done)
+cars_edited <-
+  cars_edited %>% mutate(engine_capacity = coalesce(engine_capacity, 999))
 
 # Check for Duplicates and remove them
 cars_edited <- cars_edited %>% distinct()
