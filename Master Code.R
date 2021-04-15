@@ -91,6 +91,15 @@ cars_edited <- cars_edited %>% distinct()
 View(cars_edited)
 
 ###################################################################################################
+# Split Dataset into Training and Testing for our Models
+index <- sample(seq(1, 2), size = nrow(cars_edited), replace = TRUE, prob = c(.8, .2))
+train <- cars_edited[index == 1,]
+test <- cars_edited[index == 2,]
+
+View(train)
+View(test)
+
+###################################################################################################
 
 #Investigating Variables:
 ggplot(cars_edited, mapping = aes(y = manufacturer_name)) + geom_histogram(stat ="count") + geom_text(stat = "count", aes(label = after_stat(count)), hjust = -1)
@@ -245,7 +254,7 @@ model1 <- lm(
   + model_name
   + manufacturer_name
   ,
-  cars_edited
+  train
 )
 summary(model)
 
@@ -265,7 +274,7 @@ model2 <- lm(
   + odometer_value
   + model_name
   ,
-  cars_edited
+  train
 )
 summary(model2)
 
