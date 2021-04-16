@@ -217,16 +217,14 @@ models_sorted <- group_by(cars_edited, model_name)
 View(models_sorted)
 models_sorted_averages <- summarise(models_sorted, average_price_usd = mean(price_usd))
 View(models_sorted_averages)
-models_sorted_averages_with_cnt <- models_sorted_averages %>% mutate(counts = cars_edited %>% count(model_name) %>% select(2))
-View(models_sorted_averages_with_cnt)
+models_sorted_avg_with_cnt <- models_sorted_averages %>% mutate(counts = cars_edited %>% count(model_name) %>% select(2))
+View(models_sorted_avg_with_cnt)
 
-ggplot(cars_edited) + geom_point(aes(y = model_name, x = price_usd))
+models_sorted_averages_with_cnt$counts <- as.numeric(unlist(models_sorted_averages_with_cnt$counts))
 
-model_price <- aov(average_price_usd ~ model_name + counts.n, data = models_sorted_averages_with_cnt)
+model_price <- aov(average_price_usd ~ counts, data = models_sorted_averages_with_cnt)
 summary(model_price)
-#
-TukeyHSD(model_price)
-
+# The popularity of a vehicle does seem to have an impact on the average_price of a vehicle
 
 # (Mikhail Mikhaylov) 8) Bar graph, Two-Way ANOVA/ : What is the average age of each vehicle manufacturer
 # and whether the manufacturer changes how the production year impacts the selling price?
@@ -239,7 +237,7 @@ ggplot(manufacturer_year_averages) + geom_point(aes(x = manufacturer_name, y = a
 
 ggplot(cars_edited) + geom_point(aes(x = year_produced, y = price_usd, color = manufacturer_name))
 
-manufacturer_price <- lm(price_usd ~ manufacturer_name + year_produced, data = cars_edited)
+manufacturer_price <- aov(price_usd ~ manufacturer_name + year_produced, data = cars_edited)
 summary(manufacturer_price)
 vif(manufacturer_price)
 
@@ -264,7 +262,7 @@ model1 <- lm(
   + model_name
   + manufacturer_name
   ,
-  train
+  train.data
 )
 summary(model1)
 
@@ -284,16 +282,16 @@ model2 <- lm(
   + odometer_value
   + model_name
   ,
-  train
+  train.data
 )
 summary(model2)
 
 vif(model2)
 
-modelSVM <- svm(price_usd ~ odometer_value , cars_edited)
+modelSVM <- svm(price_usd ~ odometer_value , train.data)
 summary(modelSVM)
 
-prediction <- predict(model1, test, type= "response")
+prediction <- predict(model1, test.data, type= "response")
 rmse(test$price_usd, prediction)
 
 colnames(cars_edited)
