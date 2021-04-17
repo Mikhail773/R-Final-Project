@@ -31,45 +31,45 @@ cars_edited <- select(cars, -8 & -(12:13) & -(20:29))
 View(cars_edited) #view the data
 
 
-#Recode foreign language into their English meaning (location_region)
-cars_edited <-
-  cars_edited %>% mutate(
-    location_region = recode(
-      cars_edited$location_region,
-      'Брестская обл.' = "Brest Region",
-      'Витебская обл.' = "Vitebsk Region",
-      'Гомельская обл.' = "Gomel Region",
-      'Гродненская обл.' = "Grodno Region",
-      'Минская обл.'  = "Minsk Region",
-      'Могилевская обл.' = "Mogilev Region"
-    )
-  )
-
-#Recode foreign language into their English meaning (manufacturer_name)
-cars_edited <-
-  cars_edited %>% mutate(
-    manufacturer_name = recode(
-      cars_edited$manufacturer_name,
-      'ВАЗ' = "AvtoVAZ",
-      'ГАЗ' = "GAZ",
-      'ЗАЗ' = "ZAZ",
-      'Москвич' = "Moskvitch",
-      'УАЗ'  = "UAZ"
-    )
-  )
-
-#Recode foreign language into their English meaning (model_name)
-cars_edited <-
-  cars_edited %>% mutate(
-    model_name = recode(
-      cars_edited$model_name,
-      'Таврия' = "Tavria",
-      '968м' = "968M",
-      'Соболь' = "Sobol",
-      'Луидор' = "Luidor",
-      'ВИС'  = "VIS"
-    )
-  )
+# #Recode foreign language into their English meaning (location_region)
+# cars_edited <-
+#   cars_edited %>% mutate(
+#     location_region = recode(
+#       cars_edited$location_region,
+#       'Брестская обл.' = "Brest Region",
+#       'Витебская обл.' = "Vitebsk Region",
+#       'Гомельская обл.' = "Gomel Region",
+#       'Гродненская обл.' = "Grodno Region",
+#       'Минская обл.'  = "Minsk Region",
+#       'Могилевская обл.' = "Mogilev Region"
+#     )
+#   )
+# 
+# #Recode foreign language into their English meaning (manufacturer_name)
+# cars_edited <-
+#   cars_edited %>% mutate(
+#     manufacturer_name = recode(
+#       cars_edited$manufacturer_name,
+#       'ВАЗ' = "AvtoVAZ",
+#       'ГАЗ' = "GAZ",
+#       'ЗАЗ' = "ZAZ",
+#       'Москвич' = "Moskvitch",
+#       'УАЗ'  = "UAZ"
+#     )
+#   )
+# 
+# #Recode foreign language into their English meaning (model_name)
+# cars_edited <-
+#   cars_edited %>% mutate(
+#     model_name = recode(
+#       cars_edited$model_name,
+#       'Таврия' = "Tavria",
+#       '968м' = "968M",
+#       'Соболь' = "Sobol",
+#       'Луидор' = "Luidor",
+#       'ВИС'  = "VIS"
+#     )
+#   )
 
 #Recode foreign language into their English meaning (engine_fuel)
 cars_edited <-
