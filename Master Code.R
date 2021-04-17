@@ -208,14 +208,24 @@ ggplot(cars_edited) + geom_point(mapping = aes(x = number_of_photos, y = price_u
 #
 # Finding out model popularity
 
-models_counted <- cars_edited %>% count(model_name) %>% arrange(desc(n)) # Most popular is Passat
+models_counted <- cars_edited %>% count(model_name) %>% arrange(desc(n))
 View(models_counted)
+# Most popular is Passat
+
+# Find price average for each model and appent count to it
 models_sorted <- group_by(cars_edited, model_name)
 View(models_sorted)
 models_sorted_averages <- summarise(models_sorted, average_price_usd = mean(price_usd))
 View(models_sorted_averages)
+
+# Figure out count for each model
 models_sorted_avg_with_cnt <- models_sorted_averages %>% mutate(counts = cars_edited %>% count(model_name) %>% select(2))
 View(models_sorted_avg_with_cnt)
+
+models_sorted_avg_with_cnt$counts <- as.numeric(unlist(models_sorted_avg_with_cnt$counts))
+
+model_price <- aov(average_price_usd ~ counts, data = models_sorted_avg_with_cnt)
+summary(model_price)
 
 # The popularity of a vehicle does seem to have an impact on the average_price of a vehicle
 
@@ -230,9 +240,10 @@ ggplot(manufacturer_year_averages) + geom_point(aes(x = manufacturer_name, y = a
 
 ggplot(cars_edited) + geom_point(aes(x = year_produced, y = price_usd, color = manufacturer_name))
 
-manufacturer_price <- aov(price_usd ~ manufacturer_name + year_produced, data = cars_edited)
+manufacturer_price <- aov(price_usd ~ manufacturer_name * year_produced, data = cars_edited)
 summary(manufacturer_price)
-vif(manufacturer_price)
+
+# The manufacturer does change how the production year affects the selling price
 
 # (Everyone) Goal:
 # Gain insights into which variables have the largest impact on selling price of a vehicle.
