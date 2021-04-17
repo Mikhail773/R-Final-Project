@@ -72,11 +72,8 @@ View(cars_edited) #view the data
 #   )
 
 #Recode foreign language into their English meaning (engine_fuel)
-cars_edited <-
-  cars_edited %>% mutate(engine_fuel = recode(cars_edited$engine_fuel, 'gas' = "compressed natural gas"))
-
-
-
+cars_edited <- cars_edited %>% mutate(engine_fuel = dplyr::recode(engine_fuel,'gas' = "compressed natural gas"))
+  
 #Check the na's in the dataset
 colSums(is.na(cars))
 # NA is in the categorical attribute engine-capacity
@@ -220,10 +217,6 @@ View(models_sorted_averages)
 models_sorted_avg_with_cnt <- models_sorted_averages %>% mutate(counts = cars_edited %>% count(model_name) %>% select(2))
 View(models_sorted_avg_with_cnt)
 
-models_sorted_averages_with_cnt$counts <- as.numeric(unlist(models_sorted_averages_with_cnt$counts))
-
-model_price <- aov(average_price_usd ~ counts, data = models_sorted_averages_with_cnt)
-summary(model_price)
 # The popularity of a vehicle does seem to have an impact on the average_price of a vehicle
 
 # (Mikhail Mikhaylov) 8) Bar graph, Two-Way ANOVA/ : What is the average age of each vehicle manufacturer
@@ -382,3 +375,4 @@ detach("package:datasets", unload = TRUE)  # For base
 
 # Clear console
 cat("\014")
+
