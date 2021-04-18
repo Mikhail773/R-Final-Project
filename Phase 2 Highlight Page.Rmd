@@ -20,14 +20,63 @@ This will be to show our graphs
 ```
 
 
-## Dataset used
-description of our dataset
+## Dataset Used Cars Market in Belarus
+Kaggle dataset: https://www.kaggle.com/lepchenkov/usedcarscatalog%22%20/
 
-## Questions 
-Questions that we want answered from our dataset
+The dataset we have chosen will be utilized in this project to understand what effect certain variables have on the price point at which cars are sold at. Analyzing cars that are for sale would aid in gaining understanding on what contributes to how a used car would be priced and would allow for predicting the market price of a used car in Belarus. 
+
+
+## Dataset Description
+Dataset has 30 attributes with 38,531 samples. The data has a mixture of Categorical (Nominal) and Numerical (Interval, Ratio) data. The attributes are Manufacturer Name, Model Name, Transmission Type, Color, Odometer Value, Year Produced, Engine Fuel, Engine Has Gas, Engine Type, Engine Capacity, Body Type, Has Warranty, (State)Condition of the Vehicle, Drivetrain Type, Price in USD, Exchangeability, Location Region, Number of Photos, Number of Up Counts, Features {0,1,2,3,4,5,6,7,8,9}, and Duration Listed. 
+
+## Questions and Goals
+
+QUESTIONS:
+
+What impact does a region have on price? 
+  Box Plot, One-Way Anova 
+
+What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?   
+  Pie Graph/Box Plot, One-Way Anova/ Kruskal-Wallis rank sum test 
+
+
+What is the relationship between odometer and price?  
+  Scatter Plot/Box-Plot, Simple Regression Analysis 
+
+Does the number of photos a vehicle has impact the selling price?  
+  Scatter Plot, Simple Regression Analysis  
+
+Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?  
+  Scatter Plot, Simple Regression Analysis
+  
+Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?  
+  Mosaic Plot/ Chi-Squared Test, Two-Way ANOVA /Kruskal-Wallis rank sum test
+  
+What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?    
+  Dplyr count with group_by to find the most popular model by region.         One-Way ANOVA Test/ Kruskal-Wallis rank sum test. 
+
+What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?    
+  Bar graph, Two-Way ANOVA/ Kruskal-Wallis rank sum test 
+
+GOALS:
+
+Gain insights into which variables have the largest impact on selling price of a vehicle. 
+
+Create a predictive model based on insights gained from analyzing the impact of variables on the selling price of a vehicle. 
+
 
 ## Data cleaning
-How we cleaned our data
+
+Check for null values, duplicates, and outliers.   
+  The null values (10 entries) were kept since they served as a crucial distinguishment for the Electric Vehicles in the data. 
+
+Duplicate entries were identified and removed from the dataset. 41 such duplicate entries existed.
+
+Any data that is either unused or provides seemingly no value to our project will be scrapped from our cleaned final dataset to be used.  
+  Attributes referring to features in the car were removed due a lack of information and consistency in the attributes data.  
+  “Engine Has Gas”, “Has Warranty”, and “State” attributes were removed due to a lack of diversity in the entries.  
+
+To determine what to do with the outliers we identified the outliers for each continuous variable and created a separate dataset with no outliers. In order to gauge the impact of our outliers we will have to run our analytics through the dataset with the outliers and the dataset without the outliers. 
 
 ## Graphs
 What graphs we chose to solve our questions and why
