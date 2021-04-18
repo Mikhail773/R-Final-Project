@@ -295,7 +295,16 @@ vif(model2)
 modelSVM <- svm(price_usd ~ odometer_value , train.data)
 summary(modelSVM)
 
-prediction <- predict(model1, test.data, type= "response")
+cars_edited[training.samples,] %>% select(model_name) %>% View()
+cars_edited[-training.samples,] %>% select(model_name) %>% View()
+
+(test.data$model_name %in% train.data$model_name) %>% as.tibble() %>% View()
+
+subset(cars_edited, cars_edited[training.samples] %in% cars_edited[-training.samples,])
+
+levels(train.data$model_name) <- c(levels(test.data$model_name, newFactorLevel))
+
+prediction <- predict(model1, tests.data, type= "response")
 rmse(test$price_usd, prediction)
 
 colnames(cars_edited)
