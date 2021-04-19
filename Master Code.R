@@ -9,6 +9,7 @@ library(e1071) #SVM
 library(car) #predict
 library(Metrics) #rmse
 library(caret) #partiiton
+library(multcomp) #glht
 ###################################################################################################
 #
 # Evaluate the data
@@ -201,9 +202,36 @@ ggplot(cars_edited) + geom_point(mapping = aes(x = number_of_photos, y = price_u
 # (Reid Hoffmeier) 4) Scatter Plot, Simple Regression Analysis: Does the number of photos a vehicle has impact the selling price?
 #
 # (Matthew Lane) 5) Scatter Plot, Simple Regression Analysis: Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
-#
+
+#regression analysis
+ggplot (cars_edited, aes( x =up_counter, y=price_usd)) + geom_point() + stat_smooth()
+#Correlation
+cor(cars_edited$up_counter, cars_edited$price_usd)
+up_counter_on_price <- lm (price_usd ~ up_counter, data = cars_edited)
+#The estimated regression line equation can be written as 
+#price_usd = 6493.05 + 8.569*up_counter
+#The Intercept (b0) is 6493.05.  It can be interpreted as the predicted price in usd for an up counter of 0.  This means that if there are no up counters used, the average sales price would be around $6493.05.
+#The regression beta coefficient for the variable up_counter (b1) is 8.569.  For an up_counter value of 100, Average sales price would be 6493.05+8.569*100, $7349.95, and increase of $857.00.
+ggplot (cars_edited, aes(x=up_counter, y=price_usd)) + geom_point() + stat_smooth(method=lm)
+summary(up_counter_on_price)
+#Confidence Interval
+confint(up_counter_on_price)
+sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
+
 # (Matthew Lane) 6) Mosaic Plot/ Chi-Squared Test, Two-Way ANOVA: Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
-#
+
+#Mosaic Plot
+mosaicplot( table(cars_edited$body_type, cars_edited$engine_type), shade=TRUE, las=2, main="Engine Type vs Body Type")
+#Aov3
+body_engine_type_on_price.aov3 <- aov(price_usd ~ engine_type + body_type, data = cars_edited)
+summary(body_engine_type_on_price.aov3)
+model.tables(body_engine_type_on_price.aov3, type="means", se = TRUE)
+#Tukey HSD
+TukeyHSD(body_engine_type_on_price.aov3)
+#General Linear Hypothesis
+summary(glht(body_engine_type_on_price.aov3, lincft = mcp))
+#Limousine and pickup trucks appear to have the only impact
+
 # (Mikhail Mikhaylov) 7) Dplyr count with group_by, One-Way Anova: What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
 #
 # Finding out model popularity
