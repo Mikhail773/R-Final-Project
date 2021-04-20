@@ -173,17 +173,44 @@ pre code {
 
 <p>This will be to show our code</p>
 <p>This will be to show our graphs</p>
-<div id="dataset-used" class="section level2">
-<h2>Dataset used</h2>
-<p>description of our dataset</p>
+<div id="dataset-used-cars-market-in-belarus" class="section level2">
+<h2>Dataset Used Cars Market in Belarus</h2>
+<p>Kaggle dataset: <a href="https://www.kaggle.com/lepchenkov/usedcarscatalog%22%20/" class="uri">https://www.kaggle.com/lepchenkov/usedcarscatalog%22%20/</a> The dataset that was chosen was obtained from Kaggle and was scraped by one Kirill Lepchenkov with the help of an associate named Vasily Kachalko who aided in parsing the data. This will be utilized to understand the effect certain characteristics have on the price point at which cars in Belarus are sold at. Analyzing cars that are for sale is beneficial in gaining an understanding on what contributes to how a used car would be priced and would allow for predicting the market price of a used car in Belarus.</p>
 </div>
-<div id="questions" class="section level2">
-<h2>Questions</h2>
-<p>Questions that we want answered from our dataset</p>
+<div id="dataset-description" class="section level2">
+<h2>Dataset Description</h2>
+<p>This dataset has 30 attributes with 38,531 samples. Of these attributes there is a mixture of Categorical (Nominal) as well as Numerical (Interval, Ratio) data. The attributes included in the dataset are Manufacturer Name, Model Name, Transmission Type, Color, Odometer Value, Year Produced, Engine Fuel, Engine Has Gas(Boolean), Engine Type, Engine Capacity, Body Type, Has Warranty(Boolean), (State) Condition of the Vehicle, Drivetrain Type, Price in USD, Exchangeability (Boolean), Location Region, Number of Photos, Number of Up Counts, Features {0,1,2,3,4,5,6,7,8,9}, and Duration Listed.</p>
 </div>
 <div id="data-cleaning" class="section level2">
 <h2>Data cleaning</h2>
-<p>How we cleaned our data</p>
+<p>Check for null values, duplicates, and outliers.<br />
+The null values (10 entries) were kept since they served as a crucial distinguishment for the Electric Vehicles in the data.</p>
+<p>Duplicate entries were identified and removed from the dataset. 41 such duplicate entries existed.</p>
+<p>Any data that is either unused or provides seemingly no value to our project will be scrapped from our cleaned final dataset to be used.<br />
+Attributes referring to features in the car were removed due a lack of information and consistency in the attributes data.<br />
+“Engine Has Gas”, “Has Warranty”, and “State” attributes were removed due to a lack of diversity in the entries.</p>
+<p>To determine what to do with the outliers we identified the outliers for each continuous variable and created a separate dataset with no outliers. In order to gauge the impact of our outliers we will have to run our analytics through the dataset with the outliers and the dataset without the outliers.</p>
+</div>
+<div id="questions-and-goals" class="section level2">
+<h2>Questions and Goals</h2>
+<p>What impact does a region have on price? Box Plot, One-Way Anova</p>
+<p>What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?<br />
+Pie Graph/Box Plot, One-Way Anova/ Kruskal-Wallis rank sum test</p>
+<p>What is the relationship between odometer and price?<br />
+Scatter Plot/Box-Plot, Simple Regression Analysis</p>
+<p>Does the number of photos a vehicle has impact the selling price?<br />
+Scatter Plot, Simple Regression Analysis</p>
+<p>Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?<br />
+Scatter Plot, Simple Regression Analysis</p>
+<p>Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?<br />
+Mosaic Plot/ Chi-Squared Test, Two-Way ANOVA /Kruskal-Wallis rank sum test</p>
+<p>What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?<br />
+Dplyr count with group_by to find the most popular model by region. One-Way ANOVA Test/ Kruskal-Wallis rank sum test.</p>
+<p>What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?<br />
+Bar graph, Two-Way ANOVA/ Kruskal-Wallis rank sum test</p>
+<p>GOALS:</p>
+<p>Gain insights into which variables have the largest impact on selling price of a vehicle.</p>
+<p>Create a predictive model based on insights gained from analyzing the impact of variables on the selling price of a vehicle.</p>
 </div>
 <div id="graphs" class="section level2">
 <h2>Graphs</h2>
