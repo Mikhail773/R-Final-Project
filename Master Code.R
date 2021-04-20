@@ -243,7 +243,9 @@ ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
 
 
 ###################################################################################################
+#
 # Plotting Graphs to investigate relationships
+#
 
 # 1) Graph to show the amount of cars(by manufacturer name) in a region BALLOON PLOT
 ggplot(cars_edited, aes(location_region, manufacturer_name)) + geom_count()
@@ -287,16 +289,25 @@ ggplot(cars_edited) + geom_point(mapping = aes(x = number_of_photos, y = price_u
 #
 # Answering Questions
 #
-# (Emma Doyle) 1) Box Plots, Bar Graph, ANOVA?: What impact does a region have on price?
-#what impact does region have on price?
-#regions: Minsk, Gomel, Brest, Vitebsk, Mogilev, Grodno
 
-#aggregating the data of price to region to get the mean of prices
+
+###################################################################################################
+#
+# (Emma Doyle) 
+# 
+# 1) 
+#
+# Box Plots, Bar Graph, ANOVA?: What impact does a region have on price?
+# What impact does region have on price?
+# Regions: Minsk, Gomel, Brest, Vitebsk, Mogilev, Grodno
+#
+
+#Aggregating the data of price to region to get the mean of prices
 #per region
 regionPriceDF <- Cars_No_Outliers %>% select(location_region, price_usd)
 aggregatedRegions <- aggregate(regionPriceDF, 
                                by = list(regionPriceDF$location_region), FUN = mean)
-#creating pie chart to display data
+#Creating pie chart to display data
 pie(aggregatedRegions$price_usd,aggregatedRegions$Group.1)
 
 #one-way anova
@@ -311,11 +322,20 @@ res.aov <- aov(regionPriceDF$price_usd ~ regionPriceDF$location_region,
                data = regionPriceDF)
 # Summary of the analysis
 summary(res.aov)
+
+###################################################################################################
 #
-# (Emma Doyle) 2) Pie Graph/Box Plot, One-Way Anova?: What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
+# (Emma Doyle) 
+# 
+# 2)
 #
-#What is the distribution of manufacturers and whether manufacturers have a 
-#significant impact on the asking price of a vehicle?   
+# Pie Graph/Box Plot, One-Way Anova?: 
+#
+# What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
+#
+# What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?   
+#
+
 #price/manufacturers
 manuPriceDF <- Cars_No_Outliers %>% select(manufacturer_name, price_usd)
 aggregatedManufacturers <- aggregate(manuPriceDF, 
