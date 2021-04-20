@@ -9,7 +9,7 @@ library(e1071) #SVM
 library(car) #predict
 library(Metrics) #rmse
 library(caret) #partiiton
-library(multcomp) #glht
+#library(multcomp) #glht
 ###################################################################################################
 #
 # Evaluate the data
