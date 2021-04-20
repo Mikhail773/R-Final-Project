@@ -72,10 +72,10 @@ View(cars_edited) #view the data
 #     )
 #   )
 
-#Recode foreign language into their English meaning (engine_fuel)
+# Recode foreign language into their English meaning (engine_fuel)
 cars_edited <- cars_edited %>% mutate(engine_fuel = dplyr::recode(engine_fuel,'gas' = "compressed natural gas"))
   
-#Check the na's in the dataset
+# Check the na's in the dataset
 colSums(is.na(cars))
 # NA is in the categorical attribute engine-capacity
 
@@ -86,11 +86,13 @@ cars_edited <-
 # Check for Duplicates and remove them
 cars_edited <- cars_edited %>% distinct()
 
-#view the changes the mutate made
+# View the changes the mutate made
 View(cars_edited)
 
 ###################################################################################################
+# 
 # Split Dataset into Training and Testing for our Models
+#
 set.seed(123)
 training.samples <- cars_edited$manufacturer_name %>% createDataPartition(p = 0.8, list = FALSE)
 train.data <- cars_edited[training.samples,]
@@ -148,7 +150,6 @@ View(test.data)
 # 20) Bar graph Is exchangeable: Counting the number of cars that are exchangeable
 # 21) Bar graph Location region: Count the number of cars in a region
 #
-
 
 
 # 1) Getting the unique entries for all columns and displaying how often they appear
@@ -246,6 +247,32 @@ ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
 #
 # Plotting Graphs to investigate relationships
 #
+#
+# Scatter Plot:
+# 2) Price of a car according to its year produced
+# 6) Price of a car according to it's year produced AND body type
+# 7) Price of a car according to it's Odometer AND engine fuel
+# 10) Price of a car according to it's number of photos incl. engine fuel
+#
+# Balloon Plot:
+# 1) The amount of cars(by manufacturer name) in a region
+#
+# Line Graph:
+# 3) the amount of cars(density) according to it's price
+#
+# Bar Graph:
+# 4) The number of cars in specific colors(10 red cars, 8 blue cars etc.) by region
+#
+# Box Plot:
+# 8) The outliers with body type and price
+#
+#
+# Misc: 
+# Line 287 Group cars by manufacturer, and get it's mean price
+# Line 302 Group by car body type and get it's mean price
+# 9) The correlation between car body type, price, AND engine fuel
+#
+
 
 # 1) Graph to show the amount of cars(by manufacturer name) in a region BALLOON PLOT
 ggplot(cars_edited, aes(location_region, manufacturer_name)) + geom_count()
