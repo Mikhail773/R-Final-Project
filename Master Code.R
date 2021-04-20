@@ -194,9 +194,59 @@ ggplot(cars_edited) + geom_point(mapping = aes(x = number_of_photos, y = price_u
 # Answering Questions
 #
 # (Emma Doyle) 1) Box Plots, Bar Graph, ANOVA?: What impact does a region have on price?
+#what impact does region have on price?
+#regions: Minsk, Gomel, Brest, Vitebsk, Mogilev, Grodno
+
+#aggregating the data of price to region to get the mean of prices
+#per region
+regionPriceDF <- Cars_No_Outliers %>% select(location_region, price_usd)
+aggregatedRegions <- aggregate(regionPriceDF, 
+                               by = list(regionPriceDF$location_region), FUN = mean)
+#creating pie chart to display data
+pie(aggregatedRegions$price_usd,aggregatedRegions$Group.1)
+
+#one-way anova
+group_by(regionPriceDF, regionPriceDF$location_region) %>%
+  summarise(
+    count = n(),
+    mean = mean(price_usd, na.rm = TRUE),
+    sd = sd(price_usd, na.rm = TRUE)
+  )
+# Compute the analysis of variance
+res.aov <- aov(regionPriceDF$price_usd ~ regionPriceDF$location_region,
+               data = regionPriceDF)
+# Summary of the analysis
+summary(res.aov)
 #
 # (Emma Doyle) 2) Pie Graph/Box Plot, One-Way Anova?: What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
 #
+#What is the distribution of manufacturers and whether manufacturers have a 
+#significant impact on the asking price of a vehicle?   
+#price/manufacturers
+manuPriceDF <- Cars_No_Outliers %>% select(manufacturer_name, price_usd)
+aggregatedManufacturers <- aggregate(manuPriceDF, 
+                             by = list(manuPriceDF$manufacturer_name), FUN = mean)
+#one-way anova
+manuSumm <- group_by(manuPriceDF, manuPriceDF$manufacturer_name) %>%
+  summarise(
+    count = n(),
+    mean = mean(price_usd, na.rm = TRUE),
+    sd = sd(price_usd, na.rm = TRUE)
+  )
+# Compute the analysis of variance
+res.aovTwo <- aov(manuPriceDF$price_usd ~ manuPriceDF$manufacturer_name,
+               data = manuPriceDF)
+summary(res.aovTwo)
+#making bar graph
+#showing the correlation between particular manufacturers and price
+#therefore not all manufacturers are needed to show some brands 
+# can charge more than others.
+aggManu<-data.frame(aggregatedManufacturers)
+aggManu$manufacturer_name <- NULL
+aggManuSmall <- aggManu[-c(50, 51, 52, 53, 54, 55, 40, 41, 42, 43, 44, 45, 46, 
+                           47, 48, 49, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 
+                           36, 37, 38, 39, 25, 24, 23, 22, 21, 20, 9 ,10, 19, 2),]
+barplot(aggManuSmall$price_usd~aggManuSmall$Group.1, xlab="Manufacturer", ylab="Price")
 # (Reid Hoffmeier) 3) Scatter Plot/Box-Plot, Simple Regression Analysis: What is the relationship between odometer and price?
 #
 # (Reid Hoffmeier) 4) Scatter Plot, Simple Regression Analysis: Does the number of photos a vehicle has impact the selling price?
