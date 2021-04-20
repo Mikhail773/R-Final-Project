@@ -100,51 +100,145 @@ View(train.data)
 View(test.data)
 
 ###################################################################################################
+#
+# Investigating Variables: Viewing the data with our modifications 
+#
+# VIEWS:
+#
+# 2) Show unique car model names and how many there are
+# 7) Show unique years produced for cars, and how many there are
+# 12) Show unique engine types and how many there are
+# 17) Number of cars with same price
+# 22) Posts with number of photos per car
+# 25) The count unique up time for each car
+# 28) The count of unique Duration listed for each car
+#
+#
+# BOX PLOTS:
+# 
+# 5) Odometer Value
+# 8) year produced
+# 13) Engine capacity
+# 18) Price USD
+# 23) Number of photos
+# 26) Up counter
+# 29) Duration listed
+#
+# 
+# DATA SKEWED:
+# 
+# 6) Odometer Value
+# 9) Year produced
+# 14) Engine capacity
+# 19) Price USD
+# 24) Number of photos
+# 27) Up counter
+# 30) Duration listed
+# 
+# 
+# Other Graphs:
+#
+# 1) Getting the unique entries for all columns and displaying how often they appear
+# 3) Plotting the number of cars with automatic or mechanical transmissions
+# 4) Plotting cars by color and how many there are
+# 10) Graph to show what cars use what engine type (type of fuel)
+# 11) graph to show engine type (Electric, Diesel, Gasoline)
+# 15) Bar graph Body type: count how many cars have the same body type
+# 16) Bar graph Drive train: How many cars have certain drive trains
+# 20) Bar graph Is exchangeable: Counting the number of cars that are exchangeable
+# 21) Bar graph Location region: Count the number of cars in a region
+#
 
-#Investigating Variables:
+
+
+# 1) Getting the unique entries for all columns and displaying how often they appear
 ggplot(cars_edited, mapping = aes(y = manufacturer_name)) + geom_histogram(stat ="count") + geom_text(stat = "count", aes(label = after_stat(count)), hjust = -1)
+
+# 2) A table to show unique car model names and how many there are
 View(cars_edited %>% count(model_name))
 
+# 3) Plotting the number of cars with automatic or mechanical transmissions
 ggplot(cars_edited, mapping = aes(x = transmission)) + geom_bar(stat = "count") + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
 
+# 4) Plotting cars by color and how many there are
 ggplot(cars_edited, mapping = aes(x = color)) + geom_bar(stat = "count") + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
 
+# 5) Box plot Odometer Value: investigating how our outliers look with our modifications 
 ggplot(cars_edited) + geom_boxplot(mapping = aes(odometer_value))
+
+# 6) Histogram Odometer Value: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(mapping = aes(odometer_value))
 
+# 7) A table to show unique years produced for cars, and how many there are
 View(cars_edited %>% count(year_produced))
+
+# 8) Box plot year produced: investigating how our outliers look with our modifications
 ggplot(cars_edited) + geom_boxplot(mapping = aes(year_produced))
+
+# 9) Histogram Year produced: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(mapping = aes(year_produced))
 
+# 10) Graph to show what cars use what engine type (type of fuel)
 ggplot(cars_edited, aes(x = engine_fuel), stat = "count") + geom_bar(mapping = aes(fill = engine_type))  + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+
+# 11) graph to show engine type (Electric, Diesel, Gasoline)
 ggplot(cars_edited, aes(x = engine_type), stat = "count") + geom_bar()  + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
 
+# 12) A table to show unique engine types and how many there are
 View(cars_edited %>% count(engine_capacity))
+
+# 13) Box plot Engine capacity: investigating how our outliers look with our modifications
 ggplot(cars_edited) + geom_boxplot(mapping = aes(engine_capacity))
+
+# 14) Bar graph Engine capacity: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_bar(mapping = aes(engine_capacity))
 
+# 15) Bar graph Body type: count how many cars have the same body type
 ggplot(cars_edited, mapping = aes(x = body_type), stat = "count") + geom_bar() + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
 
+# 16) Bar graph Drive train: How many cars have certain drive trains
 ggplot(cars_edited, mapping = aes(x = drivetrain), stat = "count") + geom_bar() + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
 
+# 17) Number of cars with same price
 View(cars_edited %>% count(price_usd))
+
+# 18) Box plot Price USD: investigating how our outliers look with our modifications
 ggplot(cars_edited) + geom_boxplot(mapping = aes(price_usd))
+
+# 19) Histogram Price USD: Check to see how skewed the data is
 ggplot(cars_edited) + geom_histogram(mapping = aes(price_usd))
 
+# 20) Bar graph Is exchangeable: Counting the number of cars that are exchangeable
 ggplot(cars_edited, mapping = aes(x = is_exchangeable)) + geom_bar(stat = "count") + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
 
+# 21) Bar graph Location region: Count the number of cars in a region
 ggplot(cars_edited, mapping = aes(x = location_region)) + geom_bar(stat = "count") + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
 
+# 22) View: posts with number of photos per car
 View(cars_edited %>% count(number_of_photos))
+
+# 23) Box plot Number of photos: investigating how our outliers look with our modifications
 ggplot(cars_edited) + geom_boxplot(mapping = aes(number_of_photos))
+
+# 24) Histogram Number of photos: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(mapping = aes(number_of_photos))
 
+# 25) View Up counter: The count unique up time for each car
 View(cars_edited %>% count(up_counter))
+
+# 26) Box plot Up counter: investigating how our outliers look with our modifications
 ggplot(cars_edited) + geom_boxplot(mapping = aes(up_counter))
+
+# 27) Histogram Up counter: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(mapping = aes(up_counter))
 
+# 28) View Duration listed: The count of unique Duration listed for each car
 View(cars_edited %>% count(duration_listed))
+
+# 29) Box plot Duration listed: investigating how our outliers look with our modifications
 ggplot(cars_edited) + geom_boxplot(mapping = aes(duration_listed))
+
+# 30) Histogram Duration listed: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
 
 
