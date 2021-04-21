@@ -405,7 +405,6 @@ summary(odometer_on_price)
 confint(odometer_on_price)
 sigma(odometer_on_price)*100/mean(cars_edited$price_usd)
 
-#
 # 4) Scatter Plot, Simple Regression Analysis: 
 # Does the number of photos a vehicle has impact the selling price?
 #
