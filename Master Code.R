@@ -395,10 +395,24 @@ barplot(aggManuSmall$price_usd~aggManuSmall$Group.1, xlab="Manufacturer", ylab="
 #
 # 3) Scatter Plot/Box-Plot, Simple Regression Analysis: 
 # What is the relationship between odometer and price?
+ggplot (cars_edited, aes( x =odometer, y=price_usd)) + geom_point() + stat_smooth()
+cor(cars_edited$odometer, cars_edited$price_usd)
+odometer_on_price <- lm (price_usd ~ odometer, data = cars_edited)
+ggplot (cars_edited, aes(x=odometer, y=price_usd)) + geom_point() + stat_smooth(method=lm)
+summary(odometer_on_price)
+confint(odometer_on_price)
+sigma(odometer_on_price)*100/mean(cars_edited$price_usd)
 #
 # 4) Scatter Plot, Simple Regression Analysis: 
 # Does the number of photos a vehicle has impact the selling price?
 #
+ggplot (cars_edited, aes( x =number_of_photos, y=price_usd)) + geom_point() + stat_smooth()
+cor(cars_edited$number_of_photos, cars_edited$price_usd)
+number_of_photos_on_price <- lm (price_usd ~ number_of_photos, data = cars_edited)
+ggplot (cars_edited, aes(x=number_of_photos, y=price_usd)) + geom_point() + stat_smooth(method=lm)
+summary(number_of_photos_on_price)
+confint(number_of_photos_on_price)
+sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
 #
 # (Matthew Lane) 
 # 
