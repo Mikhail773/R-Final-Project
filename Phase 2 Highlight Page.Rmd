@@ -41,7 +41,7 @@ To clean the dataset it was vital to open the csv file and investigate the types
 ```{r}
 cars <- read_csv("cars.csv")
 
-View(cars) #view the data
+head(cars, 20)
 
 ```
 
@@ -51,10 +51,15 @@ Afterwords, it was crucial to obtain a quick summary of our dataset in order to 
 summary(cars)
 ```
 
+From the summary we clearly see that engine_has_gas, has_warranty, and state have very little variability and for that reason they will be removed from the dataset. Furthermore, upon researching the features attribute it was uncovered that the data had severe inconsistencies(according to the creator) and for that reason will be removed. Therefore, we run the select command in order to remove these attributes.
 
-From the summary we clearly see that engine_has_gas, has_warranty, and state have very little variability and for that reason they will be removed from the dataset. Furthermore, upon reasearching the features attribute it was uncovered that the data had severe inconsistencies(according to the creator) and for that reason will be removed.
+```{r}
+cars_edited <- select(cars, -8 & -(12:13) & -(20:29))
+head(cars_edited, 20)
+```
 
-Now to proceed with cleaning and analyzation we need a more robust knowledge of our datset. For this reason it is vital to understand the type of data for each attribute. Therefore, we must create a table to organize all our attributes.
+
+Now to proceed with cleaning and analyzation we need a more robust knowledge of our dataset. For this reason it is vital to understand the type of data for each attribute. Therefore, we must create a table to organize all our attributes.
 
 
 Column|Details|Value/(Units)|Data Type
@@ -78,13 +83,27 @@ R|Up Counter|How many times the sample has been upped in the catalog to raise it
 S|Duration Listed|Number of days the car is listed in the catalog|Continuous
 
 
-From summary we notice that there exists 10 NA's in the attribute engine-capacity. Our understanding of vehicles informs us that engine-capacity is a categorical data-type and as such NA is crucial to our understanding of the data. The NA values serve as a distinguishment for the Electric Vehicles in the data. 
-a
+From summary we notice that there exists 10 NA's in the attribute engine-capacity. Our understanding of vehicles informs us that engine-capacity is a categorical data-type and as such NA is crucial to our understanding of the data. The NA values serve as a distinguishment for the Electric Vehicles in the data. For the sake of future analyzation is will serve great use to replace our NA values with an arbitrary number. For our sake we choose to change NA values to 999. Thus we do the following:
+
+```{r}
+summary(cars_edited$engine_capacity)
+cars_edited <- cars_edited %>% mutate(engine_capacity = coalesce(engine_capacity, 999))
+summary(cars_edited$engine_capacity)
+```
+
+Once the unneccesary attributes were filtered and the NA's were accounted for it was of incredible importance to investigate for duplicate samples. The code for doing this procedure was as follows:
+```{r}
+count(cars_edited)
+sum(duplicated(cars_edited))
+which(duplicated(cars_edited))
+cars_edited <- cars_edited %>% distinct()
+count(cars_edited)
+```   
+
 Duplicate entries were identified and removed from the dataset. 41 such duplicate entries existed.
 
-Any data that is either unused or provides seemingly no value to our project will be scrapped from our cleaned final dataset to be used.  
-  Attributes referring to features in the car were removed due a lack of information and consistency in the attributes data.  
-  “Engine Has Gas”, “Has Warranty”, and “State” attributes were removed due to a lack of diversity in the entries.  
+Splitting the DATA!!
+
 
 To determine what to do with the outliers we identified the outliers for each continuous variable and created a separate dataset with no outliers. In order to gauge the impact of our outliers we will have to run our analytics through the dataset with the outliers and the dataset without the outliers. 
 

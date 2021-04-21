@@ -208,7 +208,37 @@ pre code {
 ##   duration_listed = col_double()
 ## )
 ## ℹ Use `spec()` for the full column specifications.</code></pre>
-<pre class="r"><code>View(cars) #view the data</code></pre>
+<pre class="r"><code>head(cars, 20)</code></pre>
+<pre><code>## # A tibble: 20 x 30
+##    manufacturer_name model_name transmission color  odometer_value year_produced
+##    &lt;chr&gt;             &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;           &lt;dbl&gt;         &lt;dbl&gt;
+##  1 Subaru            Outback    automatic    silver         190000          2010
+##  2 Subaru            Outback    automatic    blue           290000          2002
+##  3 Subaru            Forester   automatic    red            402000          2001
+##  4 Subaru            Impreza    mechanical   blue            10000          1999
+##  5 Subaru            Legacy     automatic    black          280000          2001
+##  6 Subaru            Outback    automatic    silver         132449          2011
+##  7 Subaru            Forester   automatic    black          318280          1998
+##  8 Subaru            Legacy     automatic    silver         350000          2004
+##  9 Subaru            Outback    automatic    grey           179000          2010
+## 10 Subaru            Forester   automatic    silver         571317          1999
+## 11 Subaru            Forester   mechanical   other          280000          2003
+## 12 Subaru            Tribeca    automatic    grey           256000          2008
+## 13 Subaru            Forester   mechanical   other          321000          2002
+## 14 Subaru            Justy      mechanical   red             49999          2001
+## 15 Subaru            Outback    automatic    brown          154685          2011
+## 16 Subaru            Outback    automatic    black          163219          2004
+## 17 Subaru            Outback    automatic    other          318650          2005
+## 18 Subaru            Impreza    mechanical   blue           191000          2005
+## 19 Subaru            Forester   automatic    silver         179000          2014
+## 20 Subaru            Forester   automatic    black          159000          2013
+## # … with 24 more variables: engine_fuel &lt;chr&gt;, engine_has_gas &lt;lgl&gt;,
+## #   engine_type &lt;chr&gt;, engine_capacity &lt;dbl&gt;, body_type &lt;chr&gt;,
+## #   has_warranty &lt;lgl&gt;, state &lt;chr&gt;, drivetrain &lt;chr&gt;, price_usd &lt;dbl&gt;,
+## #   is_exchangeable &lt;lgl&gt;, location_region &lt;chr&gt;, number_of_photos &lt;dbl&gt;,
+## #   up_counter &lt;dbl&gt;, feature_0 &lt;lgl&gt;, feature_1 &lt;lgl&gt;, feature_2 &lt;lgl&gt;,
+## #   feature_3 &lt;lgl&gt;, feature_4 &lt;lgl&gt;, feature_5 &lt;lgl&gt;, feature_6 &lt;lgl&gt;,
+## #   feature_7 &lt;lgl&gt;, feature_8 &lt;lgl&gt;, feature_9 &lt;lgl&gt;, duration_listed &lt;dbl&gt;</code></pre>
 <p>Afterwords, it was crucial to obtain a quick summary of our dataset in order to investigate the steps needed to clean the dataset. This was done with the following line of code:</p>
 <pre class="r"><code>summary(cars)</code></pre>
 <pre><code>##  manufacturer_name   model_name        transmission          color          
@@ -275,8 +305,37 @@ pre code {
 ##                  3rd Qu.:  91.00  
 ##                  Max.   :2232.00  
 ## </code></pre>
-<p>From the summary we clearly see that engine_has_gas, has_warranty, and state have very little variability and for that reason they will be removed from the dataset. Furthermore, upon reasearching the features attribute it was uncovered that the data had severe inconsistencies(according to the creator) and for that reason will be removed.</p>
-<p>Now to proceed with cleaning and analyzation we need a more robust knowledge of our datset. For this reason it is vital to understand the type of data for each attribute. Therefore, we must create a table to organize all our attributes.</p>
+<p>From the summary we clearly see that engine_has_gas, has_warranty, and state have very little variability and for that reason they will be removed from the dataset. Furthermore, upon researching the features attribute it was uncovered that the data had severe inconsistencies(according to the creator) and for that reason will be removed. Therefore, we run the select command in order to remove these attributes.</p>
+<pre class="r"><code>cars_edited &lt;- select(cars, -8 &amp; -(12:13) &amp; -(20:29))
+head(cars_edited, 20)</code></pre>
+<pre><code>## # A tibble: 20 x 17
+##    manufacturer_name model_name transmission color  odometer_value year_produced
+##    &lt;chr&gt;             &lt;chr&gt;      &lt;chr&gt;        &lt;chr&gt;           &lt;dbl&gt;         &lt;dbl&gt;
+##  1 Subaru            Outback    automatic    silver         190000          2010
+##  2 Subaru            Outback    automatic    blue           290000          2002
+##  3 Subaru            Forester   automatic    red            402000          2001
+##  4 Subaru            Impreza    mechanical   blue            10000          1999
+##  5 Subaru            Legacy     automatic    black          280000          2001
+##  6 Subaru            Outback    automatic    silver         132449          2011
+##  7 Subaru            Forester   automatic    black          318280          1998
+##  8 Subaru            Legacy     automatic    silver         350000          2004
+##  9 Subaru            Outback    automatic    grey           179000          2010
+## 10 Subaru            Forester   automatic    silver         571317          1999
+## 11 Subaru            Forester   mechanical   other          280000          2003
+## 12 Subaru            Tribeca    automatic    grey           256000          2008
+## 13 Subaru            Forester   mechanical   other          321000          2002
+## 14 Subaru            Justy      mechanical   red             49999          2001
+## 15 Subaru            Outback    automatic    brown          154685          2011
+## 16 Subaru            Outback    automatic    black          163219          2004
+## 17 Subaru            Outback    automatic    other          318650          2005
+## 18 Subaru            Impreza    mechanical   blue           191000          2005
+## 19 Subaru            Forester   automatic    silver         179000          2014
+## 20 Subaru            Forester   automatic    black          159000          2013
+## # … with 11 more variables: engine_fuel &lt;chr&gt;, engine_type &lt;chr&gt;,
+## #   engine_capacity &lt;dbl&gt;, body_type &lt;chr&gt;, drivetrain &lt;chr&gt;, price_usd &lt;dbl&gt;,
+## #   is_exchangeable &lt;lgl&gt;, location_region &lt;chr&gt;, number_of_photos &lt;dbl&gt;,
+## #   up_counter &lt;dbl&gt;, duration_listed &lt;dbl&gt;</code></pre>
+<p>Now to proceed with cleaning and analyzation we need a more robust knowledge of our dataset. For this reason it is vital to understand the type of data for each attribute. Therefore, we must create a table to organize all our attributes.</p>
 <table>
 <colgroup>
 <col width="22%" />
@@ -397,11 +456,35 @@ pre code {
 </tr>
 </tbody>
 </table>
-<p>From summary we notice that there exists 10 NA’s in the attribute engine-capacity. Our understanding of vehicles informs us that engine-capacity is a categorical data-type and as such NA is crucial to our understanding of the data. The NA values serve as a distinguishment for the Electric Vehicles in the data.</p>
+<p>From summary we notice that there exists 10 NA’s in the attribute engine-capacity. Our understanding of vehicles informs us that engine-capacity is a categorical data-type and as such NA is crucial to our understanding of the data. The NA values serve as a distinguishment for the Electric Vehicles in the data. For the sake of future analyzation is will serve great use to replace our NA values with an arbitrary number. For our sake we choose to change NA values to 999. Thus we do the following:</p>
+<pre class="r"><code>summary(cars_edited$engine_capacity)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
+##   0.200   1.600   2.000   2.055   2.300   8.000      10</code></pre>
+<pre class="r"><code>cars_edited &lt;- cars_edited %&gt;% mutate(engine_capacity = coalesce(engine_capacity, 999))
+summary(cars_edited$engine_capacity)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   0.200   1.600   2.000   2.314   2.300 999.000</code></pre>
+<p>Once the unneccesary attributes were filtered and the NA’s were accounted for it was of incredible importance to investigate for duplicate samples. The code for doing this procedure was as follows:</p>
+<pre class="r"><code>count(cars_edited)</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##       n
+##   &lt;int&gt;
+## 1 38531</code></pre>
+<pre class="r"><code>sum(duplicated(cars_edited))</code></pre>
+<pre><code>## [1] 41</code></pre>
+<pre class="r"><code>which(duplicated(cars_edited))</code></pre>
+<pre><code>##  [1]  5768  6557  9997 11381 11705 12811 17339 18185 27961 31994 32018 32019
+## [13] 32023 32026 32029 32035 32037 32054 32127 32129 32180 32181 32296 32297
+## [25] 32299 32300 32302 32303 32305 32307 32308 32309 32311 32313 32314 32316
+## [37] 32317 32318 32319 32322 32326</code></pre>
+<pre class="r"><code>cars_edited &lt;- cars_edited %&gt;% distinct()
+count(cars_edited)</code></pre>
+<pre><code>## # A tibble: 1 x 1
+##       n
+##   &lt;int&gt;
+## 1 38490</code></pre>
 <p>Duplicate entries were identified and removed from the dataset. 41 such duplicate entries existed.</p>
-<p>Any data that is either unused or provides seemingly no value to our project will be scrapped from our cleaned final dataset to be used.<br />
-Attributes referring to features in the car were removed due a lack of information and consistency in the attributes data.<br />
-“Engine Has Gas”, “Has Warranty”, and “State” attributes were removed due to a lack of diversity in the entries.</p>
+<p>Splitting the DATA!!</p>
 <p>To determine what to do with the outliers we identified the outliers for each continuous variable and created a separate dataset with no outliers. In order to gauge the impact of our outliers we will have to run our analytics through the dataset with the outliers and the dataset without the outliers.</p>
 </div>
 <div id="questions-and-goals" class="section level2">
