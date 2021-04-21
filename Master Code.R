@@ -388,11 +388,24 @@ aggManuSmall <- aggManu[-c(50, 51, 52, 53, 54, 55, 40, 41, 42, 43, 44, 45, 46,
                            47, 48, 49, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 
                            36, 37, 38, 39, 25, 24, 23, 22, 21, 20, 9 ,10, 19, 2),]
 barplot(aggManuSmall$price_usd~aggManuSmall$Group.1, xlab="Manufacturer", ylab="Price")
-# (Reid Hoffmeier) 3) Scatter Plot/Box-Plot, Simple Regression Analysis: What is the relationship between odometer and price?
+
+###################################################################################################
 #
-# (Reid Hoffmeier) 4) Scatter Plot, Simple Regression Analysis: Does the number of photos a vehicle has impact the selling price?
+# (Reid Hoffmeier) 
 #
-# (Matthew Lane) 5) Scatter Plot, Simple Regression Analysis: Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
+# 3) Scatter Plot/Box-Plot, Simple Regression Analysis: 
+# What is the relationship between odometer and price?
+#
+# 4) Scatter Plot, Simple Regression Analysis: 
+# Does the number of photos a vehicle has impact the selling price?
+#
+#
+# (Matthew Lane) 
+# 
+# 5) Scatter Plot, Simple Regression Analysis:
+# Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
+#
+
 
 #regression analysis
 ggplot (cars_edited, aes( x =up_counter, y=price_usd)) + geom_point() + stat_smooth()
@@ -423,10 +436,15 @@ TukeyHSD(body_engine_type_on_price.aov3)
 summary(glht(body_engine_type_on_price.aov3, lincft = mcp))
 #Limousine and pickup trucks appear to have the only impact
 
-# (Mikhail Mikhaylov) 7) Dplyr count with group_by, One-Way Anova: What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
+###################################################################################################
+# 
+# (Mikhail Mikhaylov)
+# 7) Dplyr count with group_by, One-Way Anova:
+# What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
 #
-# Finding out model popularity
 
+
+# Finding out model popularity
 models_counted <- cars_edited %>% count(model_name) %>% arrange(desc(n))
 View(models_counted)
 # Most popular is Passat
@@ -448,8 +466,14 @@ summary(model_price)
 
 # The popularity of a vehicle does seem to have an impact on the average_price of a vehicle
 
-# (Mikhail Mikhaylov) 8) Bar graph, Two-Way ANOVA/ : What is the average age of each vehicle manufacturer
-# and whether the manufacturer changes how the production year impacts the selling price?
+###################################################################################################
+#
+# (Mikhail Mikhaylov)
+# 8) Bar graph, Two-Way ANOVA/ :
+# What is the average age of each vehicle manufacturer?
+# 
+# And whether the manufacturer changes how the production year impacts the selling price?
+#
 
 manufacturer_year <- group_by(cars_edited, manufacturer_name)
 manufacturer_year_averages <- summarise(manufacturer_year, average = mean(year_produced, na.rm = TRUE))
@@ -464,9 +488,12 @@ summary(manufacturer_price)
 
 # The manufacturer does change how the production year affects the selling price
 
+###################################################################################################
+#
 # (Everyone) Goal:
 # Gain insights into which variables have the largest impact on selling price of a vehicle.
 # Create a predictive model based on these insights to create a predictive model.
+#
 
 model1 <- lm(
   price_usd ~ odometer_value
@@ -534,7 +561,9 @@ colnames(cars_edited)
 # [16] "up_counter"        "duration_listed"
 
 ##############################################################################################################
+#
 # Considering Outliers
+#
 
 # Thresholds for Outliers
 Outlier_List_Fences <- function(df) {
