@@ -183,8 +183,221 @@ pre code {
 </div>
 <div id="data-cleaning" class="section level2">
 <h2>Data cleaning</h2>
-<p>Check for null values, duplicates, and outliers.<br />
-The null values (10 entries) were kept since they served as a crucial distinguishment for the Electric Vehicles in the data.</p>
+<p>To clean the dataset it was vital to open the csv file and investigate the types of attributes and samples that were given. To get a quick glance of the data we first open the csv file as follows:</p>
+<pre class="r"><code>cars &lt;- read_csv(&quot;cars.csv&quot;)</code></pre>
+<pre><code>## 
+## ── Column specification ────────────────────────────────────────────────────────
+## cols(
+##   .default = col_logical(),
+##   manufacturer_name = col_character(),
+##   model_name = col_character(),
+##   transmission = col_character(),
+##   color = col_character(),
+##   odometer_value = col_double(),
+##   year_produced = col_double(),
+##   engine_fuel = col_character(),
+##   engine_type = col_character(),
+##   engine_capacity = col_double(),
+##   body_type = col_character(),
+##   state = col_character(),
+##   drivetrain = col_character(),
+##   price_usd = col_double(),
+##   location_region = col_character(),
+##   number_of_photos = col_double(),
+##   up_counter = col_double(),
+##   duration_listed = col_double()
+## )
+## ℹ Use `spec()` for the full column specifications.</code></pre>
+<pre class="r"><code>View(cars) #view the data</code></pre>
+<p>Afterwords, it was crucial to obtain a quick summary of our dataset in order to investigate the steps needed to clean the dataset. This was done with the following line of code:</p>
+<pre class="r"><code>summary(cars)</code></pre>
+<pre><code>##  manufacturer_name   model_name        transmission          color          
+##  Length:38531       Length:38531       Length:38531       Length:38531      
+##  Class :character   Class :character   Class :character   Class :character  
+##  Mode  :character   Mode  :character   Mode  :character   Mode  :character  
+##                                                                             
+##                                                                             
+##                                                                             
+##                                                                             
+##  odometer_value    year_produced  engine_fuel        engine_has_gas 
+##  Min.   :      0   Min.   :1942   Length:38531       Mode :logical  
+##  1st Qu.: 158000   1st Qu.:1998   Class :character   FALSE:37184    
+##  Median : 250000   Median :2003   Mode  :character   TRUE :1347     
+##  Mean   : 248865   Mean   :2003                                     
+##  3rd Qu.: 325000   3rd Qu.:2009                                     
+##  Max.   :1000000   Max.   :2019                                     
+##                                                                     
+##  engine_type        engine_capacity  body_type         has_warranty   
+##  Length:38531       Min.   :0.200   Length:38531       Mode :logical  
+##  Class :character   1st Qu.:1.600   Class :character   FALSE:38082    
+##  Mode  :character   Median :2.000   Mode  :character   TRUE :449      
+##                     Mean   :2.055                                     
+##                     3rd Qu.:2.300                                     
+##                     Max.   :8.000                                     
+##                     NA&#39;s   :10                                        
+##     state            drivetrain          price_usd     is_exchangeable
+##  Length:38531       Length:38531       Min.   :    1   Mode :logical  
+##  Class :character   Class :character   1st Qu.: 2100   FALSE:24945    
+##  Mode  :character   Mode  :character   Median : 4800   TRUE :13586    
+##                                        Mean   : 6640                  
+##                                        3rd Qu.: 8990                  
+##                                        Max.   :50000                  
+##                                                                       
+##  location_region    number_of_photos   up_counter      feature_0      
+##  Length:38531       Min.   : 1.000   Min.   :   1.00   Mode :logical  
+##  Class :character   1st Qu.: 5.000   1st Qu.:   2.00   FALSE:29725    
+##  Mode  :character   Median : 8.000   Median :   5.00   TRUE :8806     
+##                     Mean   : 9.649   Mean   :  16.31                  
+##                     3rd Qu.:12.000   3rd Qu.:  16.00                  
+##                     Max.   :86.000   Max.   :1861.00                  
+##                                                                       
+##  feature_1       feature_2       feature_3       feature_4      
+##  Mode :logical   Mode :logical   Mode :logical   Mode :logical  
+##  FALSE:15135     FALSE:29907     FALSE:27904     FALSE:29227    
+##  TRUE :23396     TRUE :8624      TRUE :10627     TRUE :9304     
+##                                                                 
+##                                                                 
+##                                                                 
+##                                                                 
+##  feature_5       feature_6       feature_7       feature_8      
+##  Mode :logical   Mode :logical   Mode :logical   Mode :logical  
+##  FALSE:24811     FALSE:31943     FALSE:28369     FALSE:22528    
+##  TRUE :13720     TRUE :6588      TRUE :10162     TRUE :16003    
+##                                                                 
+##                                                                 
+##                                                                 
+##                                                                 
+##  feature_9       duration_listed  
+##  Mode :logical   Min.   :   0.00  
+##  FALSE:16206     1st Qu.:  23.00  
+##  TRUE :22325     Median :  59.00  
+##                  Mean   :  80.58  
+##                  3rd Qu.:  91.00  
+##                  Max.   :2232.00  
+## </code></pre>
+<p>From the summary we clearly see that engine_has_gas, has_warranty, and state have very little variability and for that reason they will be removed from the dataset. Furthermore, upon reasearching the features attribute it was uncovered that the data had severe inconsistencies(according to the creator) and for that reason will be removed.</p>
+<p>Now to proceed with cleaning and analyzation we need a more robust knowledge of our datset. For this reason it is vital to understand the type of data for each attribute. Therefore, we must create a table to organize all our attributes.</p>
+<table>
+<colgroup>
+<col width="22%" />
+<col width="27%" />
+<col width="27%" />
+<col width="22%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Column</th>
+<th align="center">Details</th>
+<th align="center">Value/(Units)</th>
+<th align="right">Data Type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">A</td>
+<td align="center">Manufacturer Name</td>
+<td align="center">Name of vehicle manufacturer</td>
+<td align="right">Nominal</td>
+</tr>
+<tr class="even">
+<td align="left">B</td>
+<td align="center">Model Name</td>
+<td align="center">Name of vehicle model</td>
+<td align="right">Nominal</td>
+</tr>
+<tr class="odd">
+<td align="left">C</td>
+<td align="center">Transmission</td>
+<td align="center">Type of the transmission</td>
+<td align="right">Nominal</td>
+</tr>
+<tr class="even">
+<td align="left">D</td>
+<td align="center">Color</td>
+<td align="center">Vehicle body color</td>
+<td align="right">Nominal</td>
+</tr>
+<tr class="odd">
+<td align="left">E</td>
+<td align="center">Odometer Value</td>
+<td align="center">Vehicle odometer value in km</td>
+<td align="right">Continuous</td>
+</tr>
+<tr class="even">
+<td align="left">F</td>
+<td align="center">Year Produced</td>
+<td align="center">The year the car was produced</td>
+<td align="right">Continuous</td>
+</tr>
+<tr class="odd">
+<td align="left">G</td>
+<td align="center">Engine Fuel</td>
+<td align="center">Fuel type of the engine</td>
+<td align="right">Nominal</td>
+</tr>
+<tr class="even">
+<td align="left">I</td>
+<td align="center">Engine Type</td>
+<td align="center">Vehicle engine type</td>
+<td align="right">Nominal</td>
+</tr>
+<tr class="odd">
+<td align="left">J</td>
+<td align="center">Engine Capacity</td>
+<td align="center">The capacity of the engine in liters</td>
+<td align="right">Nominal</td>
+</tr>
+<tr class="even">
+<td align="left">K</td>
+<td align="center">Body Type</td>
+<td align="center">Type of the body (hatchback, sedan, etc.)</td>
+<td align="right">Nominal</td>
+</tr>
+<tr class="odd">
+<td align="left">M</td>
+<td align="center">Drivetrain</td>
+<td align="center">Front/rear/all drivetrain</td>
+<td align="right">Nominal</td>
+</tr>
+<tr class="even">
+<td align="left">N</td>
+<td align="center">Price USD</td>
+<td align="center">Price of a cas as listed in the catalog in USD</td>
+<td align="right">Continuous</td>
+</tr>
+<tr class="odd">
+<td align="left">O</td>
+<td align="center">Exchangeable</td>
+<td align="center">If True the owner of the car is ready to exchange this car to other cars with little or no additional payment</td>
+<td align="right">Nominal</td>
+</tr>
+<tr class="even">
+<td align="left">P</td>
+<td align="center">Location Region</td>
+<td align="center">The region in Belarus where the car is listed for sale</td>
+<td align="right">Nominal</td>
+</tr>
+<tr class="odd">
+<td align="left">Q</td>
+<td align="center">Number of Photos</td>
+<td align="center">Number of photos the cas has</td>
+<td align="right">Continous</td>
+</tr>
+<tr class="even">
+<td align="left">R</td>
+<td align="center">Up Counter</td>
+<td align="center">How many times the sample has been upped in the catalog to raise its position</td>
+<td align="right">Continuous</td>
+</tr>
+<tr class="odd">
+<td align="left">S</td>
+<td align="center">Duration Listed</td>
+<td align="center">Number of days the car is listed in the catalog</td>
+<td align="right">Continuous</td>
+</tr>
+</tbody>
+</table>
+<p>From summary we notice that there exists 10 NA’s in the attribute engine-capacity. Our understanding of vehicles informs us that engine-capacity is a categorical data-type and as such NA is crucial to our understanding of the data. The NA values serve as a distinguishment for the Electric Vehicles in the data.</p>
 <p>Duplicate entries were identified and removed from the dataset. 41 such duplicate entries existed.</p>
 <p>Any data that is either unused or provides seemingly no value to our project will be scrapped from our cleaned final dataset to be used.<br />
 Attributes referring to features in the car were removed due a lack of information and consistency in the attributes data.<br />

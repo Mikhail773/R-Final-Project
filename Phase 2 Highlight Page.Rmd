@@ -7,6 +7,11 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(e1071) #SVM
+library(car) #predict
+library(Metrics) #rmse
+library(caret) #partition
 ```
 
 This will be to show our code
@@ -31,10 +36,50 @@ This dataset has 30 attributes with 38,531 samples. Of these attributes there is
 
 ## Data cleaning
 
+To clean the dataset it was vital to open the csv file and investigate the types of attributes and samples that were given. To get a quick glance of the data we first open the csv file as follows:
 
-Check for null values, duplicates, and outliers.   
-  The null values (10 entries) were kept since they served as a crucial distinguishment for the Electric Vehicles in the data. 
+```{r}
+cars <- read_csv("cars.csv")
 
+View(cars) #view the data
+
+```
+
+Afterwords, it was crucial to obtain a quick summary of our dataset in order to investigate the steps needed to clean the dataset. This was done with the following line of code:
+
+```{r}
+summary(cars)
+```
+
+
+From the summary we clearly see that engine_has_gas, has_warranty, and state have very little variability and for that reason they will be removed from the dataset. Furthermore, upon reasearching the features attribute it was uncovered that the data had severe inconsistencies(according to the creator) and for that reason will be removed.
+
+Now to proceed with cleaning and analyzation we need a more robust knowledge of our datset. For this reason it is vital to understand the type of data for each attribute. Therefore, we must create a table to organize all our attributes.
+
+
+Column|Details|Value/(Units)|Data Type
+:---|:---:|:---:|---:
+A|Manufacturer Name|Name of vehicle manufacturer|Nominal   
+B|Model Name|Name of vehicle model|Nominal
+C|Transmission|Type of the transmission|Nominal
+D|Color| Vehicle body color| Nominal
+E|Odometer Value|Vehicle odometer value in km|Continuous
+F|Year Produced|The year the car was produced|Continuous
+G|Engine Fuel|Fuel type of the engine|Nominal
+I|Engine Type|Vehicle engine type|Nominal
+J|Engine Capacity|The capacity of the engine in liters|Nominal
+K|Body Type|Type of the body (hatchback, sedan, etc.)|Nominal
+M|Drivetrain|Front/rear/all drivetrain|Nominal
+N|Price USD| Price of a cas as listed in the catalog in USD|Continuous
+O|Exchangeable|If True the owner of the car is ready to exchange this car to other cars with little or no additional payment|Nominal
+P|Location Region|The region in Belarus where the car is listed for sale|Nominal
+Q|Number of Photos|Number of photos the cas has|Continous
+R|Up Counter|How many times the sample has been upped in the catalog to raise its position|Continuous
+S|Duration Listed|Number of days the car is listed in the catalog|Continuous
+
+
+From summary we notice that there exists 10 NA's in the attribute engine-capacity. Our understanding of vehicles informs us that engine-capacity is a categorical data-type and as such NA is crucial to our understanding of the data. The NA values serve as a distinguishment for the Electric Vehicles in the data. 
+a
 Duplicate entries were identified and removed from the dataset. 41 such duplicate entries existed.
 
 Any data that is either unused or provides seemingly no value to our project will be scrapped from our cleaned final dataset to be used.  
@@ -87,3 +132,4 @@ Our answers to our questions based on the graphs
 ## Completed
 
 ## To do list
+

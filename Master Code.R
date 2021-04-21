@@ -520,6 +520,16 @@ summary(manufacturer_price)
 # Create a predictive model based on these insights to create a predictive model.
 #
 
+model <- train(
+  price_usd ~ ., data = train.data, method = "lm",
+  trControl = trainControl(method = "cv"))
+
+summary(model)
+  
+  
+  
+
+
 model1 <- lm(
   price_usd ~ odometer_value
   + year_produced
