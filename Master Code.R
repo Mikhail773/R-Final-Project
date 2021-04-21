@@ -405,7 +405,8 @@ barplot(aggManuSmall$price_usd~aggManuSmall$Group.1, xlab="Manufacturer", ylab="
 # 5) Scatter Plot, Simple Regression Analysis:
 # Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
 #
-
+# Yes, the number of times a vehicle has been upped raises the selling price (It's linear)
+#
 
 #regression analysis
 ggplot (cars_edited, aes( x =up_counter, y=price_usd)) + geom_point() + stat_smooth()
@@ -422,7 +423,16 @@ summary(up_counter_on_price)
 confint(up_counter_on_price)
 sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
 
-# (Matthew Lane) 6) Mosaic Plot/ Chi-Squared Test, Two-Way ANOVA: Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
+###################################################################################################
+#
+# (Matthew Lane) 
+# 6) Mosaic Plot/ Chi-Squared Test, Two-Way ANOVA: 
+# Relationship between Engine Type and Body Type? 
+# 
+# 
+#
+# What is the impact of Engine Type and Body Type on the selling price?
+#
 
 #Mosaic Plot
 mosaicplot( table(cars_edited$body_type, cars_edited$engine_type), shade=TRUE, las=2, main="Engine Type vs Body Type")
@@ -435,6 +445,7 @@ TukeyHSD(body_engine_type_on_price.aov3)
 #General Linear Hypothesis
 summary(glht(body_engine_type_on_price.aov3, lincft = mcp))
 #Limousine and pickup trucks appear to have the only impact
+
 
 ###################################################################################################
 # 
