@@ -9,6 +9,7 @@ library(e1071) #SVM
 library(car) #predict
 library(Metrics) #rmse
 library(caret) #partiiton
+library(MASS) #stepwise
 #library(multcomp) #glht
 ###################################################################################################
 #
@@ -84,6 +85,7 @@ cars_edited <-
   cars_edited %>% mutate(engine_capacity = coalesce(engine_capacity, 999))
 
 # Check for Duplicates and remove them
+which(duplicated(cars_edited))
 cars_edited <- cars_edited %>% distinct()
 
 # View the changes the mutate made
@@ -395,13 +397,14 @@ barplot(aggManuSmall$price_usd~aggManuSmall$Group.1, xlab="Manufacturer", ylab="
 #
 # 3) Scatter Plot/Box-Plot, Simple Regression Analysis: 
 # What is the relationship between odometer and price?
-ggplot (cars_edited, aes( x =odometer, y=price_usd)) + geom_point() + stat_smooth()
-cor(cars_edited$odometer, cars_edited$price_usd)
-odometer_on_price <- lm (price_usd ~ odometer, data = cars_edited)
-ggplot (cars_edited, aes(x=odometer, y=price_usd)) + geom_point() + stat_smooth(method=lm)
+ggplot (cars_edited, aes( x =odometer_value, y=price_usd)) + geom_point() + stat_smooth()
+cor(cars_edited$odometer_value, cars_edited$price_usd)
+odometer_on_price <- lm (price_usd ~ odometer_value, data = cars_edited)
+ggplot (cars_edited, aes(x=odometer_value, y=price_usd)) + geom_point() + stat_smooth(method=lm)
 summary(odometer_on_price)
 confint(odometer_on_price)
 sigma(odometer_on_price)*100/mean(cars_edited$price_usd)
+
 #
 # 4) Scatter Plot, Simple Regression Analysis: 
 # Does the number of photos a vehicle has impact the selling price?
@@ -413,7 +416,7 @@ ggplot (cars_edited, aes(x=number_of_photos, y=price_usd)) + geom_point() + stat
 summary(number_of_photos_on_price)
 confint(number_of_photos_on_price)
 sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
-#
+
 # (Matthew Lane) 
 # 
 # 5) Scatter Plot, Simple Regression Analysis:
@@ -521,13 +524,12 @@ summary(manufacturer_price)
 #
 
 model <- train(
-  price_usd ~ ., data = train.data, method = "lm",
-  trControl = trainControl(method = "cv"))
+  price_usd ~ ., data = train.data, method = "lm",family="binomial")
 
 summary(model)
   
-  
-  
+step.model <- model %>% stepAIC(trace = FALSE)
+coef(step.model)
 
 
 model1 <- lm(
