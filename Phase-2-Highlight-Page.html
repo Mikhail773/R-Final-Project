@@ -173,8 +173,37 @@ pre code {
 
 <p>This will be to show our code</p>
 <p>This will be to show our graphs</p>
-<div id="dataset-used-cars-market-in-belarus" class="section level2">
-<h2>Dataset Used Cars Market in Belarus</h2>
+<div id="abstract-description-of-the-project-and-the-findings" class="section level1">
+<h1>Abstract: Description of the project and the findings</h1>
+</div>
+<div id="introduction-overview-of-the-problemsgoals-and-how-they-will-be-solved" class="section level1">
+<h1>Introduction: Overview of the problems/goals and how they will be solved</h1>
+</div>
+<div id="initial-questions-and-goals" class="section level1">
+<h1>Initial Questions and Goals</h1>
+<p>What impact does a region have on price? Box Plot, One-Way Anova</p>
+<p>What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?<br />
+Pie Graph/Box Plot, One-Way Anova/ Kruskal-Wallis rank sum test</p>
+<p>What is the relationship between odometer and price?<br />
+Scatter Plot/Box-Plot, Simple Regression Analysis</p>
+<p>Does the number of photos a vehicle has impact the selling price?<br />
+Scatter Plot, Simple Regression Analysis</p>
+<p>Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?<br />
+Scatter Plot, Simple Regression Analysis</p>
+<p>Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?<br />
+Mosaic Plot/ Chi-Squared Test, Two-Way ANOVA /Kruskal-Wallis rank sum test</p>
+<p>What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?<br />
+Dplyr count with group_by to find the most popular model by region. One-Way ANOVA Test/ Kruskal-Wallis rank sum test.</p>
+<p>What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?<br />
+Bar graph, Two-Way ANOVA/ Kruskal-Wallis rank sum test</p>
+<p>GOALS:</p>
+<p>Gain insights into which variables have the largest impact on selling price of a vehicle.</p>
+<p>Create a predictive model based on insights gained from analyzing the impact of variables on the selling price of a vehicle.</p>
+</div>
+<div id="dataset-source-description-cleaning-and-other-things-relation-to-the-dataset" class="section level1">
+<h1>Dataset: Source, Description, Cleaning, and other things relation to the dataset</h1>
+<div id="dataset-source" class="section level2">
+<h2>Dataset Source</h2>
 <p>Kaggle dataset: <a href="https://www.kaggle.com/lepchenkov/usedcarscatalog%22%20/" class="uri">https://www.kaggle.com/lepchenkov/usedcarscatalog%22%20/</a> The dataset that was chosen was obtained from Kaggle and was scraped by one Kirill Lepchenkov with the help of an associate named Vasily Kachalko who aided in parsing the data. This will be utilized to understand the effect certain characteristics have on the price point at which cars in Belarus are sold at. Analyzing cars that are for sale is beneficial in gaining an understanding on what contributes to how a used car would be priced and would allow for predicting the market price of a used car in Belarus.</p>
 </div>
 <div id="dataset-description" class="section level2">
@@ -182,7 +211,7 @@ pre code {
 <p>This dataset has 30 attributes with 38,531 samples. Of these attributes there is a mixture of Categorical (Nominal) as well as Numerical (Interval, Ratio) data. The attributes included in the dataset are Manufacturer Name, Model Name, Transmission Type, Color, Odometer Value, Year Produced, Engine Fuel, Engine Has Gas(Boolean), Engine Type, Engine Capacity, Body Type, Has Warranty(Boolean), (State) Condition of the Vehicle, Drivetrain Type, Price in USD, Exchangeability (Boolean), Location Region, Number of Photos, Number of Up Counts, Features {0,1,2,3,4,5,6,7,8,9}, and Duration Listed.</p>
 </div>
 <div id="data-cleaning" class="section level2">
-<h2>Data cleaning</h2>
+<h2>Data Cleaning</h2>
 <p>To clean the dataset it was vital to open the csv file and investigate the types of attributes and samples that were given. To get a quick glance of the data we first open the csv file as follows:</p>
 <pre class="r"><code>cars &lt;- read_csv(&quot;cars.csv&quot;)</code></pre>
 <pre><code>## 
@@ -484,43 +513,46 @@ count(cars_edited)</code></pre>
 ##   &lt;int&gt;
 ## 1 38490</code></pre>
 <p>Duplicate entries were identified and removed from the dataset. 41 such duplicate entries existed.</p>
-<p>Splitting the DATA!!</p>
+</div>
+<div id="dataset-splitting" class="section level2">
+<h2>Dataset Splitting</h2>
+<p><em>Splitting the DATA!!</em></p>
+</div>
+<div id="dataset-outliers" class="section level2">
+<h2>Dataset Outliers</h2>
 <p>To determine what to do with the outliers we identified the outliers for each continuous variable and created a separate dataset with no outliers. In order to gauge the impact of our outliers we will have to run our analytics through the dataset with the outliers and the dataset without the outliers.</p>
 </div>
-<div id="questions-and-goals" class="section level2">
-<h2>Questions and Goals</h2>
-<p>What impact does a region have on price? Box Plot, One-Way Anova</p>
-<p>What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?<br />
-Pie Graph/Box Plot, One-Way Anova/ Kruskal-Wallis rank sum test</p>
-<p>What is the relationship between odometer and price?<br />
-Scatter Plot/Box-Plot, Simple Regression Analysis</p>
-<p>Does the number of photos a vehicle has impact the selling price?<br />
-Scatter Plot, Simple Regression Analysis</p>
-<p>Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?<br />
-Scatter Plot, Simple Regression Analysis</p>
-<p>Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?<br />
-Mosaic Plot/ Chi-Squared Test, Two-Way ANOVA /Kruskal-Wallis rank sum test</p>
-<p>What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?<br />
-Dplyr count with group_by to find the most popular model by region. One-Way ANOVA Test/ Kruskal-Wallis rank sum test.</p>
-<p>What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?<br />
-Bar graph, Two-Way ANOVA/ Kruskal-Wallis rank sum test</p>
-<p>GOALS:</p>
-<p>Gain insights into which variables have the largest impact on selling price of a vehicle.</p>
-<p>Create a predictive model based on insights gained from analyzing the impact of variables on the selling price of a vehicle.</p>
 </div>
-<div id="graphs" class="section level2">
-<h2>Graphs</h2>
-<p>What graphs we chose to solve our questions and why</p>
+<div id="data-analysis-and-modeling" class="section level1">
+<h1>Data Analysis and Modeling:</h1>
+<div id="visualitions-used-to-analyze-data" class="section level2">
+<h2>Visualitions used to analyze data</h2>
 </div>
-<div id="results" class="section level2">
-<h2>Results</h2>
-<p>Our answers to our questions based on the graphs</p>
+<div id="ml-techniques-to-solve-questions-and-goals-and-why-they-were-used" class="section level2">
+<h2>ML techniques to solve questions and Goals and why they were used</h2>
+<div id="describe-the-different-ways-you-tried-to-answer-the-questions-and-goals" class="section level3">
+<h3>Describe the different ways you tried to answer the questions and goals</h3>
 </div>
-<div id="completed" class="section level2">
-<h2>Completed</h2>
 </div>
-<div id="to-do-list" class="section level2">
-<h2>To do list</h2>
+<div id="how-did-you-reach-your-conclusions" class="section level2">
+<h2>How did you reach your conclusions?</h2>
+<p>What graphs we chose to solve our questions and why Our answers to our questions based on the graphs</p>
+</div>
+</div>
+<div id="final-outcomes-and-analysis" class="section level1">
+<h1>Final outcomes and Analysis</h1>
+<div id="what-are-the-results-you-obtained-about-the-data" class="section level2">
+<h2>What are the results you obtained about the data?</h2>
+</div>
+<div id="compare-results-obtained-using-different-ml-methods" class="section level2">
+<h2>Compare results obtained using different ML methods</h2>
+</div>
+<div id="what-are-the-answers-for-the-proposed-questions" class="section level2">
+<h2>What are the answers for the proposed questions?</h2>
+</div>
+<div id="what-are-the-justifications-for-your-answers" class="section level2">
+<h2>What are the justifications for your answers?</h2>
+</div>
 </div>
 
 
