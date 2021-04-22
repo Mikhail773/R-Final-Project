@@ -29,7 +29,7 @@ View(cars) #view the data
 #Removing unnecessary columns from cars. Store that data in cars_edited
 # -(19) is a column that shows the number of times a car has been upped. This column not descriptive and has been removed
 # -(20:29) are boolean columns for various features. There is no description of what these features are and for that reason they have been omitted.
-cars_edited <- select(cars, -8 & -(12:13) & -(20:29))
+cars_edited <- dplyr::select(cars, -8 & -(12:13) & -(20:29))
 View(cars_edited) #view the data
 
 
@@ -607,7 +607,7 @@ step.model$xlevels[["model_name"]] <- union(step.model$xlevels[["model_name"]], 
 vif(model1)
 prediction <- step.model %>% predict(test.data)
 prediction %>% as.tibble()
-mean(prediction == test.data$price_usd)
+sigma(prediction)/mean(test.data$price_usd)
 rmse(test.data$price_usd, prediction)
 
 colnames(cars_edited)
