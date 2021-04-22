@@ -30,7 +30,7 @@ This will be to show our graphs
 # Introduction: Overview of the problems/goals and how they will be solved
 
 
-# Initial Questions and Goals
+# Initial Questions
 
 What impact does a region have on price? 
   Box Plot, One-Way Anova 
@@ -57,7 +57,7 @@ What is the most popular model and whether we can conclude that the popularity o
 What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?    
   Bar graph, Two-Way ANOVA/ Kruskal-Wallis rank sum test 
 
-GOALS:
+## GOALS:
 
 Gain insights into which variables have the largest impact on selling price of a vehicle. 
 
@@ -163,13 +163,143 @@ To determine what to do with the outliers we identified the outliers for each co
 What graphs we chose to solve our questions and why
 Our answers to our questions based on the graphs
 
+Q: What impact does a region have on price? 
+ 
+Graphs used:
+How these graphs helped us solve the problem:
+
+
+Q: What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
+
+Graphs used:
+How these graphs helped us solve the problem:
+
+
+Q: What is the relationship between odometer and price?
+
+Graphs used:
+How these graphs helped us solve the problem:
+
+
+Q: Does the number of photos a vehicle has impact the selling price? 
+
+Graphs used:
+How these graphs helped us solve the problem:
+
+
+Q: Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price? 
+
+Graphs used:
+How these graphs helped us solve the problem:
+
+
+Q: Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
+
+Graphs used:
+How these graphs helped us solve the problem:
+
+
+Q: What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
+
+Graphs used:
+How these graphs helped us solve the problem:
+
+
+Q: What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?
+
+Graphs used:
+How these graphs helped us solve the problem:
+
+
 # Final outcomes and Analysis
+Answer the goal here:
 
 ## What are the results you obtained about the data?
 
 
 ## Compare results obtained using different ML methods
 
+
 ## What are the answers for the proposed questions?
 
+Q: What impact does a region have on price? 
+ 
+A:
+
+
+Q: What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
+
+A:
+
+
+Q: What is the relationship between odometer and price?
+
+A:
+
+
+Q: Does the number of photos a vehicle has impact the selling price? 
+
+A:
+
+
+Q: Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price? 
+
+A:
+
+
+Q: Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
+
+A:
+
+
+Q: What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
+
+A:
+
+
+Q: What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?
+
+A:
+
 ## What are the justifications for your answers?
+How the analysis of the graphs lead to the answer:
+
+Q: What impact does a region have on price? 
+ 
+Justification:
+
+
+Q: What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
+
+Justification:
+
+
+Q: What is the relationship between odometer and price?
+
+Justification:
+
+
+Q: Does the number of photos a vehicle has impact the selling price? 
+
+Justification:
+
+
+Q: Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price? 
+
+Justification:
+
+
+Q: Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
+
+Justification:
+
+
+Q: What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
+
+Justification:
+
+
+Q: What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?
+
+Justification:
+
