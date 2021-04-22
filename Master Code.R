@@ -483,8 +483,9 @@ models_sorted_averages <- summarise(models_sorted, average_price_usd = mean(pric
 View(models_sorted_averages)
 
 # Figure out count for each model
-models_sorted_avg_with_cnt <- models_sorted_averages %>% mutate(counts = cars_edited %>% count(model_name) %>% select(2))
+models_sorted_avg_with_cnt <- models_sorted_averages %>% mutate(counts = count(cars_edited, model_name) %>% select(2))
 View(models_sorted_avg_with_cnt)
+count(cars_edited, model_name) %>% select(2)
 
 models_sorted_avg_with_cnt$counts <- as.numeric(unlist(models_sorted_avg_with_cnt$counts))
 
@@ -552,6 +553,10 @@ model1 <- lm(
 )
 summary(model1)
 
+step.model <- model1 %>% stepAIC(trace = FALSE)
+coef(step.model)
+
+
 model2 <- lm(
   log(price_usd) ~ odometer_value
   + year_produced
@@ -574,7 +579,11 @@ summary(model2)
 
 vif(model2)
 
-modelSVM <- svm(price_usd ~ odometer_value , train.data)
+modelSVM <- train( price_usd ~ ., data = train.data, method = "svmPoly",
+                   trControl = trainControl("cv", number =10), 
+                   preProcess = c("ceneter", "scale"),
+                   tuneLength = 4
+                   )
 summary(modelSVM)
 
 cars_edited[training.samples,] %>% select(model_name) %>% View()
