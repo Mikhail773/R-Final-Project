@@ -63,7 +63,7 @@ Gain insights into which variables have the largest impact on selling price of a
 
 Create a predictive model based on insights gained from analyzing the impact of variables on the selling price of a vehicle. 
 
-# Dataset: Source, Description, Cleaning, and other things relation to the dataset
+# Dataset: Source, Description, Cleaning, and other things related to the dataset
 
 ## Dataset Source
 Kaggle dataset: https://www.kaggle.com/lepchenkov/usedcarscatalog%22%20/

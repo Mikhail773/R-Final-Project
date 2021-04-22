@@ -29,7 +29,7 @@ View(cars) #view the data
 #Removing unnecessary columns from cars. Store that data in cars_edited
 # -(19) is a column that shows the number of times a car has been upped. This column not descriptive and has been removed
 # -(20:29) are boolean columns for various features. There is no description of what these features are and for that reason they have been omitted.
-cars_edited <- dplyr::select(cars, -8 & -(12:13) & -(20:29))
+cars_edited <- cars %>% dplyr::select(-8 & -(12:13) & -(20:29))
 View(cars_edited) #view the data
 
 
@@ -75,7 +75,7 @@ View(cars_edited) #view the data
 
 # Recode foreign language into their English meaning (engine_fuel)
 cars_edited <- cars_edited %>% mutate(engine_fuel = dplyr::recode(engine_fuel,'gas' = "compressed natural gas"))
-  
+
 # Check the na's in the dataset
 colSums(is.na(cars))
 # NA is in the categorical attribute engine-capacity
@@ -94,6 +94,7 @@ View(cars_edited)
 #Change model_name to factor. Useful later on for prediction modeling
 str(cars_edited)
 cars_edited$model_name <- as.factor(cars_edited$model_name)
+cars_edited$engine_fuel <- as.factor(cars_edited$engine_fuel)
 ###################################################################################################
 # 
 # Split Dataset into Training and Testing for our Models
@@ -309,7 +310,7 @@ group_by(cars_edited, body_type) %>% summarise(price_mean = mean(price_usd)) -> 
 
 # 8) Graph to show the outliers with body type and price BOX PLOT
 ggplot(cars_edited) + geom_boxplot(mapping = aes(x = reorder(body_type, price_usd), y =
-                                                                    price_usd))
+                                                   price_usd))
 # 9) Graph to show the correlation between car body type, price, AND engine fuel
 ggplot(cars_edited) + geom_point(mapping = aes(x = body_type, y = price_usd, color = engine_fuel))
 
@@ -371,7 +372,7 @@ summary(res.aov)
 #price/manufacturers
 manuPriceDF <- Cars_No_Outliers %>% select(manufacturer_name, price_usd)
 aggregatedManufacturers <- aggregate(manuPriceDF, 
-                             by = list(manuPriceDF$manufacturer_name), FUN = mean)
+                                     by = list(manuPriceDF$manufacturer_name), FUN = mean)
 #one-way anova
 manuSumm <- group_by(manuPriceDF, manuPriceDF$manufacturer_name) %>%
   summarise(
@@ -381,7 +382,7 @@ manuSumm <- group_by(manuPriceDF, manuPriceDF$manufacturer_name) %>%
   )
 # Compute the analysis of variance
 res.aovTwo <- aov(manuPriceDF$price_usd ~ manuPriceDF$manufacturer_name,
-               data = manuPriceDF)
+                  data = manuPriceDF)
 summary(res.aovTwo)
 #making bar graph
 #showing the correlation between particular manufacturers and price
@@ -526,16 +527,10 @@ summary(manufacturer_price)
 # Create a predictive model based on these insights to create a predictive model.
 #
 
-model <- train(
-  price_usd ~ ., data = train.data, method = "lm",family="binomial")
+## Multiple Linear Regression Models
+###################################################################################################
 
-summary(model)
-  
-step.model <- model %>% stepAIC(trace = FALSE)
-coef(step.model)
-
-
-model1 <- lm(
+multi_lm1 <- lm(
   price_usd ~ odometer_value
   + year_produced
   + number_of_photos
@@ -554,61 +549,76 @@ model1 <- lm(
   ,
   train.data
 )
-summary(model1) %>% View()
 
-step.model <- model1 %>% stepAIC(trace = FALSE)
+summary(multi_lm1)
+step.model <- multi_lm1 %>% stepAIC(trace = FALSE)
+coef(step.model) %>% View()
+
+multi_lm2 <- lm(price_usd ~ . , train.data)
+summary(multi_lm2)
+step.model <- multi_lm2 %>% stepAIC(trace = FALSE)
 coef(step.model) %>% View()
 
 
-model2 <- lm(
-  log(price_usd) ~ odometer_value
-  + year_produced
-  + number_of_photos
-  + duration_listed
-  + up_counter
-  + is_exchangeable
-  + location_region
-  + body_type
-  + transmission
-  + color
-  + engine_type
-  + engine_fuel
-  + engine_capacity
-  + model_name
-  + manufacturer_name
-  ,
-  train.data
-)
-summary(model2)
+multi_lm3 <- lm(log(price_usd) ~ . , train.data)
+summary(multi_lm3)
 
-vif(model2)
+modelLM <- train( price_usd ~ ., data = train.data, method = "lm")
+summary(multi_lm3)
+
+vif(multi_lm3)
+
+# To prevent errors from the test.data encountering new factors we proceed as following:
+#add all levels of 'model_name' in 'test.data' dataset to train.data$xlevels[["y"]] in the fit object
+step.model$xlevels[["model_name"]] <- union(step.model$xlevels[["model_name"]], levels(test.data[["model_name"]]))
+step.model$xlevels[["model_name"]] <- union(step.model$xlevels[["engine_fuel"]], levels(test.data[["engine_fuel"]]))
+# 
+vif(multi_lm3)
+prediction <- step.model %>% predict(test.data)
+prediction %>% as.tibble()
+mean(prediction == test.data$price_usd)
+rmse(test.data$price_usd, prediction)
+
+## SVR Models
+###################################################################################################
+
+SVR <- svm(price_usd ~ ., train.data, type <- 'eps-regression', kernel <- 'radial')
+summary(SVR)
 
 modelSVM <- train( price_usd ~ ., data = train.data, method = "svmPoly",
                    trControl = trainControl("cv", number =10), 
                    preProcess = c("center", "scale"),
                    tuneLength = 4
-                   )
+)
+
 summary(modelSVM)
 
-
-# To prevent errors from the test.data encountering new factors we proceed as following:
-#add all levels of 'model_name' in 'test.data' dataset to train.data$xlevels[["y"]] in the fit object
-step.model$xlevels[["model_name"]] <- union(step.model$xlevels[["model_name"]], levels(test.data[["model_name"]]))
-
-# cars_edited[training.samples,] %>% select(model_name) %>% View()
-# cars_edited[-training.samples,] %>% select(model_name) %>% View()
-# 
-# (test.data$model_name %in% train.data$model_name) %>% as.tibble() 
-# 
-# subset(cars_edited, cars_edited[training.samples] %in% cars_edited[-training.samples,])
-# 
-# levels(train.data$model_name) <- c(levels(test.data$model_name, newFactorLevel))
-# 
-vif(model1)
-prediction <- step.model %>% predict(test.data)
+prediction <- SVR %>% predict(train.data)
 prediction %>% as.tibble()
-sigma(prediction)/mean(test.data$price_usd)
+sigma(SVR)/mean(train.data$price_usd)
 rmse(test.data$price_usd, prediction)
+
+## Decision Tree Regression Model
+###################################################################################################
+
+
+
+
+
+
+
+
+
+## Random Forest Model
+###################################################################################################
+
+
+
+
+
+
+
+
 
 colnames(cars_edited)
 
