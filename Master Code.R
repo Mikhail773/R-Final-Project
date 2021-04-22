@@ -91,6 +91,9 @@ cars_edited <- cars_edited %>% distinct()
 # View the changes the mutate made
 View(cars_edited)
 
+#Change model_name to factor. Useful later on for prediction modeling
+str(cars_edited)
+cars_edited$model_name <- as.factor(cars_edited$model_name)
 ###################################################################################################
 # 
 # Split Dataset into Training and Testing for our Models
@@ -551,10 +554,10 @@ model1 <- lm(
   ,
   train.data
 )
-summary(model1)
+summary(model1) %>% View()
 
 step.model <- model1 %>% stepAIC(trace = FALSE)
-coef(step.model)
+coef(step.model) %>% View()
 
 
 model2 <- lm(
@@ -563,6 +566,7 @@ model2 <- lm(
   + number_of_photos
   + duration_listed
   + up_counter
+  + is_exchangeable
   + location_region
   + body_type
   + transmission
@@ -570,8 +574,8 @@ model2 <- lm(
   + engine_type
   + engine_fuel
   + engine_capacity
-  + odometer_value
   + model_name
+  + manufacturer_name
   ,
   train.data
 )
@@ -581,22 +585,30 @@ vif(model2)
 
 modelSVM <- train( price_usd ~ ., data = train.data, method = "svmPoly",
                    trControl = trainControl("cv", number =10), 
-                   preProcess = c("ceneter", "scale"),
+                   preProcess = c("center", "scale"),
                    tuneLength = 4
                    )
 summary(modelSVM)
 
-cars_edited[training.samples,] %>% select(model_name) %>% View()
-cars_edited[-training.samples,] %>% select(model_name) %>% View()
 
-(test.data$model_name %in% train.data$model_name) %>% as.tibble() %>% View()
+# To prevent errors from the test.data encountering new factors we proceed as following:
+#add all levels of 'model_name' in 'test.data' dataset to train.data$xlevels[["y"]] in the fit object
+step.model$xlevels[["model_name"]] <- union(step.model$xlevels[["model_name"]], levels(test.data[["model_name"]]))
 
-subset(cars_edited, cars_edited[training.samples] %in% cars_edited[-training.samples,])
-
-levels(train.data$model_name) <- c(levels(test.data$model_name, newFactorLevel))
-
-prediction <- predict(model1, tests.data, type= "response")
-rmse(test$price_usd, prediction)
+# cars_edited[training.samples,] %>% select(model_name) %>% View()
+# cars_edited[-training.samples,] %>% select(model_name) %>% View()
+# 
+# (test.data$model_name %in% train.data$model_name) %>% as.tibble() 
+# 
+# subset(cars_edited, cars_edited[training.samples] %in% cars_edited[-training.samples,])
+# 
+# levels(train.data$model_name) <- c(levels(test.data$model_name, newFactorLevel))
+# 
+vif(model1)
+prediction <- step.model %>% predict(test.data)
+prediction %>% as.tibble()
+mean(prediction == test.data$price_usd)
+rmse(test.data$price_usd, prediction)
 
 colnames(cars_edited)
 
