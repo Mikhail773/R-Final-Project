@@ -152,11 +152,34 @@ To determine what to do with the outliers we identified the outliers for each co
 # Data Analysis and Modeling: 
 
 ## Visualitions used to analyze data
+The different graphs that we used:
+Scatter plot
+Box plot
+Bar graph
+Pie chart
+Balloon Plot
+Line Graph
 
 ## ML techniques to solve questions and Goals and why they were used
+Our choices:
+Logistic Regression
+Decision Trees (Partition)
+SVM
+
+Logistic Regression:
+
+
+Decision Trees (Partition):
+
+
+SVM:
+
 
 
 ### Describe the different ways you tried to answer the questions and goals
+
+
+
 
 ## How did you reach your conclusions?
 
@@ -218,6 +241,10 @@ Answer the goal here:
 
 
 ## Compare results obtained using different ML methods
+Our choices:
+Logistic Regression
+Decision Trees (Partition)
+SVM
 
 
 ## What are the answers for the proposed questions?
