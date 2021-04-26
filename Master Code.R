@@ -366,7 +366,7 @@ summary(res.aov)
 #
 # What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
 #
-# What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?   
+#
 #
 
 #price/manufacturers
@@ -552,7 +552,7 @@ summary(model_price)
 ###################################################################################################
 #
 # (Mikhail Mikhaylov)
-# 8) Bar graph, Two-Way ANOVA/ :
+# 8) Scatter plot, Two-Way ANOVA/ :
 # What is the average age of each vehicle manufacturer?
 #
 # 1) A view of the age of each vehicle manufacturer
