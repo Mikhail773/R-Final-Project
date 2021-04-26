@@ -414,7 +414,7 @@ sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
 #Mosaic Plot
 mosaicplot( table(cars_edited$body_type, cars_edited$engine_type), shade=TRUE, las=2, main="Engine Type vs Body Type")
 #Aov3
-body_engine_type_on_price.aov3 <- aov(price_usd ~ engine_type + body_type, data = cars_edited)
+body_engine_type_on_price.aov3 <- aov(price_usd ~ engine_type * body_type, data = cars_edited)
 summary(body_engine_type_on_price.aov3)
 model.tables(body_engine_type_on_price.aov3, type="means", se = TRUE)
 #Tukey HSD
@@ -445,6 +445,8 @@ models_sorted_avg_with_cnt$counts <- as.numeric(unlist(models_sorted_avg_with_cn
 
 model_price <- aov(average_price_usd ~ counts, data = models_sorted_avg_with_cnt)
 summary(model_price)
+
+
 
 # The popularity of a vehicle does seem to have an impact on the average_price of a vehicle
 
