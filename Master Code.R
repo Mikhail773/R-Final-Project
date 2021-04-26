@@ -401,25 +401,58 @@ barplot(aggManuSmall$price_usd~aggManuSmall$Group.1, xlab="Manufacturer", ylab="
 #
 # 3) Scatter Plot/Box-Plot, Simple Regression Analysis: 
 # What is the relationship between odometer and price?
+#
+# The higher the odometer milage the lower the price.
+#
+
+#Scatter plot: Odometer and price
 ggplot (cars_edited, aes( x =odometer_value, y=price_usd)) + geom_point() + stat_smooth()
+
+#Getting cor value
 cor(cars_edited$odometer_value, cars_edited$price_usd)
+
+#Getting the formula for linear regression
 odometer_on_price <- lm (price_usd ~ odometer_value, data = cars_edited)
+odometer_on_price
+
+#Scatter plot: Odometer and price with linear regression line
 ggplot (cars_edited, aes(x=odometer_value, y=price_usd)) + geom_point() + stat_smooth(method=lm)
+
+#Finding how well this line fits our data
 summary(odometer_on_price)
 confint(odometer_on_price)
 sigma(odometer_on_price)*100/mean(cars_edited$price_usd)
 
+###################################################################################################
+#
+# (Reid Hoffmeier) 
+#
 # 4) Scatter Plot, Simple Regression Analysis: 
 # Does the number of photos a vehicle has impact the selling price?
 #
+# Yes, the more photos a cehicle has, the higher the selling price.
+#
+
+#Scatter plot: Number of photos and price
 ggplot (cars_edited, aes( x =number_of_photos, y=price_usd)) + geom_point() + stat_smooth()
+
+#getting the cor value
 cor(cars_edited$number_of_photos, cars_edited$price_usd)
+
+#Getting the formula for linear regression
 number_of_photos_on_price <- lm (price_usd ~ number_of_photos, data = cars_edited)
+number_of_photos_on_price
+
+#Scatter plot: Number of photos and price with linear regresison line
 ggplot (cars_edited, aes(x=number_of_photos, y=price_usd)) + geom_point() + stat_smooth(method=lm)
+
+#Finding how well this line fits the data
 summary(number_of_photos_on_price)
 confint(number_of_photos_on_price)
 sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
 
+###################################################################################################
+#
 # (Matthew Lane) 
 # 
 # 5) Scatter Plot, Simple Regression Analysis:
@@ -428,17 +461,28 @@ sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
 # Yes, the number of times a vehicle has been upped raises the selling price (It's linear)
 #
 
-#regression analysis
+#Regression analysis
 ggplot (cars_edited, aes( x =up_counter, y=price_usd)) + geom_point() + stat_smooth()
+
 #Correlation
 cor(cars_edited$up_counter, cars_edited$price_usd)
 up_counter_on_price <- lm (price_usd ~ up_counter, data = cars_edited)
-#The estimated regression line equation can be written as 
-#price_usd = 6493.05 + 8.569*up_counter
-#The Intercept (b0) is 6493.05.  It can be interpreted as the predicted price in usd for an up counter of 0.  This means that if there are no up counters used, the average sales price would be around $6493.05.
-#The regression beta coefficient for the variable up_counter (b1) is 8.569.  For an up_counter value of 100, Average sales price would be 6493.05+8.569*100, $7349.95, and increase of $857.00.
+up_counter_on_price
+
+###################################################################################################
+#
+# Explanation of regression line in this problem
+#
+# The estimated regression line equation can be written as 
+# price_usd = 6493.05 + 8.569*up_counter
+# The Intercept (b0) is 6493.05.  It can be interpreted as the predicted price in usd for an up counter of 0.  This means that if there are no up counters used, the average sales price would be around $6493.05.
+# The regression beta coefficient for the variable up_counter (b1) is 8.569.  For an up_counter value of 100, Average sales price would be 6493.05+8.569*100, $7349.95, and increase of $857.00.
+#
+
+#Scatter plot: up counter and price with regression line
 ggplot (cars_edited, aes(x=up_counter, y=price_usd)) + geom_point() + stat_smooth(method=lm)
 summary(up_counter_on_price)
+
 #Confidence Interval
 confint(up_counter_on_price)
 sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
@@ -448,30 +492,37 @@ sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
 # (Matthew Lane) 
 # 6) Mosaic Plot/ Chi-Squared Test, Two-Way ANOVA: 
 # Relationship between Engine Type and Body Type? 
-# 
-# 
 #
 # What is the impact of Engine Type and Body Type on the selling price?
+#
+# Limousine and pickup trucks appear to have the only impact.
 #
 
 #Mosaic Plot
 mosaicplot( table(cars_edited$body_type, cars_edited$engine_type), shade=TRUE, las=2, main="Engine Type vs Body Type")
+
 #Aov3
 body_engine_type_on_price.aov3 <- aov(price_usd ~ engine_type + body_type, data = cars_edited)
 summary(body_engine_type_on_price.aov3)
 model.tables(body_engine_type_on_price.aov3, type="means", se = TRUE)
+
 #Tukey HSD
 TukeyHSD(body_engine_type_on_price.aov3)
+
 #General Linear Hypothesis
 summary(glht(body_engine_type_on_price.aov3, lincft = mcp))
+
 #Limousine and pickup trucks appear to have the only impact
 
 
 ###################################################################################################
 # 
 # (Mikhail Mikhaylov)
+#
 # 7) Dplyr count with group_by, One-Way Anova:
 # What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
+#
+# The popularity of a vehicle does seem to have an impact on the average_price of a vehicle
 #
 
 
@@ -503,18 +554,29 @@ summary(model_price)
 # (Mikhail Mikhaylov)
 # 8) Bar graph, Two-Way ANOVA/ :
 # What is the average age of each vehicle manufacturer?
-# 
+#
+# 1) A view of the age of each vehicle manufacturer
+#
 # And whether the manufacturer changes how the production year impacts the selling price?
 #
+# The manufacturer does change how the production year affects the selling price
+#
 
+#Group cars by manufacturer name
 manufacturer_year <- group_by(cars_edited, manufacturer_name)
+
+#Summarise the manufacturer years average
 manufacturer_year_averages <- summarise(manufacturer_year, average = mean(year_produced, na.rm = TRUE))
+# 1) Average age of each vehicle manufacturer
 View(manufacturer_year_averages)
 
+#Scatter plot: Manufacturer name and average year
 ggplot(manufacturer_year_averages) + geom_point(aes(x = manufacturer_name, y = average))
 
+#Scatter plot: Year produced by price and colored by manufacturer name
 ggplot(cars_edited) + geom_point(aes(x = year_produced, y = price_usd, color = manufacturer_name))
 
+#Summary of manufacturer price
 manufacturer_price <- aov(price_usd ~ manufacturer_name * year_produced, data = cars_edited)
 summary(manufacturer_price)
 
