@@ -7,6 +7,11 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(e1071) #SVM
+library(car) #predict
+library(Metrics) #rmse
+library(caret) #partition
 ```
 
 This will be to show our code
@@ -19,32 +24,13 @@ This will be to show our graphs
 
 ```
 
-
-## Dataset Used Cars Market in Belarus
-Kaggle dataset: https://www.kaggle.com/lepchenkov/usedcarscatalog%22%20/
-The dataset that was chosen was obtained from Kaggle and was scraped by one Kirill Lepchenkov with the help of an associate named Vasily Kachalko who aided in parsing the data. This will be utilized to understand the effect certain characteristics have on the price point at which cars in Belarus are sold at. Analyzing cars that are for sale is beneficial in gaining an understanding on what contributes to how a used car would be priced and would allow for predicting the market price of a used car in Belarus. 
+# Abstract: Description of the project and the findings
 
 
-## Dataset Description
-This dataset has 30 attributes with 38,531 samples. Of these attributes there is a mixture of Categorical (Nominal) as well as Numerical (Interval, Ratio) data. The attributes included in the dataset are Manufacturer Name, Model Name, Transmission Type, Color, Odometer Value, Year Produced, Engine Fuel, Engine Has Gas(Boolean), Engine Type, Engine Capacity, Body Type, Has Warranty(Boolean), (State) Condition of the Vehicle, Drivetrain Type, Price in USD, Exchangeability (Boolean), Location Region, Number of Photos, Number of Up Counts, Features {0,1,2,3,4,5,6,7,8,9}, and Duration Listed. 
+# Introduction: Overview of the problems/goals and how they will be solved
 
 
-## Data cleaning
-
-
-Check for null values, duplicates, and outliers.   
-  The null values (10 entries) were kept since they served as a crucial distinguishment for the Electric Vehicles in the data. 
-
-Duplicate entries were identified and removed from the dataset. 41 such duplicate entries existed.
-
-Any data that is either unused or provides seemingly no value to our project will be scrapped from our cleaned final dataset to be used.  
-  Attributes referring to features in the car were removed due a lack of information and consistency in the attributes data.  
-  “Engine Has Gas”, “Has Warranty”, and “State” attributes were removed due to a lack of diversity in the entries.  
-
-To determine what to do with the outliers we identified the outliers for each continuous variable and created a separate dataset with no outliers. In order to gauge the impact of our outliers we will have to run our analytics through the dataset with the outliers and the dataset without the outliers. 
-
-
-## Questions and Goals
+# Initial Questions
 
 What impact does a region have on price? 
   Box Plot, One-Way Anova 
@@ -71,19 +57,284 @@ What is the most popular model and whether we can conclude that the popularity o
 What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?    
   Bar graph, Two-Way ANOVA/ Kruskal-Wallis rank sum test 
 
-GOALS:
+## GOALS:
 
 Gain insights into which variables have the largest impact on selling price of a vehicle. 
 
 Create a predictive model based on insights gained from analyzing the impact of variables on the selling price of a vehicle. 
 
+# Dataset: Source, Description, Cleaning, and other things related to the dataset
 
-## Graphs
+## Dataset Source
+Kaggle dataset: https://www.kaggle.com/lepchenkov/usedcarscatalog%22%20/
+The dataset that was chosen was obtained from Kaggle and was scraped by one Kirill Lepchenkov with the help of an associate named Vasily Kachalko who aided in parsing the data. This will be utilized to understand the effect certain characteristics have on the price point at which cars in Belarus are sold at. Analyzing cars that are for sale is beneficial in gaining an understanding on what contributes to how a used car would be priced and would allow for predicting the market price of a used car in Belarus. 
+
+
+## Dataset Description
+This dataset has 30 attributes with 38,531 samples. Of these attributes there is a mixture of Categorical (Nominal) as well as Numerical (Interval, Ratio) data. The attributes included in the dataset are Manufacturer Name, Model Name, Transmission Type, Color, Odometer Value, Year Produced, Engine Fuel, Engine Has Gas(Boolean), Engine Type, Engine Capacity, Body Type, Has Warranty(Boolean), (State) Condition of the Vehicle, Drivetrain Type, Price in USD, Exchangeability (Boolean), Location Region, Number of Photos, Number of Up Counts, Features {0,1,2,3,4,5,6,7,8,9}, and Duration Listed. 
+
+
+## Data Cleaning
+
+To clean the dataset it was vital to open the csv file and investigate the types of attributes and samples that were given. To get a quick glance of the data we first open the csv file as follows:
+
+```{r Read Cars}
+cars <- read_csv("cars.csv")
+
+head(cars, 20)
+
+```
+
+Afterwords, it was crucial to obtain a quick summary of our dataset in order to investigate the steps needed to clean the dataset. This was done with the following line of code:
+
+```{r Cars Summary}
+summary(cars)
+```
+
+From the summary we clearly see that engine_has_gas, has_warranty, and state have very little variability and for that reason they will be removed from the dataset. Furthermore, upon researching the features attribute it was uncovered that the data had severe inconsistencies(according to the creator) and for that reason will be removed. Therefore, we run the select command in order to remove these attributes.
+
+```{r FIlter Attributes}
+cars_edited <- select(cars, -8 & -(12:13) & -(20:29))
+head(cars_edited, 20)
+```
+
+
+Now to proceed with cleaning and analyzation we need a more robust knowledge of our dataset. For this reason it is vital to understand the type of data for each attribute. Therefore, we must create a table to organize all our attributes.
+
+
+Column|Details|Value/(Units)|Data Type
+:---|:---:|:---:|---:
+A|Manufacturer Name|Name of vehicle manufacturer|Nominal   
+B|Model Name|Name of vehicle model|Nominal
+C|Transmission|Type of the transmission|Nominal
+D|Color| Vehicle body color| Nominal
+E|Odometer Value|Vehicle odometer value in km|Continuous
+F|Year Produced|The year the car was produced|Continuous
+G|Engine Fuel|Fuel type of the engine|Nominal
+I|Engine Type|Vehicle engine type|Nominal
+J|Engine Capacity|The capacity of the engine in liters|Nominal
+K|Body Type|Type of the body (hatchback, sedan, etc.)|Nominal
+M|Drivetrain|Front/rear/all drivetrain|Nominal
+N|Price USD| Price of a cas as listed in the catalog in USD|Continuous
+O|Exchangeable|If True the owner of the car is ready to exchange this car to other cars with little or no additional payment|Nominal
+P|Location Region|The region in Belarus where the car is listed for sale|Nominal
+Q|Number of Photos|Number of photos the cas has|Continous
+R|Up Counter|How many times the sample has been upped in the catalog to raise its position|Continuous
+S|Duration Listed|Number of days the car is listed in the catalog|Continuous
+
+
+From summary we notice that there exists 10 NA's in the attribute engine-capacity. Our understanding of vehicles informs us that engine-capacity is a categorical data-type and as such NA is crucial to our understanding of the data. The NA values serve as a distinguishment for the Electric Vehicles in the data. For the sake of future analyzation is will serve great use to replace our NA values with an arbitrary number. For our sake we choose to change NA values to 999. Thus we do the following:
+
+```{r Handling NA Values}
+summary(cars_edited$engine_capacity)
+cars_edited <- cars_edited %>% mutate(engine_capacity = coalesce(engine_capacity, 999))
+summary(cars_edited$engine_capacity)
+```
+
+Once the unneccesary attributes were filtered and the NA's were accounted for it was of incredible importance to investigate for duplicate samples. The code for doing this procedure was as follows:
+```{r Handling Duplicate Data}
+count(cars_edited)
+sum(duplicated(cars_edited))
+which(duplicated(cars_edited))
+cars_edited <- cars_edited %>% distinct()
+count(cars_edited)
+```   
+
+Duplicate entries were identified and removed from the dataset. 41 such duplicate entries existed.
+
+## Dataset Splitting
+*Splitting the DATA!!*
+
+## Dataset Outliers
+To determine what to do with the outliers we identified the outliers for each continuous variable and created a separate dataset with no outliers. In order to gauge the impact of our outliers we will have to run our analytics through the dataset with the outliers and the dataset without the outliers. 
+
+
+# Data Analysis and Modeling: 
+
+## Visualitions used to analyze data
+The different graphs that we used:
+Scatter plot
+Box plot
+Bar graph
+Pie chart
+Balloon Plot
+Line Graph
+
+## ML techniques to solve questions and Goals and why they were used
+Our choices:
+Logistic Regression
+Decision Trees (Partition)
+SVM
+
+Logistic Regression:
+In our project this was the most used of the ML techniques. This is because most of our questions had an interest in the price of a vehicle. That means for each question we were investigating only one different variable. We used Logistic regression to check to see how accurate our data was for the linear lines representing the graph. This in turn gave us the information needed to draw a conclusion about the relationship between the price of cars, and the variable in question.
+
+Decision Trees (Partition):
+
+
+SVM:
+
+
+
+### Describe the different ways you tried to answer the questions and goals
+
+
+
+
+## How did you reach your conclusions?
+
 What graphs we chose to solve our questions and why
-
-## Results
 Our answers to our questions based on the graphs
 
-## Completed
+Q: What impact does a region have on price? 
+ 
+Graphs used: Pie chart
+How these graphs helped us solve the problem:
+This graph helped solve the problem by giving a percentage of the cars that were sold in a region, by the mean price. It was easy to see which regions had the biggest impact on price thanks to this graph.
 
-## To do list
+
+Q: What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
+
+Graphs used: Bar graph
+How these graphs helped us solve the problem:
+A bar graph for this question was helpful because each manufacturer had it's own bar, and the highest bar represents the highest asking price of a vehicle. We were able to answer our question thanks to this graph.
+
+
+Q: What is the relationship between odometer and price?
+
+Graphs used: Scatter plot
+How these graphs helped us solve the problem:
+This graph helped solve the problem by allowing us to graph a line of best fit to the data, and by doing so seeing the relationship between the data.
+
+
+Q: Does the number of photos a vehicle has impact the selling price? 
+
+Graphs used: Scatter plot
+How these graphs helped us solve the problem:
+This graph helped us solve the problem by allowing us to see the relationship between the two variables by doing a line of best fit.
+
+
+Q: Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price? 
+
+Graphs used: Scatter plot
+How these graphs helped us solve the problem:
+Using a scatter plot for this question again allowed us to see the relationship between the two variables. With that we can come up with a solution to the question.
+
+
+Q: Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
+
+Graphs used: Mosaic 
+How these graphs helped us solve the problem:
+This graph helped us solve the problem by giving us a colored graph that showed the amount of cars with a specific body type and engine. We were able to confirm the acuracy of the graph and come to a conclusion.
+
+
+Q: What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
+
+Graphs used: Count, group by, and oneway anova
+How these graphs helped us solve the problem:
+We didn't need to have a graph for this question. It was very effective to group the data, count it and look at the view of the data.
+
+
+Q: What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?
+
+Graphs used: Scatter plot
+How these graphs helped us solve the problem:
+The use of a scatter plot here is profound. It was VERY clear of an answer, just by a quick inspection of the graph there was a clear answer.
+
+
+# Final outcomes and Analysis
+Answer the goal here:
+
+## What are the results you obtained about the data?
+
+
+## Compare results obtained using different ML methods
+Our choices:
+Logistic Regression
+Decision Trees (Partition)
+SVM
+
+
+## What are the answers for the proposed questions?
+
+Q: What impact does a region have on price? 
+ 
+A:
+
+
+Q: What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
+
+A:
+
+
+Q: What is the relationship between odometer and price?
+
+A:
+
+
+Q: Does the number of photos a vehicle has impact the selling price? 
+
+A:
+
+
+Q: Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price? 
+
+A:
+
+
+Q: Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
+
+A:
+
+
+Q: What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
+
+A:
+
+
+Q: What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?
+
+A:
+
+## What are the justifications for your answers?
+How the analysis of the graphs lead to the answer:
+
+Q: What impact does a region have on price? 
+ 
+Justification:
+
+
+Q: What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
+
+Justification:
+
+
+Q: What is the relationship between odometer and price?
+
+Justification:
+
+
+Q: Does the number of photos a vehicle has impact the selling price? 
+
+Justification:
+
+
+Q: Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price? 
+
+Justification:
+
+
+Q: Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
+
+Justification:
+
+
+Q: What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
+
+Justification:
+
+
+Q: What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?
+
+Justification:
+
