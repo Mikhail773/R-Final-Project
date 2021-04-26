@@ -10,6 +10,7 @@ library(car) #predict
 library(Metrics) #rmse
 library(caret) #partiiton
 library(MASS) #stepwise
+library(kernlab) #SVM
 library(rpart) # Decision Tree Regression
 library(randomForest) #  Random Forest Tree Regression
 #library(multcomp) #glht
@@ -633,7 +634,6 @@ rmse(test.data$price_usd, prediction)
 
 ## SVR Models
 ###################################################################################################
-
 SVR <- svm(price_usd ~ ., train.data, type <- 'eps-regression', kernel <- 'radial')
 summary(SVR)
 
@@ -652,8 +652,11 @@ rmse(test.data$price_usd, prediction)
 
 ## Decision Tree Regression Model
 ###################################################################################################
-
+set.seed(123)
 model_DT <- rpart(price_usd ~ ., method = "anova", data = train.data)
+par(xpd=NA)
+plot(model_DT)
+
 summary(model_DT)
 
 prediction_DT <- model_DT %>% predict(test.data)
@@ -663,7 +666,6 @@ R2(prediction_DT,test.data$price_usd)
 
 ## Random Forest Model
 ###################################################################################################
-
 random_forest_tree <- randomForest(price_usd ~ ., data=train.data)
 summary(random_forest_tree)
 print(random_forest_tree)
