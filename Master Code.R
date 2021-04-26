@@ -10,6 +10,8 @@ library(car) #predict
 library(Metrics) #rmse
 library(caret) #partiiton
 library(MASS) #stepwise
+library(rpart) # Decision Tree Regression
+library(randomForest) #  Random Forest Tree Regression
 #library(multcomp) #glht
 ###################################################################################################
 #
@@ -594,43 +596,30 @@ summary(manufacturer_price)
 ## Multiple Linear Regression Models
 ###################################################################################################
 
-multi_lm1 <- lm(
-  price_usd ~ odometer_value
-  + year_produced
-  + number_of_photos
-  + duration_listed
-  + up_counter
-  + is_exchangeable
-  + location_region
-  + body_type
-  + transmission
-  + color
-  + engine_type
-  + engine_fuel
-  + engine_capacity
-  + model_name
-  + manufacturer_name
-  ,
-  train.data
-)
+modelLMCont <- train( price_usd ~ odometer_value
+                      + year_produced
+                      + number_of_photos
+                      + duration_listed
+                      + up_counter
+                        , data = train.data, method = "lm")
+summary(modelLMCont)
 
-summary(multi_lm1)
-step.model <- multi_lm1 %>% stepAIC(trace = FALSE)
-coef(step.model) %>% View()
-
-multi_lm2 <- lm(price_usd ~ . , train.data)
-summary(multi_lm2)
-step.model <- multi_lm2 %>% stepAIC(trace = FALSE)
-coef(step.model) %>% View()
+predictionLMCont <- modelLMCont %>% predict(test.data)
+sigma(predictionLMCont)/mean(test.data$price_usd)
+rmse(test.data$price_usd, predictionLMCont)
 
 
-multi_lm3 <- lm(log(price_usd) ~ . , train.data)
-summary(multi_lm3)
 
-modelLM <- train( price_usd ~ ., data = train.data, method = "lm")
-summary(multi_lm3)
+modelLMConts <- train( log(price_usd) ~ odometer_value
+                      + year_produced
+                      + number_of_photos
+                      + duration_listed
+                      + up_counter
+                      , data = train.data, method = "lm")
+summary(modelLMConts)
+step.modelConts <- modelLMConts %>% stepAIC(trace = FALSE)
+coef(step.modelConts) %>% View()
 
-vif(multi_lm3)
 
 # To prevent errors from the test.data encountering new factors we proceed as following:
 #add all levels of 'model_name' in 'test.data' dataset to train.data$xlevels[["y"]] in the fit object
@@ -640,7 +629,6 @@ step.model$xlevels[["model_name"]] <- union(step.model$xlevels[["engine_fuel"]],
 vif(multi_lm3)
 prediction <- step.model %>% predict(test.data)
 prediction %>% as.tibble()
-mean(prediction == test.data$price_usd)
 rmse(test.data$price_usd, prediction)
 
 ## SVR Models
@@ -665,31 +653,25 @@ rmse(test.data$price_usd, prediction)
 ## Decision Tree Regression Model
 ###################################################################################################
 
+model_DT <- rpart(price_usd ~ ., method = "anova", data = train.data)
+summary(model_DT)
 
-
-
-
-
-
+prediction_DT <- model_DT %>% predict(test.data)
+rmse(prediction_DT,test.data$price_usd)
+R2(prediction_DT,test.data$price_usd)
 
 
 ## Random Forest Model
 ###################################################################################################
 
+random_forest_tree <- randomForest(price_usd ~ ., data=train.data)
+summary(random_forest_tree)
+print(random_forest_tree)
 
+rf_predict <- predict(random_forest_tree, test.data , type='response')
+rmse(rf_predict,test.data$price_usd)
+R2(rf_predict,test.data$price_usd)
 
-
-
-
-
-
-
-colnames(cars_edited)
-
-# [1] "manufacturer_name" "model_name"        "transmission"      "color"             "odometer_value"
-# [6] "year_produced"     "engine_fuel"       "engine_type"       "engine_capacity"   "body_type"
-# [11] "drivetrain"        "price_usd"         "is_exchangeable"   "location_region"   "number_of_photos"
-# [16] "up_counter"        "duration_listed"
 
 ##############################################################################################################
 #
