@@ -162,17 +162,20 @@ Line Graph
 
 ## ML techniques to solve questions and Goals and why they were used
 Our choices:
-Logistic Regression
-Decision Trees (Partition)
-SVM
+One-way Anova
+Two-Way Anova
 
-Logistic Regression:
+
+Simple Linear Regression and Multiple Linear Regression:
 In our project this was the most used of the ML techniques. This is because most of our questions had an interest in the price of a vehicle. That means for each question we were investigating only one different variable. We used Logistic regression to check to see how accurate our data was for the linear lines representing the graph. This in turn gave us the information needed to draw a conclusion about the relationship between the price of cars, and the variable in question.
+
+SVR:
 
 Decision Trees (Partition):
 
+Random Forest Regression:
 
-SVM:
+KNN:
 
 
 

@@ -13,6 +13,7 @@ library(MASS) #stepwise
 library(kernlab) #SVM
 library(rpart) # Decision Tree Regression
 library(randomForest) #  Random Forest Tree Regression
+library(ranger) # RFT more than 53 factors
 #library(multcomp) #glht
 ###################################################################################################
 #
@@ -433,11 +434,11 @@ sigma(odometer_on_price)*100/mean(cars_edited$price_usd)
 # 4) Scatter Plot, Simple Regression Analysis: 
 # Does the number of photos a vehicle has impact the selling price?
 #
-# Yes, the more photos a cehicle has, the higher the selling price.
+# Yes, the more photos a vehicle has, the higher the selling price.
 #
 
 #Scatter plot: Number of photos and price
-ggplot (cars_edited, aes( x =number_of_photos, y=price_usd)) + geom_point() + stat_smooth()
+ggplot(cars_edited, aes( x =number_of_photos, y=price_usd)) + geom_point() + stat_smooth()
 
 #getting the cor value
 cor(cars_edited$number_of_photos, cars_edited$price_usd)
@@ -502,7 +503,7 @@ sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
 #
 
 #Mosaic Plot
-mosaicplot( table(cars_edited$body_type, cars_edited$engine_type), shade=TRUE, las=2, main="Engine Type vs Body Type")
+mosaicplot(table(cars_edited$body_type, cars_edited$engine_type), shade=TRUE, las=2, main="Engine Type vs Body Type")
 
 #Aov3
 body_engine_type_on_price.aov3 <- aov(price_usd ~ engine_type * body_type, data = cars_edited)
@@ -598,28 +599,28 @@ summary(manufacturer_price)
 ###################################################################################################
 
 LMCont <- lm(price_usd ~ odometer_value
-                     + year_produced
-                     + number_of_photos
-                     + duration_listed
-                     + up_counter
-                     , data = train.data)
+             + year_produced
+             + number_of_photos
+             + duration_listed
+             + up_counter
+             , data = train.data)
 
 step.Conts <- LMCont %>% stepAIC(trace = FALSE)
 summary(step.Conts)
 coef(step.Conts)
 LMContPrediction <- step.Conts %>% predict(test.data)
-rmse(test.data$price_usd, predictionLMCont)
+rmse(test.data$price_usd, LMContPrediction)
 R2(LMContPrediction,test.data$price_usd)
 vif(step.Conts)
 confint(step.Conts)
 
 # Log transformation
 LogLMConts <- lm(log(price_usd) ~ odometer_value
-                   + year_produced
-                   + number_of_photos
-                   + duration_listed
-                   + up_counter
-                   , data = train.data)
+                 + year_produced
+                 + number_of_photos
+                 + duration_listed
+                 + up_counter
+                 , data = train.data)
 
 summary(LogLMConts)
 step.logConts <- LogLMConts %>% stepAIC(trace = FALSE)
@@ -636,7 +637,7 @@ confint(step.logConts)
 SVR <- svm(price_usd ~ ., train.data)
 summary(SVR)
 
-coef(step.SVR) 
+coef(step.SVR)
 SVRPrediction <- predict(SVR, test.data)
 rmse(test.data$price_usd, SVRPrediction)
 R2(SVRPrediction,test.data$price_usd)
@@ -646,17 +647,19 @@ confint(step.logConts)
 
 
 modelSVM <- train( price_usd ~ ., data = train.data, method = "svmPoly",
-                   trControl = trainControl("cv", number =10), 
+                   trControl = trainControl("cv", number =10),
                    preProcess = c("center", "scale"),
                    tuneLength = 4
 )
 
 summary(modelSVM)
 
-prediction <- SVR %>% predict(train.data)
-prediction %>% as.tibble()
-sigma(SVR)/mean(train.data$price_usd)
+predictionSVRTrain <- modelSVM %>% predict(train.data)
 rmse(test.data$price_usd, prediction)
+R2(predictionSVRTrain,test.data$price_usd)
+vif(predictionSVRTrain)
+confint(predictionSVRTrain)
+
 
 ## Decision Tree Regression Model
 ###################################################################################################
@@ -670,24 +673,63 @@ prediction_DT <- model_DT %>% predict(test.data)
 rmse(prediction_DT,test.data$price_usd)
 R2(prediction_DT,test.data$price_usd)
 
-
-
-
-model_Classes_DT <- rpart(price_usd ~ ., method = "class", data = train.data)
-summary(model_DT)
-
-
 ## Random Forest Model
 ###################################################################################################
-random_forest_tree <- randomForest(price_usd ~ ., data=train.data)
+random_forest_tree_cont <- randomForest(price_usd  ~ odometer_value
+                                        + year_produced
+                                        + number_of_photos
+                                        + duration_listed
+                                        + up_counter
+                                        , data=train.data)
+
+rf_predict_cont <- predict(random_forest_tree_cont, test.data , type='response')
+rmse(rf_predict_cont,test.data$price_usd)
+R2(rf_predict_cont,test.data$price_usd)
+
+# RF Tree without Model_name
+random_forest_tree <- randomForest(price_usd ~ manufacturer_name
+                                   + transmission
+                                   + color
+                                   + odometer_value
+                                   + year_produced
+                                   + engine_fuel
+                                   + engine_type
+                                   + engine_capacity
+                                   + body_type
+                                   + drivetrain
+                                   + is_exchangeable
+                                   + location_region
+                                   + number_of_photos
+                                   + up_counter
+                                   + duration_listed
+                                   , data=train.data)
 summary(random_forest_tree)
 print(random_forest_tree)
+rf_predict_rf_noncont <- predict(random_forest_tree, test.data , type='response')
+rmse(rf_predict_rf_noncont,test.data$price_usd)
+R2(rf_predict_rf_noncont,test.data$price_usd)
 
-rf_predict <- predict(random_forest_tree, test.data , type='response')
-rmse(rf_predict,test.data$price_usd)
-R2(rf_predict,test.data$price_usd)
+
+random_forest_ranger <- train(price_usd ~ . , 
+                              data = train.data, 
+                              method = "ranger")
+summary(random_forest_ranger)
+print(random_forest_ranger)
+rf_predict_ranger <- predict(random_forest_ranger, test.data , type='response')
+rmse(rf_predict_ranger,test.data$price_usd)
+R2(rf_predict_ranger,test.data$price_usd)
 
 
+## KNN Model
+###################################################################################################
+
+NROW(train.data)
+knn.26 <- knn(train=train.data, test=test.data, cl=train.loan_labels, k=175)
+
+
+
+
+colnames(cars_edited)
 ##############################################################################################################
 #
 # Considering Outliers
