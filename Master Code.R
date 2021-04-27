@@ -660,16 +660,21 @@ rmse(test.data$price_usd, prediction)
 
 ## Decision Tree Regression Model
 ###################################################################################################
-set.seed(123)
 model_DT <- rpart(price_usd ~ ., method = "anova", data = train.data)
-par(xpd=NA)
-plot(model_DT)
-
 summary(model_DT)
+par(xpd = NA)
+plot(model_DT)
+text(model_DT, digits = 3)
 
 prediction_DT <- model_DT %>% predict(test.data)
 rmse(prediction_DT,test.data$price_usd)
 R2(prediction_DT,test.data$price_usd)
+
+
+
+
+model_Classes_DT <- rpart(price_usd ~ ., method = "class", data = train.data)
+summary(model_DT)
 
 
 ## Random Forest Model
