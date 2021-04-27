@@ -175,32 +175,11 @@ pre code {
 <p>This will be to show our graphs</p>
 <div id="abstract-description-of-the-project-and-the-findings" class="section level1">
 <h1>Abstract: Description of the project and the findings</h1>
-</div>
-<div id="introduction-overview-of-the-problemsgoals-and-how-they-will-be-solved" class="section level1">
-<h1>Introduction: Overview of the problems/goals and how they will be solved</h1>
+<p>The dataset in question is of used cars in a popular catalog from the country of Belarus. This dataset will be cleaned, analyzed, to answer several questions about the effect that certain variables have on the price point at which cars are sold at. Ultimately, Multiple Linear Regression Models, SVR, Decision Tree Regression, Random Forest Reggression, and KNN will all be used to predict the market price of a used car in Belarus given the attributes found in the dataset. The accuracy of these models were analyzed and perfomance tested for real-world application with the help of a training and testing dataset. Afterwords, the models were compared to find the most effective model for prediciting the price of a used car in Belarus. <strong>STATE OUR FINDINGS</strong> # Introduction: Overview of the problems/goals and how they will be solved <strong>EMMA?</strong></p>
 </div>
 <div id="initial-questions" class="section level1">
 <h1>Initial Questions</h1>
-<p>What impact does a region have on price? Box Plot, One-Way Anova</p>
-<p>What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?<br />
-Pie Graph/Box Plot, One-Way Anova/ Kruskal-Wallis rank sum test</p>
-<p>What is the relationship between odometer and price?<br />
-Scatter Plot/Box-Plot, Simple Regression Analysis</p>
-<p>Does the number of photos a vehicle has impact the selling price?<br />
-Scatter Plot, Simple Regression Analysis</p>
-<p>Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?<br />
-Scatter Plot, Simple Regression Analysis</p>
-<p>Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?<br />
-Mosaic Plot/ Chi-Squared Test, Two-Way ANOVA /Kruskal-Wallis rank sum test</p>
-<p>What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?<br />
-Dplyr count with group_by to find the most popular model by region. One-Way ANOVA Test/ Kruskal-Wallis rank sum test.</p>
-<p>What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?<br />
-Bar graph, Two-Way ANOVA/ Kruskal-Wallis rank sum test</p>
-<div id="goals" class="section level2">
-<h2>GOALS:</h2>
-<p>Gain insights into which variables have the largest impact on selling price of a vehicle.</p>
-<p>Create a predictive model based on insights gained from analyzing the impact of variables on the selling price of a vehicle.</p>
-</div>
+<p>The main goal is to create a predictive model based on insights gained from analyzing the impact of variables on the selling price of a vehicle. In addition, there will be several questions that will be answered concerning the dataset. The questions that will be answered are as follows: 1. What impact does a region have on price? 2. What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle? 3. What is the relationship between odometer and price? 4. Does the number of photos a vehicle has impact the selling price? 5. Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price? 6. Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price? 7. What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle? 8. What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?</p>
 </div>
 <div id="dataset-source-description-cleaning-and-other-things-related-to-the-dataset" class="section level1">
 <h1>Dataset: Source, Description, Cleaning, and other things related to the dataset</h1>
@@ -516,29 +495,35 @@ count(cars_edited)</code></pre>
 ## 1 38490</code></pre>
 <p>Duplicate entries were identified and removed from the dataset. 41 such duplicate entries existed.</p>
 </div>
-<div id="dataset-splitting" class="section level2">
-<h2>Dataset Splitting</h2>
-<p><em>Splitting the DATA!!</em></p>
-</div>
 <div id="dataset-outliers" class="section level2">
 <h2>Dataset Outliers</h2>
 <p>To determine what to do with the outliers we identified the outliers for each continuous variable and created a separate dataset with no outliers. In order to gauge the impact of our outliers we will have to run our analytics through the dataset with the outliers and the dataset without the outliers.</p>
+</div>
+<div id="dataset-training-and-testing" class="section level2">
+<h2>Dataset Training and Testing</h2>
+<p>For the purpose of effectively analyzing the real-world performance of the models that will be used to solve the question we split the dataset into a “Training” dataset and a “Testing dataset. The”Training&quot; set comprised of a random selection of 80% of our dataset and the “Testing” was the rest of the samples not included in the “Training” dataset(20%). The reason for the split was the necessity to be able to access how accurately the models were able to predict the price of a vehicle given a seperate portion of samples in the dataset. By testing our models against data not in our training set we can effectively see how well the model holds up with the addition of new vehicles we wish to predict. This was done as following:</p>
+<pre class="r"><code>set.seed(123)
+training.samples &lt;- cars_edited$manufacturer_name %&gt;% createDataPartition(p = 0.8, list = FALSE)
+train.data &lt;- cars_edited[training.samples,]
+test.data &lt;- cars_edited[-training.samples,]
+
+View(train.data)
+View(test.data)</code></pre>
 </div>
 </div>
 <div id="data-analysis-and-modeling" class="section level1">
 <h1>Data Analysis and Modeling:</h1>
 <div id="visualitions-used-to-analyze-data" class="section level2">
 <h2>Visualitions used to analyze data</h2>
+<p>In an attempt to gain a robust knowledge of our dataset several visualitions were used. Visualization of our data was done in two sections. Initially each attribute was graphed in order to gain a general understanding of how the samples are distributed for each atribute. This was done with the help of Bar Graphs, Histograms, Boxplots, and the count function.</p>
 <p>The different graphs that we used: Scatter plot Box plot Bar graph Pie chart Balloon Plot Line Graph</p>
-</div>
-<div id="ml-techniques-to-solve-questions-and-goals-and-why-they-were-used" class="section level2">
-<h2>ML techniques to solve questions and Goals and why they were used</h2>
-<p>Our choices: Logistic Regression Decision Trees (Partition) SVM</p>
-<p>Logistic Regression: In our project this was the most used of the ML techniques. This is because most of our questions had an interest in the price of a vehicle. That means for each question we were investigating only one different variable. We used Logistic regression to check to see how accurate our data was for the linear lines representing the graph. This in turn gave us the information needed to draw a conclusion about the relationship between the price of cars, and the variable in question.</p>
+<p>Simple Linear Regression and Multiple Linear Regression: In our project this was the most used of the ML techniques. This is because most of our questions had an interest in the price of a vehicle. That means for each question we were investigating only one different variable. We used Logistic regression to check to see how accurate our data was for the linear lines representing the graph. This in turn gave us the information needed to draw a conclusion about the relationship between the price of cars, and the variable in question.</p>
+<p>SVR:</p>
 <p>Decision Trees (Partition):</p>
-<p>SVM:</p>
-<div id="describe-the-different-ways-you-tried-to-answer-the-questions-and-goals" class="section level3">
-<h3>Describe the different ways you tried to answer the questions and goals</h3>
+<p>Random Forest Regression:</p>
+<p>KNN:</p>
+<div id="phase-2-part-describe-the-different-ways-you-tried-to-answer-the-questions-and-goals" class="section level3">
+<h3>PHASE 2 PART: Describe the different ways you tried to answer the questions and goals</h3>
 </div>
 </div>
 <div id="how-did-you-reach-your-conclusions" class="section level2">

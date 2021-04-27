@@ -50,7 +50,7 @@ View(cars_edited) #view the data
 #       'Могилевская обл.' = "Mogilev Region"
 #     )
 #   )
-# 
+#
 # #Recode foreign language into their English meaning (manufacturer_name)
 # cars_edited <-
 #   cars_edited %>% mutate(
@@ -63,7 +63,7 @@ View(cars_edited) #view the data
 #       'УАЗ'  = "UAZ"
 #     )
 #   )
-# 
+#
 # #Recode foreign language into their English meaning (model_name)
 # cars_edited <-
 #   cars_edited %>% mutate(
@@ -100,7 +100,7 @@ str(cars_edited)
 cars_edited$model_name <- as.factor(cars_edited$model_name)
 cars_edited$engine_fuel <- as.factor(cars_edited$engine_fuel)
 ###################################################################################################
-# 
+#
 # Split Dataset into Training and Testing for our Models
 #
 set.seed(123)
@@ -113,9 +113,9 @@ View(test.data)
 
 ###################################################################################################
 #
-# Investigating Variables: Viewing the data with our modifications 
+# Investigating Variables: Viewing the data with our modifications
 #
-# VIEWS:
+# TABLE:
 #
 # 2) Show unique car model names and how many there are
 # 7) Show unique years produced for cars, and how many there are
@@ -125,9 +125,8 @@ View(test.data)
 # 25) The count unique up time for each car
 # 28) The count of unique Duration listed for each car
 #
-#
 # BOX PLOTS:
-# 
+#
 # 5) Odometer Value
 # 8) year produced
 # 13) Engine capacity
@@ -136,9 +135,8 @@ View(test.data)
 # 26) Up counter
 # 29) Duration listed
 #
-# 
 # DATA SKEWED:
-# 
+#
 # 6) Odometer Value
 # 9) Year produced
 # 14) Engine capacity
@@ -146,13 +144,13 @@ View(test.data)
 # 24) Number of photos
 # 27) Up counter
 # 30) Duration listed
-# 
-# 
+#
 # Other Graphs:
 #
-# 1) Getting the unique entries for all columns and displaying how often they appear
+# Bar Graphs:
+#
 # 3) Plotting the number of cars with automatic or mechanical transmissions
-# 4) Plotting cars by color and how many there are
+# 4) Plotting cars by color and quantity
 # 10) Graph to show what cars use what engine type (type of fuel)
 # 11) graph to show engine type (Electric, Diesel, Gasoline)
 # 15) Bar graph Body type: count how many cars have the same body type
@@ -160,7 +158,9 @@ View(test.data)
 # 20) Bar graph Is exchangeable: Counting the number of cars that are exchangeable
 # 21) Bar graph Location region: Count the number of cars in a region
 #
-
+# Histogram Graph:
+# 1) Getting the unique entries for all columns and displaying how often they appear
+#
 
 # 1) Getting the unique entries for all columns and displaying how often they appear
 ggplot(cars_edited, mapping = aes(y = manufacturer_name)) + geom_histogram(stat ="count") + geom_text(stat = "count", aes(label = after_stat(count)), hjust = -1)
@@ -174,7 +174,7 @@ ggplot(cars_edited, mapping = aes(x = transmission)) + geom_bar(stat = "count") 
 # 4) Plotting cars by color and how many there are
 ggplot(cars_edited, mapping = aes(x = color)) + geom_bar(stat = "count") + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
 
-# 5) Box plot Odometer Value: investigating how our outliers look with our modifications 
+# 5) Box plot Odometer Value: investigating how our outliers look with our modifications
 ggplot(cars_edited) + geom_boxplot(mapping = aes(odometer_value))
 
 # 6) Histogram Odometer Value: Graph to see how the data is skewed
@@ -252,11 +252,9 @@ ggplot(cars_edited) + geom_boxplot(mapping = aes(duration_listed))
 # 30) Histogram Duration listed: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
 
-
 ###################################################################################################
 #
 # Plotting Graphs to investigate relationships
-#
 #
 # Scatter Plot:
 # 2) Price of a car according to its year produced
@@ -277,16 +275,14 @@ ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
 # 8) The outliers with body type and price
 #
 #
-# Misc: 
+# Misc:
 # Line 287 Group cars by manufacturer, and get it's mean price
 # Line 302 Group by car body type and get it's mean price
 # 9) The correlation between car body type, price, AND engine fuel
 #
 
-
 # 1) Graph to show the amount of cars(by manufacturer name) in a region BALLOON PLOT
 ggplot(cars_edited, aes(location_region, manufacturer_name)) + geom_count()
-
 
 # 2) Graph to show the price of a car according to its year produced SCATTER PLOT
 ggplot(cars_edited, aes(year_produced, price_usd)) + geom_point() + geom_smooth()
@@ -321,18 +317,15 @@ ggplot(cars_edited) + geom_point(mapping = aes(x = body_type, y = price_usd, col
 # 10 ) Graph to show the price of a car according to it's number of photos incl. engine fuel SCATTER PLOT
 ggplot(cars_edited) + geom_point(mapping = aes(x = number_of_photos, y = price_usd, color = engine_fuel))
 
-
 ###################################################################################################
 #
 # Answering Questions
 #
-
-
 ###################################################################################################
 #
-# (Emma Doyle) 
-# 
-# 1) 
+# (Emma Doyle)
+#
+# 1)
 #
 # Box Plots, Bar Graph, ANOVA?: What impact does a region have on price?
 # What impact does region have on price?
@@ -342,7 +335,7 @@ ggplot(cars_edited) + geom_point(mapping = aes(x = number_of_photos, y = price_u
 #Aggregating the data of price to region to get the mean of prices
 #per region
 regionPriceDF <- Cars_No_Outliers %>% select(location_region, price_usd)
-aggregatedRegions <- aggregate(regionPriceDF, 
+aggregatedRegions <- aggregate(regionPriceDF,
                                by = list(regionPriceDF$location_region), FUN = mean)
 #Creating pie chart to display data
 pie(aggregatedRegions$price_usd,aggregatedRegions$Group.1)
@@ -362,11 +355,11 @@ summary(res.aov)
 
 ###################################################################################################
 #
-# (Emma Doyle) 
-# 
+# (Emma Doyle)
+#
 # 2)
 #
-# Pie Graph/Box Plot, One-Way Anova?: 
+# Pie Graph/Box Plot, One-Way Anova?:
 #
 # What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
 #
@@ -375,7 +368,7 @@ summary(res.aov)
 
 #price/manufacturers
 manuPriceDF <- Cars_No_Outliers %>% select(manufacturer_name, price_usd)
-aggregatedManufacturers <- aggregate(manuPriceDF, 
+aggregatedManufacturers <- aggregate(manuPriceDF,
                                      by = list(manuPriceDF$manufacturer_name), FUN = mean)
 #one-way anova
 manuSumm <- group_by(manuPriceDF, manuPriceDF$manufacturer_name) %>%
@@ -390,20 +383,20 @@ res.aovTwo <- aov(manuPriceDF$price_usd ~ manuPriceDF$manufacturer_name,
 summary(res.aovTwo)
 #making bar graph
 #showing the correlation between particular manufacturers and price
-#therefore not all manufacturers are needed to show some brands 
+#therefore not all manufacturers are needed to show some brands
 # can charge more than others.
 aggManu<-data.frame(aggregatedManufacturers)
 aggManu$manufacturer_name <- NULL
-aggManuSmall <- aggManu[-c(50, 51, 52, 53, 54, 55, 40, 41, 42, 43, 44, 45, 46, 
-                           47, 48, 49, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 
+aggManuSmall <- aggManu[-c(50, 51, 52, 53, 54, 55, 40, 41, 42, 43, 44, 45, 46,
+                           47, 48, 49, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
                            36, 37, 38, 39, 25, 24, 23, 22, 21, 20, 9 ,10, 19, 2),]
 barplot(aggManuSmall$price_usd~aggManuSmall$Group.1, xlab="Manufacturer", ylab="Price")
 
 ###################################################################################################
 #
-# (Reid Hoffmeier) 
+# (Reid Hoffmeier)
 #
-# 3) Scatter Plot/Box-Plot, Simple Regression Analysis: 
+# 3) Scatter Plot/Box-Plot, Simple Regression Analysis:
 # What is the relationship between odometer and price?
 #
 # The higher the odometer milage the lower the price.
@@ -429,9 +422,9 @@ sigma(odometer_on_price)*100/mean(cars_edited$price_usd)
 
 ###################################################################################################
 #
-# (Reid Hoffmeier) 
+# (Reid Hoffmeier)
 #
-# 4) Scatter Plot, Simple Regression Analysis: 
+# 4) Scatter Plot, Simple Regression Analysis:
 # Does the number of photos a vehicle has impact the selling price?
 #
 # Yes, the more photos a vehicle has, the higher the selling price.
@@ -457,8 +450,8 @@ sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
 
 ###################################################################################################
 #
-# (Matthew Lane) 
-# 
+# (Matthew Lane)
+#
 # 5) Scatter Plot, Simple Regression Analysis:
 # Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
 #
@@ -477,7 +470,7 @@ up_counter_on_price
 #
 # Explanation of regression line in this problem
 #
-# The estimated regression line equation can be written as 
+# The estimated regression line equation can be written as
 # price_usd = 6493.05 + 8.569*up_counter
 # The Intercept (b0) is 6493.05.  It can be interpreted as the predicted price in usd for an up counter of 0.  This means that if there are no up counters used, the average sales price would be around $6493.05.
 # The regression beta coefficient for the variable up_counter (b1) is 8.569.  For an up_counter value of 100, Average sales price would be 6493.05+8.569*100, $7349.95, and increase of $857.00.
@@ -493,9 +486,9 @@ sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
 
 ###################################################################################################
 #
-# (Matthew Lane) 
-# 6) Mosaic Plot/ Chi-Squared Test, Two-Way ANOVA: 
-# Relationship between Engine Type and Body Type? 
+# (Matthew Lane)
+# 6) Mosaic Plot/ Chi-Squared Test, Two-Way ANOVA:
+# Relationship between Engine Type and Body Type?
 #
 # What is the impact of Engine Type and Body Type on the selling price?
 #
@@ -520,7 +513,7 @@ summary(glht(body_engine_type_on_price.aov3, lincft = mcp))
 
 
 ###################################################################################################
-# 
+#
 # (Mikhail Mikhaylov)
 #
 # 7) Dplyr count with group_by, One-Way Anova:
@@ -550,8 +543,6 @@ models_sorted_avg_with_cnt$counts <- as.numeric(unlist(models_sorted_avg_with_cn
 
 model_price <- aov(average_price_usd ~ counts, data = models_sorted_avg_with_cnt)
 summary(model_price)
-
-
 
 # The popularity of a vehicle does seem to have an impact on the average_price of a vehicle
 
@@ -594,10 +585,9 @@ summary(manufacturer_price)
 # Gain insights into which variables have the largest impact on selling price of a vehicle.
 # Create a predictive model based on these insights to create a predictive model.
 #
-
-## Multiple Linear Regression Models
 ###################################################################################################
 
+## Multiple Linear Regression Models
 LMCont <- lm(price_usd ~ odometer_value
              + year_produced
              + number_of_photos
@@ -624,7 +614,7 @@ LogLMConts <- lm(log(price_usd) ~ odometer_value
 
 summary(LogLMConts)
 step.logConts <- LogLMConts %>% stepAIC(trace = FALSE)
-coef(step.logConts) 
+coef(step.logConts)
 LMLofContPrediction <- step.logConts %>% predict(test.data)
 rmse(test.data$price_usd, LMLofContPrediction)
 R2(LMLofContPrediction,test.data$price_usd)
@@ -632,38 +622,70 @@ vif(step.logConts)
 confint(step.logConts)
 # More accurate without log transformation
 
-## SVR Models
 ###################################################################################################
-SVR <- svm(price_usd ~ ., train.data)
-summary(SVR)
+## SVR Models
 
-coef(step.SVR)
-SVRPrediction <- predict(SVR, test.data)
-rmse(test.data$price_usd, SVRPrediction)
-R2(SVRPrediction,test.data$price_usd)
-vif(step.logConts)
-confint(step.logConts)
-
-
-
-modelSVM <- train( price_usd ~ ., data = train.data, method = "svmPoly",
-                   trControl = trainControl("cv", number =10),
-                   preProcess = c("center", "scale"),
-                   tuneLength = 4
+### Nonlinear SVR
+modelSVMPolyCont <- train( price_usd ~
+                             odometer_value
+                           + year_produced
+                           + number_of_photos
+                           + duration_listed
+                           + up_counter, data = train.data, method = "svmPoly",
+                           trControl = trainControl("cv", number =10),
+                           tuneLength = 4
 )
 
-summary(modelSVM)
+SVRPredictionPolyCont <- predict(modelSVMPolyCont, test.data)
+rmse(test.data$price_usd, SVRPredictionPolyCont)
+R2(SVRPredictionPolyCont,test.data$price_usd)
+vif(SVRPredictionPolyCont)
+confint(SVRPredictionPolyCont)
 
-predictionSVRTrain <- modelSVM %>% predict(train.data)
-rmse(test.data$price_usd, prediction)
-R2(predictionSVRTrain,test.data$price_usd)
-vif(predictionSVRTrain)
-confint(predictionSVRTrain)
+modelSVMPoly <- train( price_usd ~ ., data = train.data, method = "svmPoly",
+                       trControl = trainControl("cv", number =10),
+                       preProcess = c("center", "scale"),
+                       tuneLength = 4
+)
 
+SVRPredictionPoly <- predict(modelSVMPoly, test.data)
+rmse(test.data$price_usd, SVRPredictionPoly)
+R2(SVRPredictionPoly,test.data$price_usd)
+vif(SVRPredictionPoly)
+confint(SVRPredictionPoly)
 
-## Decision Tree Regression Model
+### Linear SVR
+modelSVMLinCont <- train( price_usd ~
+                            odometer_value
+                          + year_produced
+                          + number_of_photos
+                          + duration_listed
+                          + up_counter, data = train.data, method = "svmLinear",
+                          trControl = trainControl("cv", number =10),
+                          tuneLength = 4
+)
+
+SVRPredictionLinCont <- predict(modelSVMLinCont, test.data)
+rmse(test.data$price_usd, SVRPredictionLinCont)
+R2(SVRPredictionLinCont,test.data$price_usd)
+vif(SVRPredictionLinCont)
+confint(SVRPredictionLinCont)
+
+modelSVMLin <- train( price_usd ~ ., data = train.data, method = "svmLinear",
+                      trControl = trainControl("cv", number =10),
+                      preProcess = c("center", "scale"),
+                      tuneLength = 4
+)
+
+SVRPredictionLin <- predict(modelSVMLin, test.data)
+rmse(test.data$price_usd, SVRPredictionLin)
+R2(SVRPredictionLin,test.data$price_usd)
+vif(SVRPredictionLin)
+confint(SVRPredictionLin)
+
 ###################################################################################################
-model_DT <- rpart(price_usd ~ ., method = "anova", data = train.data)
+## Decision Tree Regression Model
+model_DT <- rpart(price_usd ~ ., method = "reg", data = train.data)
 summary(model_DT)
 par(xpd = NA)
 plot(model_DT)
@@ -673,8 +695,8 @@ prediction_DT <- model_DT %>% predict(test.data)
 rmse(prediction_DT,test.data$price_usd)
 R2(prediction_DT,test.data$price_usd)
 
-## Random Forest Model
 ###################################################################################################
+## Random Forest Model
 random_forest_tree_cont <- randomForest(price_usd  ~ odometer_value
                                         + year_produced
                                         + number_of_photos
@@ -710,8 +732,8 @@ rmse(rf_predict_rf_noncont,test.data$price_usd)
 R2(rf_predict_rf_noncont,test.data$price_usd)
 
 
-random_forest_ranger <- train(price_usd ~ . , 
-                              data = train.data, 
+random_forest_ranger <- train(price_usd ~ . ,
+                              data = train.data,
                               method = "ranger")
 summary(random_forest_ranger)
 print(random_forest_ranger)
@@ -720,8 +742,9 @@ rmse(rf_predict_ranger,test.data$price_usd)
 R2(rf_predict_ranger,test.data$price_usd)
 
 
-## KNN Model
+
 ###################################################################################################
+## KNN Model
 
 NROW(train.data)
 knn.26 <- knn(train=train.data, test=test.data, cl=train.loan_labels, k=175)
