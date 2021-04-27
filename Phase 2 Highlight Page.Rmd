@@ -132,9 +132,6 @@ set.seed(123)
 training.samples <- cars_edited$manufacturer_name %>% createDataPartition(p = 0.8, list = FALSE)
 train.data <- cars_edited[training.samples,]
 test.data <- cars_edited[-training.samples,]
-
-View(train.data)
-View(test.data)
 ```
 
 
@@ -142,7 +139,7 @@ View(test.data)
 
 ## Visualitions used to analyze data
 
-In an attempt to gain a robust knowledge of our dataset several visualitions were used. Visualization of our data was done in two sections. Initially each attribute was graphed in order to gain a general understanding of how the samples are distributed for each atribute. This was done with the help of Bar Graphs, Histograms, Boxplots, and the count function.
+In an attempt to gain a robust knowledge of our dataset several visualizations were used. Visualization of our data was done in two sections. Initially each attribute was graphed in order to gain a general understanding of how the samples are distributed for each attribute. This was done with the help of Bar Graphs, Histograms, Boxplots, and the count function. Once a general understanding of each attribute was gained we began to visualize various combinations of attributions. These visualizations were vital in seeing different relationships among our samples. The visualizations that were were used were Balloon Plot, Scatterplot, frequency polygons, dplyr::summarize, and Boxplots.
 
 The different graphs that we used:
 Scatter plot

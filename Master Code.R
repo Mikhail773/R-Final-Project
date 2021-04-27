@@ -588,6 +588,20 @@ summary(manufacturer_price)
 ###################################################################################################
 
 ## Multiple Linear Regression Models
+# Check Accuracy
+LM <- lm(price_usd ~ odometer_value
+             + year_produced
+             + number_of_photos
+             + duration_listed
+             + up_counter
+             , data = cars_edited)
+step.LM <- LM %>% stepAIC(trace = FALSE)
+vif(step.LM)
+summary(step.LM)
+# Accuracy is 52.61%
+# At Least one model is significantly related to the outcome variable since p < 0.05
+
+# R^2 for test/train dataset
 LMCont <- lm(price_usd ~ odometer_value
              + year_produced
              + number_of_photos
@@ -595,14 +609,15 @@ LMCont <- lm(price_usd ~ odometer_value
              + up_counter
              , data = train.data)
 
-step.Conts <- LMCont %>% stepAIC(trace = FALSE)
-summary(step.Conts)
-coef(step.Conts)
-LMContPrediction <- step.Conts %>% predict(test.data)
-rmse(test.data$price_usd, LMContPrediction)
-R2(LMContPrediction,test.data$price_usd)
-vif(step.Conts)
+vif(LMCont)
+step.LMConts <- LMCont %>% stepAIC(trace = FALSE)
+vif(step.LMConts)
+summary(step.LMConts)
+coef(step.LMConts)
 confint(step.Conts)
+LMContPrediction <- step.LMConts %>% predict(test.data)
+rmse(test.data$price_usd, LMContPrediction)
+R2(LMContPrediction,test.data$price_usd) ## R^2 for test/train is 50.95891%
 
 # Log transformation
 LogLMConts <- lm(log(price_usd) ~ odometer_value
@@ -612,48 +627,19 @@ LogLMConts <- lm(log(price_usd) ~ odometer_value
                  + up_counter
                  , data = train.data)
 
-summary(LogLMConts)
+vif(LogLMConts)
 step.logConts <- LogLMConts %>% stepAIC(trace = FALSE)
+vif(step.logConts)
+summary(step.logConts)
 coef(step.logConts)
+confint(step.logConts)
 LMLofContPrediction <- step.logConts %>% predict(test.data)
 rmse(test.data$price_usd, LMLofContPrediction)
 R2(LMLofContPrediction,test.data$price_usd)
-vif(step.logConts)
-confint(step.logConts)
 # More accurate without log transformation
 
 ###################################################################################################
 ## SVR Models
-
-### Nonlinear SVR
-modelSVMPolyCont <- train( price_usd ~
-                             odometer_value
-                           + year_produced
-                           + number_of_photos
-                           + duration_listed
-                           + up_counter, data = train.data, method = "svmPoly",
-                           trControl = trainControl("cv", number =10),
-                           tuneLength = 4
-)
-
-SVRPredictionPolyCont <- predict(modelSVMPolyCont, test.data)
-rmse(test.data$price_usd, SVRPredictionPolyCont)
-R2(SVRPredictionPolyCont,test.data$price_usd)
-vif(SVRPredictionPolyCont)
-confint(SVRPredictionPolyCont)
-
-modelSVMPoly <- train( price_usd ~ ., data = train.data, method = "svmPoly",
-                       trControl = trainControl("cv", number =10),
-                       preProcess = c("center", "scale"),
-                       tuneLength = 4
-)
-
-SVRPredictionPoly <- predict(modelSVMPoly, test.data)
-rmse(test.data$price_usd, SVRPredictionPoly)
-R2(SVRPredictionPoly,test.data$price_usd)
-vif(SVRPredictionPoly)
-confint(SVRPredictionPoly)
-
 ### Linear SVR
 modelSVMLinCont <- train( price_usd ~
                             odometer_value
@@ -662,7 +648,7 @@ modelSVMLinCont <- train( price_usd ~
                           + duration_listed
                           + up_counter, data = train.data, method = "svmLinear",
                           trControl = trainControl("cv", number =10),
-                          tuneLength = 4
+                          preProcess = c("center", "scale"),
 )
 
 SVRPredictionLinCont <- predict(modelSVMLinCont, test.data)
@@ -674,7 +660,6 @@ confint(SVRPredictionLinCont)
 modelSVMLin <- train( price_usd ~ ., data = train.data, method = "svmLinear",
                       trControl = trainControl("cv", number =10),
                       preProcess = c("center", "scale"),
-                      tuneLength = 4
 )
 
 SVRPredictionLin <- predict(modelSVMLin, test.data)
@@ -682,6 +667,35 @@ rmse(test.data$price_usd, SVRPredictionLin)
 R2(SVRPredictionLin,test.data$price_usd)
 vif(SVRPredictionLin)
 confint(SVRPredictionLin)
+
+### Nonlinear SVR
+modelSVMPolyCont <- train( price_usd ~
+                             odometer_value
+                           + year_produced
+                           + number_of_photos
+                           + duration_listed
+                           + up_counter, data = train.data, method = "svmPoly",
+                           trControl = trainControl("cv", number =10),
+                           preProcess = c("center", "scale"),
+)
+
+SVRPredictionPolyCont <- predict(modelSVMPolyCont, test.data)
+rmse(test.data$price_usd, SVRPredictionPolyCont)
+R2(SVRPredictionPolyCont,test.data$price_usd)
+vif(SVRPredictionPolyCont)
+confint(SVRPredictionPolyCont)
+
+modelSVMPoly <- train( price_usd ~ ., data = train.data, method = "svmPoly",
+                       trControl = trainControl("cv", number =10),
+                       preProcess = c("center", "scale"),
+)
+
+SVRPredictionPoly <- predict(modelSVMPoly, test.data)
+rmse(test.data$price_usd, SVRPredictionPoly)
+R2(SVRPredictionPoly,test.data$price_usd)
+vif(SVRPredictionPoly)
+confint(SVRPredictionPoly)
+
 
 ###################################################################################################
 ## Decision Tree Regression Model

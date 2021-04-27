@@ -505,10 +505,7 @@ count(cars_edited)</code></pre>
 <pre class="r"><code>set.seed(123)
 training.samples &lt;- cars_edited$manufacturer_name %&gt;% createDataPartition(p = 0.8, list = FALSE)
 train.data &lt;- cars_edited[training.samples,]
-test.data &lt;- cars_edited[-training.samples,]
-
-View(train.data)
-View(test.data)</code></pre>
+test.data &lt;- cars_edited[-training.samples,]</code></pre>
 </div>
 </div>
 <div id="data-analysis-and-modeling" class="section level1">
