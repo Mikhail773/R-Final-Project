@@ -597,45 +597,53 @@ summary(manufacturer_price)
 ## Multiple Linear Regression Models
 ###################################################################################################
 
-modelLMCont <- train( price_usd ~ odometer_value
-                      + year_produced
-                      + number_of_photos
-                      + duration_listed
-                      + up_counter
-                        , data = train.data, method = "lm")
-summary(modelLMCont)
+LMCont <- lm(price_usd ~ odometer_value
+                     + year_produced
+                     + number_of_photos
+                     + duration_listed
+                     + up_counter
+                     , data = train.data)
 
-predictionLMCont <- modelLMCont %>% predict(test.data)
-sigma(predictionLMCont)/mean(test.data$price_usd)
+step.Conts <- LMCont %>% stepAIC(trace = FALSE)
+summary(step.Conts)
+coef(step.Conts)
+LMContPrediction <- step.Conts %>% predict(test.data)
 rmse(test.data$price_usd, predictionLMCont)
+R2(LMContPrediction,test.data$price_usd)
+vif(step.Conts)
+confint(step.Conts)
 
+# Log transformation
+LogLMConts <- lm(log(price_usd) ~ odometer_value
+                   + year_produced
+                   + number_of_photos
+                   + duration_listed
+                   + up_counter
+                   , data = train.data)
 
-
-modelLMConts <- train( log(price_usd) ~ odometer_value
-                      + year_produced
-                      + number_of_photos
-                      + duration_listed
-                      + up_counter
-                      , data = train.data, method = "lm")
-summary(modelLMConts)
-step.modelConts <- modelLMConts %>% stepAIC(trace = FALSE)
-coef(step.modelConts) %>% View()
-
-
-# To prevent errors from the test.data encountering new factors we proceed as following:
-#add all levels of 'model_name' in 'test.data' dataset to train.data$xlevels[["y"]] in the fit object
-step.model$xlevels[["model_name"]] <- union(step.model$xlevels[["model_name"]], levels(test.data[["model_name"]]))
-step.model$xlevels[["model_name"]] <- union(step.model$xlevels[["engine_fuel"]], levels(test.data[["engine_fuel"]]))
-# 
-vif(multi_lm3)
-prediction <- step.model %>% predict(test.data)
-prediction %>% as.tibble()
-rmse(test.data$price_usd, prediction)
+summary(LogLMConts)
+step.logConts <- LogLMConts %>% stepAIC(trace = FALSE)
+coef(step.logConts) 
+LMLofContPrediction <- step.logConts %>% predict(test.data)
+rmse(test.data$price_usd, LMLofContPrediction)
+R2(LMLofContPrediction,test.data$price_usd)
+vif(step.logConts)
+confint(step.logConts)
+# More accurate without log transformation
 
 ## SVR Models
 ###################################################################################################
-SVR <- svm(price_usd ~ ., train.data, type <- 'eps-regression', kernel <- 'radial')
+SVR <- svm(price_usd ~ ., train.data)
 summary(SVR)
+
+coef(step.SVR) 
+SVRPrediction <- predict(SVR, test.data)
+rmse(test.data$price_usd, SVRPrediction)
+R2(SVRPrediction,test.data$price_usd)
+vif(step.logConts)
+confint(step.logConts)
+
+
 
 modelSVM <- train( price_usd ~ ., data = train.data, method = "svmPoly",
                    trControl = trainControl("cv", number =10), 
