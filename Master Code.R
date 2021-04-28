@@ -332,6 +332,8 @@ ggplot(cars_edited) + geom_point(mapping = aes(x = number_of_photos, y = price_u
 # What impact does region have on price?
 # Regions: Minsk, Gomel, Brest, Vitebsk, Mogilev, Grodno
 #
+# With this data set region doesn't have an impact on vehicle price.
+#
 
 #Aggregating the data of price to region to get the mean of prices
 #per region
@@ -392,9 +394,13 @@ manuSumm <- group_by(manuPriceDF, manuPriceDF$manufacturer_name) %>%
     mean = mean(price_usd, na.rm = TRUE),
     sd = sd(price_usd, na.rm = TRUE)
   )
+manuSumm
+
 # Compute the analysis of variance
 res.aovTwo <- aov(manuPriceDF$price_usd ~ manuPriceDF$manufacturer_name,
                   data = manuPriceDF)
+res.aovTwo
+
 summary(res.aovTwo)
 #making bar graph
 #showing the correlation between particular manufacturers and price
