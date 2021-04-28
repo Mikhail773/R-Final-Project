@@ -452,11 +452,21 @@ Because of this analysis we can conclude that **the popularity of a vehicle does
 
 **Q:** What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
 
-**Justification:** With the nature of this question we can figure out the answer without a graph. We just need to look at the views of the variables we create.
+**Justification:** With the nature of this question we can figure out the answer without a graph. We just need to look at the views of the variables we create. 
 
 ```{r}
+#Find popularity of vehicles
+models_counted <- cars_edited %>% count(model_name) %>% arrange(desc(n))
+
+#Find average price for each model
+models_sorted_averages <- summarise(models_sorted, average_price_usd = mean(price_usd))
+
+#Get the count of each model
+models_sorted_avg_with_cnt <- models_sorted_averages %>% mutate(counts = count(cars_edited, model_name) %>% dplyr::select(2))
+
 
 ```
+
 
 Because of this analysis we can conclude that **the popularity of a vehicle does have an impact on the average_price of a vehicle.**
 

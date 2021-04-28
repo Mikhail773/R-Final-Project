@@ -547,7 +547,7 @@ models_counted <- cars_edited %>% count(model_name) %>% arrange(desc(n))
 View(models_counted)
 # Most popular is Passat
 
-# Find price average for each model and appent count to it
+# Find price average for each model and append count to it
 models_sorted <- group_by(cars_edited, model_name)
 View(models_sorted)
 models_sorted_averages <- summarise(models_sorted, average_price_usd = mean(price_usd))
@@ -559,6 +559,15 @@ View(models_sorted_avg_with_cnt)
 count(cars_edited, model_name) %>% dplyr::select(2)
 
 models_sorted_avg_with_cnt$counts <- as.numeric(unlist(models_sorted_avg_with_cnt$counts))
+
+#Brandon added Keep or no keep?
+ggplot (models_sorted_avg_with_cnt, aes( x =counts, y=average_price_usd)) + geom_point() + stat_smooth()
+modelPricePerCount <- lm (average_price_usd ~ counts, data = models_sorted_avg_with_cnt)
+ggplot (models_sorted_avg_with_cnt, aes(x=counts, y=average_price_usd)) + geom_point() + stat_smooth(method=lm)
+summary(modelPricePerCount)
+confint(modelPricePerCount)
+sigma(modelPricePerCount)*100/mean(models_sorted_avg_with_cnt$average_price_usd)
+
 
 model_price <- aov(average_price_usd ~ counts, data = models_sorted_avg_with_cnt)
 summary(model_price)
