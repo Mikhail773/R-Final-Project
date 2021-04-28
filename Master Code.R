@@ -107,6 +107,7 @@ set.seed(123)
 training.samples <- cars_edited$manufacturer_name %>% createDataPartition(p = 0.8, list = FALSE)
 train.data <- cars_edited[training.samples,]
 test.data <- cars_edited[-training.samples,]
+observed.price_usd <- test.data$price_usd
 
 View(train.data)
 View(test.data)
@@ -618,6 +619,7 @@ confint(step.Conts)
 LMContPrediction <- step.LMConts %>% predict(test.data)
 rmse(test.data$price_usd, LMContPrediction)
 R2(LMContPrediction,test.data$price_usd) ## R^2 for test/train is 50.95891%
+confusionMatrix(LMContPrediction$price_usd ,observed.price_usd, positive = "pos")
 
 # Log transformation
 LogLMConts <- lm(log(price_usd) ~ odometer_value
@@ -659,6 +661,8 @@ rmse(test.data$price_usd, SVRPredictionLinCont)
 R2(SVRPredictionLinCont,test.data$price_usd)
 vif(SVRPredictionLinCont)
 confint(SVRPredictionLinCont)
+confusionMatrix(SVRPredictionLinCont$price_usd ,observed.price_usd, positive = "pos")
+
 
 modelSVMLin <- train( price_usd ~ ., data = train.data, method = "svmLinear",
                       trControl = trainControl("cv", number =10),
@@ -673,6 +677,7 @@ rmse(test.data$price_usd, SVRPredictionLin)
 R2(SVRPredictionLin,test.data$price_usd)
 vif(SVRPredictionLin)
 confint(SVRPredictionLin)
+confusionMatrix(SVRPredictionLin$price_usd ,observed.price_usd, positive = "pos")
 
 ### Nonlinear SVR
 modelSVMPolyCont <- train( price_usd ~
@@ -693,6 +698,7 @@ rmse(test.data$price_usd, SVRPredictionPolyCont)
 R2(SVRPredictionPolyCont,test.data$price_usd)
 vif(SVRPredictionPolyCont)
 confint(SVRPredictionPolyCont)
+confusionMatrix(SVRPredictionPolyCont$price_usd ,observed.price_usd, positive = "pos")
 
 modelSVMPoly <- train( price_usd ~ ., data = train.data, method = "svmPoly",
                        trControl = trainControl("cv", number =10),
@@ -707,21 +713,54 @@ rmse(test.data$price_usd, SVRPredictionPoly)
 R2(SVRPredictionPoly,test.data$price_usd)
 vif(SVRPredictionPoly)
 confint(SVRPredictionPoly)
+confusionMatrix(SVRPredictionPoly$price_usd ,observed.price_usd, positive = "pos")
 
 ###################################################################################################
 ## Decision Tree Regression Model
+DT <- rpart(price_usd ~ ., method = "reg", data = cars_edited)
+summary(DT)
+print(DT)
+
 model_DT <- rpart(price_usd ~ ., method = "reg", data = train.data)
 summary(model_DT)
 par(xpd = NA)
-plot(model_DT)
+plot(model_DT, uniform = TRUE)
 text(model_DT, digits = 3)
+print(DT)
 
 prediction_DT <- model_DT %>% predict(test.data)
 rmse(prediction_DT,test.data$price_usd)
 R2(prediction_DT,test.data$price_usd)
+vif(prediction_DT)
+confint(prediction_DT)
+confusionMatrix(prediction_DT$price_usd ,observed.price_usd, positive = "pos")
+
+model_DT_Train <- train(price_usd ~ ., data = train.data, method = "rpart",
+                        trControl = trainControl("cv",number = 10),
+                        tuneLength = 10)
+model_DT_Train$bestTune
+summary(model_DT_Train)
+par(xpd = NA)
+plot(model_DT_Train$finalModel, uniform = TRUE)
+text(model_DT_Train$finalModel, digits = 3)
+print(model_DT_Train$finalModel)
+model_DT_Train$finalModel
+
+prediction_DT_Train <- model_DT_Train %>% predict(test.data)
+rmse(prediction_DT_Train,test.data$price_usd)
+R2(prediction_DT_Train,test.data$price_usd)
+vif(prediction_DT_Train)
+confint(prediction_DT_Train)
+confusionMatrix(prediction_DT_Train$price_usd ,observed.price_usd, positive = "pos")
 
 ###################################################################################################
 ## Random Forest Model
+random_forest <- train(price_usd ~ . ,
+                              data = cars_edited,
+                              method = "ranger")
+summary(random_forest)
+plot(random_forest)
+
 random_forest_tree_cont <- randomForest(price_usd  ~ odometer_value
                                         + year_produced
                                         + number_of_photos
@@ -732,6 +771,9 @@ random_forest_tree_cont <- randomForest(price_usd  ~ odometer_value
 rf_predict_cont <- predict(random_forest_tree_cont, test.data , type='response')
 rmse(rf_predict_cont,test.data$price_usd)
 R2(rf_predict_cont,test.data$price_usd)
+vif(rf_predict_cont)
+confint(rf_predict_cont)
+confusionMatrix(rf_predict_cont$price_usd ,observed.price_usd, positive = "pos")
 
 # RF Tree without Model_name
 random_forest_tree <- randomForest(price_usd ~ manufacturer_name
@@ -755,6 +797,9 @@ print(random_forest_tree)
 rf_predict_rf_noncont <- predict(random_forest_tree, test.data , type='response')
 rmse(rf_predict_rf_noncont,test.data$price_usd)
 R2(rf_predict_rf_noncont,test.data$price_usd)
+vif(rf_predict_rf_noncont)
+confint(rf_predict_rf_noncont)
+confusionMatrix(rf_predict_rf_noncont$price_usd ,observed.price_usd, positive = "pos")
 
 
 random_forest_ranger <- train(price_usd ~ . ,
@@ -765,8 +810,9 @@ print(random_forest_ranger)
 rf_predict_ranger <- predict(random_forest_ranger, test.data , type='response')
 rmse(rf_predict_ranger,test.data$price_usd)
 R2(rf_predict_ranger,test.data$price_usd)
-
-
+vif(rf_predict_ranger)
+confint(rf_predict_ranger)
+confusionMatrix(rf_predict_ranger$price_usd ,observed.price_usd, positive = "pos")
 
 ###################################################################################################
 ## KNN Model
