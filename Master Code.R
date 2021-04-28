@@ -648,9 +648,12 @@ modelSVMLinCont <- train( price_usd ~
                           + duration_listed
                           + up_counter, data = train.data, method = "svmLinear",
                           trControl = trainControl("cv", number =10),
+                          tuneGrid = expand.grid(C = seq(0,2, length =20)),
                           preProcess = c("center", "scale"),
 )
 
+summary(modelSVMLinCont)
+modelSVMLinCont$bestTune
 SVRPredictionLinCont <- predict(modelSVMLinCont, test.data)
 rmse(test.data$price_usd, SVRPredictionLinCont)
 R2(SVRPredictionLinCont,test.data$price_usd)
@@ -659,9 +662,12 @@ confint(SVRPredictionLinCont)
 
 modelSVMLin <- train( price_usd ~ ., data = train.data, method = "svmLinear",
                       trControl = trainControl("cv", number =10),
+                      tuneGrid = expand.grid(C = seq(0,2, length =20)),
                       preProcess = c("center", "scale"),
 )
 
+summary(modelSVMLin)
+modelSVMLin$bestTune
 SVRPredictionLin <- predict(modelSVMLin, test.data)
 rmse(test.data$price_usd, SVRPredictionLin)
 R2(SVRPredictionLin,test.data$price_usd)
@@ -676,9 +682,12 @@ modelSVMPolyCont <- train( price_usd ~
                            + duration_listed
                            + up_counter, data = train.data, method = "svmPoly",
                            trControl = trainControl("cv", number =10),
+                           tuneGrid = expand.grid(C = seq(0,2, length =20)),
                            preProcess = c("center", "scale"),
 )
 
+summary(modelSVMPolyCont)
+modelSVMPolyCont$bestTune
 SVRPredictionPolyCont <- predict(modelSVMPolyCont, test.data)
 rmse(test.data$price_usd, SVRPredictionPolyCont)
 R2(SVRPredictionPolyCont,test.data$price_usd)
@@ -687,15 +696,17 @@ confint(SVRPredictionPolyCont)
 
 modelSVMPoly <- train( price_usd ~ ., data = train.data, method = "svmPoly",
                        trControl = trainControl("cv", number =10),
+                       tuneGrid = expand.grid(C = seq(0,2, length =20)),
                        preProcess = c("center", "scale"),
 )
 
+summary(modelSVMPoly)
+modelSVMPoly$bestTune
 SVRPredictionPoly <- predict(modelSVMPoly, test.data)
 rmse(test.data$price_usd, SVRPredictionPoly)
 R2(SVRPredictionPoly,test.data$price_usd)
 vif(SVRPredictionPoly)
 confint(SVRPredictionPoly)
-
 
 ###################################################################################################
 ## Decision Tree Regression Model
