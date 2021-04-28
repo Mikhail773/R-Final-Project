@@ -335,11 +335,19 @@ ggplot(cars_edited) + geom_point(mapping = aes(x = number_of_photos, y = price_u
 
 #Aggregating the data of price to region to get the mean of prices
 #per region
-regionPriceDF <- Cars_No_Outliers %>% select(location_region, price_usd)
-aggregatedRegions <- aggregate(regionPriceDF,
-                               by = list(regionPriceDF$location_region), FUN = mean)
-#Creating pie chart to display data
-pie(aggregatedRegions$price_usd,aggregatedRegions$Group.1)
+regionPriceDF <- group_by(cars_edited, location_region)
+regionPriceDF_averages <- summarise(regionPriceDF, average_price_usd = mean(price_usd))
+View(regionPriceDF_averages)
+percentRegion <- paste0(round(100*regionPriceDF_averages$average_price_usd/sum(regionPriceDF_averages$average_price_usd), 2), "%")
+pie(regionPriceDF_averages$average_price_usd, labels = percentRegion, main = "Region Price Distribution pie chart", col = rainbow(length(regionPriceDF_averages$average_price_usd)))
+legend("topright", c("Brest Region", "Gomel Region", "Grodno Region", "Minsk Region", "Mogilev Region", "Vitebsk Region"), cex = 0.8,
+       fill = rainbow(length(regionPriceDF_averages$average_price_usd)))
+
+# regionPriceDF <- Cars_No_Outliers %>% select(location_region, price_usd)
+# aggregatedRegions <- aggregate(regionPriceDF,
+#                                by = list(regionPriceDF$location_region), FUN = mean)
+# #Creating pie chart to display data
+# pie(aggregatedRegions$price_usd,aggregatedRegions$Group.1)
 
 #one-way anova
 group_by(regionPriceDF, regionPriceDF$location_region) %>%
@@ -367,10 +375,16 @@ summary(res.aov)
 #
 #
 
-#price/manufacturers
-manuPriceDF <- Cars_No_Outliers %>% select(manufacturer_name, price_usd)
-aggregatedManufacturers <- aggregate(manuPriceDF,
-                                     by = list(manuPriceDF$manufacturer_name), FUN = mean)
+manuPriceDF <- group_by(cars_edited, manufacturer_name)
+manuPriceDF_averages <- summarise(manuPriceDF, average_price_usd = mean(price_usd))
+View(manuPriceDF_averages)
+ggplot(manuPriceDF_averages, aes(x = average_price_usd, y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name),stat="identity") + geom_text(aes(label =  paste0("$",round(average_price_usd)), hjust = 1))
+
+# #price/manufacturers
+# manuPriceDF <- Cars_No_Outliers %>% select(manufacturer_name, price_usd)
+# aggregatedManufacturers <- aggregate(manuPriceDF,
+#                                      by = list(manuPriceDF$manufacturer_name), FUN = mean)
+
 #one-way anova
 manuSumm <- group_by(manuPriceDF, manuPriceDF$manufacturer_name) %>%
   summarise(
@@ -386,12 +400,12 @@ summary(res.aovTwo)
 #showing the correlation between particular manufacturers and price
 #therefore not all manufacturers are needed to show some brands
 # can charge more than others.
-aggManu<-data.frame(aggregatedManufacturers)
-aggManu$manufacturer_name <- NULL
-aggManuSmall <- aggManu[-c(50, 51, 52, 53, 54, 55, 40, 41, 42, 43, 44, 45, 46,
-                           47, 48, 49, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
-                           36, 37, 38, 39, 25, 24, 23, 22, 21, 20, 9 ,10, 19, 2),]
-barplot(aggManuSmall$price_usd~aggManuSmall$Group.1, xlab="Manufacturer", ylab="Price")
+# aggManu<-data.frame(aggregatedManufacturers)
+# aggManu$manufacturer_name <- NULL
+# aggManuSmall <- aggManu[-c(50, 51, 52, 53, 54, 55, 40, 41, 42, 43, 44, 45, 46,
+#                            47, 48, 49, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
+#                            36, 37, 38, 39, 25, 24, 23, 22, 21, 20, 9 ,10, 19, 2),]
+# barplot(aggManuSmall$price_usd~aggManuSmall$Group.1, xlab="Manufacturer", ylab="Price")
 
 ###################################################################################################
 #
@@ -615,11 +629,12 @@ step.LMConts <- LMCont %>% stepAIC(trace = FALSE)
 vif(step.LMConts)
 summary(step.LMConts)
 coef(step.LMConts)
-confint(step.Conts)
-LMContPrediction <- step.LMConts %>% predict(test.data)
+confint(step.LMConts)
+LMContPrediction <- predict(step.LMConts, test.data)
 rmse(test.data$price_usd, LMContPrediction)
+rmse(test.data$price_usd, LMContPrediction)/mean(test.data$price_usd)  ##67.57975
 R2(LMContPrediction,test.data$price_usd) ## R^2 for test/train is 50.95891%
-confusionMatrix(LMContPrediction$price_usd ,observed.price_usd, positive = "pos")
+confusionMatrix(LMContPrediction , test.data$price_usd, positive = "pos")
 
 # Log transformation
 LogLMConts <- lm(log(price_usd) ~ odometer_value
@@ -650,8 +665,8 @@ modelSVMLinCont <- train( price_usd ~
                           + duration_listed
                           + up_counter, data = train.data, method = "svmLinear",
                           trControl = trainControl("cv", number =10),
-                          tuneGrid = expand.grid(C = seq(0,2, length =20)),
                           preProcess = c("center", "scale"),
+                          tuneLength = 10
 )
 
 summary(modelSVMLinCont)
@@ -659,15 +674,13 @@ modelSVMLinCont$bestTune
 SVRPredictionLinCont <- predict(modelSVMLinCont, test.data)
 rmse(test.data$price_usd, SVRPredictionLinCont)
 R2(SVRPredictionLinCont,test.data$price_usd)
-vif(SVRPredictionLinCont)
-confint(SVRPredictionLinCont)
 confusionMatrix(SVRPredictionLinCont$price_usd ,observed.price_usd, positive = "pos")
 
 
 modelSVMLin <- train( price_usd ~ ., data = train.data, method = "svmLinear",
                       trControl = trainControl("cv", number =10),
-                      tuneGrid = expand.grid(C = seq(0,2, length =20)),
                       preProcess = c("center", "scale"),
+                      tuneLength = 10
 )
 
 summary(modelSVMLin)
@@ -675,8 +688,6 @@ modelSVMLin$bestTune
 SVRPredictionLin <- predict(modelSVMLin, test.data)
 rmse(test.data$price_usd, SVRPredictionLin)
 R2(SVRPredictionLin,test.data$price_usd)
-vif(SVRPredictionLin)
-confint(SVRPredictionLin)
 confusionMatrix(SVRPredictionLin$price_usd ,observed.price_usd, positive = "pos")
 
 ### Nonlinear SVR
@@ -687,8 +698,8 @@ modelSVMPolyCont <- train( price_usd ~
                            + duration_listed
                            + up_counter, data = train.data, method = "svmPoly",
                            trControl = trainControl("cv", number =10),
-                           tuneGrid = expand.grid(C = seq(0,2, length =20)),
                            preProcess = c("center", "scale"),
+                           tuneLength = 10
 )
 
 summary(modelSVMPolyCont)
@@ -696,14 +707,30 @@ modelSVMPolyCont$bestTune
 SVRPredictionPolyCont <- predict(modelSVMPolyCont, test.data)
 rmse(test.data$price_usd, SVRPredictionPolyCont)
 R2(SVRPredictionPolyCont,test.data$price_usd)
-vif(SVRPredictionPolyCont)
-confint(SVRPredictionPolyCont)
 confusionMatrix(SVRPredictionPolyCont$price_usd ,observed.price_usd, positive = "pos")
+
+modelSVMRadialCont <- train( price_usd ~
+                             odometer_value
+                           + year_produced
+                           + number_of_photos
+                           + duration_listed
+                           + up_counter, data = train.data, method = "svmPoly",
+                           trControl = trainControl("cv", number =10),
+                           preProcess = c("center", "scale"),
+                           tuneLength = 10
+)
+
+summary(modelSVMRadialCont)
+modelSVMRadialCont$bestTune
+SVRPredictionRadialCont <- predict(modelSVMPolyCont, test.data)
+rmse(test.data$price_usd, SVRPredictionRadialCont)
+R2(SVRPredictionRadialCont,test.data$price_usd)
+confusionMatrix(SVRPredictionRadialCont$price_usd ,observed.price_usd, positive = "pos")
 
 modelSVMPoly <- train( price_usd ~ ., data = train.data, method = "svmPoly",
                        trControl = trainControl("cv", number =10),
-                       tuneGrid = expand.grid(C = seq(0,2, length =20)),
                        preProcess = c("center", "scale"),
+                       tuneLength = 10
 )
 
 summary(modelSVMPoly)
@@ -711,17 +738,28 @@ modelSVMPoly$bestTune
 SVRPredictionPoly <- predict(modelSVMPoly, test.data)
 rmse(test.data$price_usd, SVRPredictionPoly)
 R2(SVRPredictionPoly,test.data$price_usd)
-vif(SVRPredictionPoly)
-confint(SVRPredictionPoly)
 confusionMatrix(SVRPredictionPoly$price_usd ,observed.price_usd, positive = "pos")
+
+modelSVMRadial <- train( price_usd ~ ., data = train.data, method = "svmRadial",
+                       trControl = trainControl("cv", number =10),
+                       preProcess = c("center", "scale"),
+                       tuneLength = 10
+)
+
+summary(modelSVMRadial)
+modelSVMRadial$bestTune
+SVRPredictionRadial <- predict(modelSVMRadial, test.data)
+rmse(test.data$price_usd, SVRPredictionRadial)
+R2(SVRPredictionRadial,test.data$price_usd)
+confusionMatrix(SVRPredictionRadial$price_usd ,observed.price_usd, positive = "pos")
 
 ###################################################################################################
 ## Decision Tree Regression Model
-DT <- rpart(price_usd ~ ., method = "reg", data = cars_edited)
+DT <- rpart(price_usd ~ ., method = "anova", data = cars_edited)
 summary(DT)
 print(DT)
 
-model_DT <- rpart(price_usd ~ ., method = "reg", data = train.data)
+model_DT <- rpart(price_usd ~ ., method = "anova", data = train.data)
 summary(model_DT)
 par(xpd = NA)
 plot(model_DT, uniform = TRUE)
