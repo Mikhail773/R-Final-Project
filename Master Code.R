@@ -554,9 +554,9 @@ models_sorted_averages <- summarise(models_sorted, average_price_usd = mean(pric
 View(models_sorted_averages)
 
 # Figure out count for each model
-models_sorted_avg_with_cnt <- models_sorted_averages %>% mutate(counts = count(cars_edited, model_name) %>% select(2))
+models_sorted_avg_with_cnt <- models_sorted_averages %>% mutate(counts = count(cars_edited, model_name) %>% dplyr::select(2))
 View(models_sorted_avg_with_cnt)
-count(cars_edited, model_name) %>% select(2)
+count(cars_edited, model_name) %>% dplyr::select(2)
 
 models_sorted_avg_with_cnt$counts <- as.numeric(unlist(models_sorted_avg_with_cnt$counts))
 
@@ -744,7 +744,22 @@ rmse(test.data$price_usd, SVRPredictionPoly)
 R2(SVRPredictionPoly,test.data$price_usd)
 confusionMatrix(SVRPredictionPoly$price_usd ,observed.price_usd, positive = "pos")
 
-modelSVMRadial <- train( price_usd ~ ., data = train.data, method = "svmRadial",
+modelSVMRadial <- train( price_usd ~ manufacturer_name
+                         + transmission
+                         + color
+                         + odometer_value
+                         + year_produced
+                         + engine_fuel
+                         + engine_type
+                         + engine_capacity
+                         + body_type
+                         + drivetrain
+                         + is_exchangeable
+                         + location_region
+                         + number_of_photos
+                         + up_counter
+                         + duration_listed
+                         , data=train.data, method = "svmRadial",
                        trControl = trainControl("cv", number =10),
                        preProcess = c("center", "scale"),
                        tuneLength = 10
