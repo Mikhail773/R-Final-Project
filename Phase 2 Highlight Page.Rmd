@@ -84,43 +84,43 @@ head(cars_edited, 20)
 
 Now to proceed with cleaning and analyzation we need a more robust knowledge of our dataset. For this reason it is vital to understand the type of data for each attribute. Therefore, we must create a table to organize all our attributes.
 
-+--------------+-------------------+---------------------------------------------------------------------------------------------------------------+--------------+
-| Column       | Details           | Value/(Units)                                                                                                 | Data Type    |
-+:=============+:=================:+:=============================================================================================================:+=============:+
-| A            | Manufacturer Name | Name of vehicle manufacturer                                                                                  | Nominal      |
-+--------------+-------------------+---------------------------------------------------------------------------------------------------------------+--------------+
-| B            | Model Name        | Name of vehicle model                                                                                         | Nominal      |
-+--------------+-------------------+---------------------------------------------------------------------------------------------------------------+--------------+
-| C            | Transmission      | Type of the transmission                                                                                      | Nominal      |
-+--------------+-------------------+---------------------------------------------------------------------------------------------------------------+--------------+
-| D            | Color             | Vehicle body color                                                                                            | Nominal      |
-+--------------+-------------------+---------------------------------------------------------------------------------------------------------------+--------------+
-| E            | Odometer Value    | Vehicle odometer value in km                                                                                  | Continuous   |
-+--------------+-------------------+---------------------------------------------------------------------------------------------------------------+--------------+
-| F            | Year Produced     | The year the car was produced                                                                                 | Continuous   |
-+--------------+-------------------+---------------------------------------------------------------------------------------------------------------+--------------+
-| G            | Engine Fuel       | Fuel type of the engine                                                                                       | Nominal      |
-+--------------+-------------------+---------------------------------------------------------------------------------------------------------------+--------------+
-| I            | Engine Type       | Vehicle engine type                                                                                           | Nominal      |
-+--------------+-------------------+---------------------------------------------------------------------------------------------------------------+--------------+
-| J            | Engine Capacity   | The capacity of the engine in liters                                                                          | Nominal      |
-+--------------+-------------------+---------------------------------------------------------------------------------------------------------------+--------------+
-| K            | Body Type         | Type of the body (hatchback, sedan, etc.)                                                                     | Nominal      |
-+--------------+-------------------+---------------------------------------------------------------------------------------------------------------+--------------+
-| M            | Drivetrain        | Front/rear/all drivetrain                                                                                     | Nominal      |
-+--------------+-------------------+---------------------------------------------------------------------------------------------------------------+--------------+
-| N            | Price USD         | Price of a cars as listed in the catalog in USD                                                               | Continuous   |
-+--------------+-------------------+---------------------------------------------------------------------------------------------------------------+--------------+
-| O            | Exchangeable      | If True the owner of the car is ready to exchange this car to other cars with little or no additional payment | Nominal      |
-+--------------+-------------------+---------------------------------------------------------------------------------------------------------------+--------------+
-| P            | Location Region   | The region in Belarus where the car is listed for sale                                                        | Nominal      |
-+--------------+-------------------+---------------------------------------------------------------------------------------------------------------+--------------+
-| Q            | Number of Photos  | Number of photos the cas has                                                                                  | Continous    |
-+--------------+-------------------+---------------------------------------------------------------------------------------------------------------+--------------+
-| R            | Up Counter        | How many times the sample has been upped in the catalog to raise its position                                 | Continuous   |
-+--------------+-------------------+---------------------------------------------------------------------------------------------------------------+--------------+
-| S            | Duration Listed   | Number of days the car is listed in the catalog                                                               | Continuous   |
-+--------------+-------------------+---------------------------------------------------------------------------------------------------------------+--------------+
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| Column | Details           | Value/(Units)                                                                                                 | Data Type  |
++:=======+:=================:+:=============================================================================================================:+===========:+
+| A      | Manufacturer Name | Name of vehicle manufacturer                                                                                  | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| B      | Model Name        | Name of vehicle model                                                                                         | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| C      | Transmission      | Type of the transmission                                                                                      | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| D      | Color             | Vehicle body color                                                                                            | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| E      | Odometer Value    | Vehicle odometer value in km                                                                                  | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| F      | Year Produced     | The year the car was produced                                                                                 | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| G      | Engine Fuel       | Fuel type of the engine                                                                                       | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| I      | Engine Type       | Vehicle engine type                                                                                           | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| J      | Engine Capacity   | The capacity of the engine in liters                                                                          | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| K      | Body Type         | Type of the body (hatchback, sedan, etc.)                                                                     | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| M      | Drivetrain        | Front/rear/all drivetrain                                                                                     | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| N      | Price USD         | Price of a cars as listed in the catalog in USD                                                               | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| O      | Exchangeable      | If True the owner of the car is ready to exchange this car to other cars with little or no additional payment | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| P      | Location Region   | The region in Belarus where the car is listed for sale                                                        | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| Q      | Number of Photos  | Number of photos the cas has                                                                                  | Continous  |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| R      | Up Counter        | How many times the sample has been upped in the catalog to raise its position                                 | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| S      | Duration Listed   | Number of days the car is listed in the catalog                                                               | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
 
 From summary we notice that there exists 10 NA's in the attribute engine-capacity. Our understanding of vehicles informs us that engine-capacity is a categorical data-type and as such NA is crucial to our understanding of the data. The NA values serve as a distinguishment for the Electric Vehicles in the data. For the sake of future analyzation is will serve great use to replace our NA values with an arbitrary number. For our sake we choose to change NA values to 999. Thus we do the following:
 
@@ -439,7 +439,6 @@ TukeyHSD(body_engine_type_on_price.aov3)
 
 These tests confirm our original assumption. **Thus, Body types Pickup, and Limousine have an impact on engine type.**
 
-
 **Q:** What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
 
 **Justification:** With the nature of this question we can figure out the answer without a graph. We just need to look at the views of the variables we create.
@@ -452,9 +451,10 @@ Because of this analysis we can conclude that **the popularity of a vehicle does
 
 **Q:** What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
 
-**Justification:** With the nature of this question we can figure out the answer without a graph. We just need to look at the views of the variables we create. 
+**Justification:** With the nature of this question we need to organize some data before we can graph it.
 
 ```{r}
+models_sorted <- group_by(cars_edited, model_name)
 #Find popularity of vehicles
 models_counted <- cars_edited %>% count(model_name) %>% arrange(desc(n))
 
@@ -463,10 +463,33 @@ models_sorted_averages <- summarise(models_sorted, average_price_usd = mean(pric
 
 #Get the count of each model
 models_sorted_avg_with_cnt <- models_sorted_averages %>% mutate(counts = count(cars_edited, model_name) %>% dplyr::select(2))
+```
 
+Now that we have the data in a way where the models of each of the cars has a count, with a price we can graph it.
+
+```{r Popularity, echo=FALSE}
+ggplot (models_sorted_avg_with_cnt, aes( x =counts, y=average_price_usd)) + geom_point() + stat_smooth()
+```
+
+From this scatter plot that has a line of best fit, it is kind of hard to tell what the result will be. Now we can run linear regression on this to be sure of what relationship there is.
+
+```{r Popularitylm, echo=FALSE}
+#Taking the linear regression
+modelPricePerCount <- lm (average_price_usd ~ counts, data = models_sorted_avg_with_cnt)
+
+#Plotting the linear regression
+ggplot (models_sorted_avg_with_cnt, aes(x=counts, y=average_price_usd)) + geom_point() + stat_smooth(method=lm)
 
 ```
 
+Next we need to be sure of the accuracy of the linear regression line.
+
+```{r}
+modelPricePerCount <- lm (average_price_usd ~ counts, data = models_sorted_avg_with_cnt)
+summary(modelPricePerCount)
+confint(modelPricePerCount)
+sigma(modelPricePerCount)*100/mean(models_sorted_avg_with_cnt$average_price_usd)
+```
 
 Because of this analysis we can conclude that **the popularity of a vehicle does have an impact on the average_price of a vehicle.**
 
@@ -484,4 +507,5 @@ Again we can't look at just the graph and call it a day, we need to confirm the 
 manufacturer_price <- aov(price_usd ~ manufacturer_name * year_produced, data = cars_edited)
 summary(manufacturer_price)
 ```
+
 With these results we can confirm our original assumption. **Thus, the manufacturer does change how the production year affects the selling price.**

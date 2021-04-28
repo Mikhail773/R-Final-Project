@@ -560,10 +560,16 @@ count(cars_edited, model_name) %>% dplyr::select(2)
 
 models_sorted_avg_with_cnt$counts <- as.numeric(unlist(models_sorted_avg_with_cnt$counts))
 
-#Brandon added Keep or no keep?
+#Scatter plot: count of models VS price
 ggplot (models_sorted_avg_with_cnt, aes( x =counts, y=average_price_usd)) + geom_point() + stat_smooth()
+
+#Taking the linear regression
 modelPricePerCount <- lm (average_price_usd ~ counts, data = models_sorted_avg_with_cnt)
+
+#Plotting the linear regression
 ggplot (models_sorted_avg_with_cnt, aes(x=counts, y=average_price_usd)) + geom_point() + stat_smooth(method=lm)
+
+#Making sure the linear regression line matches the model
 summary(modelPricePerCount)
 confint(modelPricePerCount)
 sigma(modelPricePerCount)*100/mean(models_sorted_avg_with_cnt$average_price_usd)
