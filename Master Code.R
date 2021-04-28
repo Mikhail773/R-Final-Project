@@ -773,8 +773,6 @@ print(DT)
 prediction_DT <- model_DT %>% predict(test.data)
 rmse(prediction_DT,test.data$price_usd)
 R2(prediction_DT,test.data$price_usd)
-vif(prediction_DT)
-confint(prediction_DT)
 confusionMatrix(prediction_DT$price_usd ,observed.price_usd, positive = "pos")
 
 model_DT_Train <- train(price_usd ~ ., data = train.data, method = "rpart",
@@ -791,8 +789,6 @@ model_DT_Train$finalModel
 prediction_DT_Train <- model_DT_Train %>% predict(test.data)
 rmse(prediction_DT_Train,test.data$price_usd)
 R2(prediction_DT_Train,test.data$price_usd)
-vif(prediction_DT_Train)
-confint(prediction_DT_Train)
 confusionMatrix(prediction_DT_Train$price_usd ,observed.price_usd, positive = "pos")
 
 ###################################################################################################
@@ -813,8 +809,6 @@ random_forest_tree_cont <- randomForest(price_usd  ~ odometer_value
 rf_predict_cont <- predict(random_forest_tree_cont, test.data , type='response')
 rmse(rf_predict_cont,test.data$price_usd)
 R2(rf_predict_cont,test.data$price_usd)
-vif(rf_predict_cont)
-confint(rf_predict_cont)
 confusionMatrix(rf_predict_cont$price_usd ,observed.price_usd, positive = "pos")
 
 # RF Tree without Model_name
@@ -839,8 +833,6 @@ print(random_forest_tree)
 rf_predict_rf_noncont <- predict(random_forest_tree, test.data , type='response')
 rmse(rf_predict_rf_noncont,test.data$price_usd)
 R2(rf_predict_rf_noncont,test.data$price_usd)
-vif(rf_predict_rf_noncont)
-confint(rf_predict_rf_noncont)
 confusionMatrix(rf_predict_rf_noncont$price_usd ,observed.price_usd, positive = "pos")
 
 
@@ -852,8 +844,6 @@ print(random_forest_ranger)
 rf_predict_ranger <- predict(random_forest_ranger, test.data , type='response')
 rmse(rf_predict_ranger,test.data$price_usd)
 R2(rf_predict_ranger,test.data$price_usd)
-vif(rf_predict_ranger)
-confint(rf_predict_ranger)
 confusionMatrix(rf_predict_ranger$price_usd ,observed.price_usd, positive = "pos")
 
 ###################################################################################################
