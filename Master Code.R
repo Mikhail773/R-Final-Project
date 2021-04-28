@@ -503,11 +503,15 @@ sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
 #
 # (Matthew Lane)
 # 6) Mosaic Plot/ Chi-Squared Test, Two-Way ANOVA:
+# 
 # Relationship between Engine Type and Body Type?
+#
+# Limousine and pickup trucks appear to have the only impact.
+#
 #
 # What is the impact of Engine Type and Body Type on the selling price?
 #
-# Limousine and pickup trucks appear to have the only impact.
+#
 #
 
 #Mosaic Plot

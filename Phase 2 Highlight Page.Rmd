@@ -38,6 +38,7 @@ The dataset in question is of used cars in a popular catalog from the country of
 # Initial Questions
 
 The main goal is to create a predictive model based on insights gained from analyzing the impact of variables on the selling price of a vehicle. In addition, there will be several questions that will be answered concerning the dataset. The questions that will be answered are as follows:
+
 1. What impact does a region have on price?
 2. What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
 3. What is the relationship between odometer and price?
@@ -297,32 +298,32 @@ A:
 
 Q: What is the relationship between odometer and price?
 
-A:
+A: The higher the odometer the lower the price is for the vehicle.
 
 
 Q: Does the number of photos a vehicle has impact the selling price?
 
-A:
+A: Yes, the more photos a vehicle has, the higher the selling price.
 
 
 Q: Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
 
-A:
+A: Yes, the number of times a vehicle has been upped raises the selling price
 
 
 Q: Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
 
-A:
+A: Limousine and pickup trucks appear to have the only impact.
 
 
 Q: What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
 
-A:
+A:The popularity of a vehicle does seem to have an impact on the average_price of a vehicle.
 
 
 Q: What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?
 
-A:
+A: The manufacturer does change how the production year affects the selling price.
 
 ## What are the justifications for your answers?
 How the analysis of the graphs lead to the answer:
@@ -339,22 +340,81 @@ Justification:
 
 Q: What is the relationship between odometer and price?
 
-Justification:
+Justification: When we investigate this graph we initially notice that the line of best fit seems to be going down as the odometer value increases.
+```{r odometer, echo=FALSE}
+ggplot (cars_edited, aes( x =odometer_value, y=price_usd)) + geom_point() + stat_smooth()
 
+```
+
+However, this doesn't justify that the higher the odometer the lower the price is for the vehicle. In order to show this we will use linear regression, and check the percentage of accuracy of that line. Using this we will come up with an answer to our question.
+
+```{r odometerLm, echo=FALSE}
+odometer_on_price <- lm (price_usd ~ odometer_value, data = cars_edited)
+
+ggplot (cars_edited, aes(x=odometer_value, y=price_usd)) + geom_point() + stat_smooth(method=lm)
+
+```
+
+```{r}
+summary(odometer_on_price)
+confint(odometer_on_price)
+sigma(odometer_on_price)*100/mean(cars_edited$price_usd)
+```
+
+Once checking the accuracy of the linear regression, we see that it is 87.89% accurate. **Thus we can conclude that the higher the odometer the lower the price of the vehicle will be.**
 
 Q: Does the number of photos a vehicle has impact the selling price?
 
-Justification:
+Justification: With our scatter plot graph we added a line of best fit for the data.
 
+```{r photos, echo=FALSE}
+ggplot(cars_edited, aes( x =number_of_photos, y=price_usd)) + geom_point() + stat_smooth()
+
+```
+
+From the graph it seems like the more photos of a vehicle there are the higher the price will be. However, we can't make that assumption based on just this graph, we need to use linear regression to confirm this.
+
+```{r photosLm, echo=FALSE}
+number_of_photos_on_price <- lm (price_usd ~ number_of_photos, data = cars_edited)
+
+ggplot (cars_edited, aes(x=number_of_photos, y=price_usd)) + geom_point() + stat_smooth(method=lm)
+```
+
+Now that we have the the linear regression line we need to make sure that the line fits the data with a high accuracy.
+```{r}
+summary(number_of_photos_on_price)
+confint(number_of_photos_on_price)
+sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
+```
+
+With the accuracy of the linear regression being 91.88% **we can now conclude that the more photos a vehicle has, the higher the selling price.**
 
 Q: Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
 
-Justification:
+Justification: With using a scatter plot and the use of a line of best fit it appears that the more a vehicle has been upped the higher the price will be. 
+
+```{r upCounter, echo=FALSE}
+ggplot (cars_edited, aes( x =up_counter, y=price_usd)) + geom_point() + stat_smooth()
+```
+
+Again however, we can't assume this to be true without checking the linear regression and getting the accuracy of that line.
+
+```{r upCounterLm, echo=FALSE}
+ggplot (cars_edited, aes(x=up_counter, y=price_usd)) + geom_point() + stat_smooth(method=lm)
+```
+
+```{r}
+summary(up_counter_on_price)
+confint(up_counter_on_price)
+sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
+```
+
+Since the accuracy of the linear regression is 96.69% **we can conclude that the number of times a vehicle has been upped raises the selling price**
 
 
 Q: Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
 
-Justification:
+Justification: 
 
 
 Q: What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
