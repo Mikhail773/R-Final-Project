@@ -139,24 +139,32 @@ test.data <- cars_edited[-training.samples,]
 
 ## Visualitions used to analyze data
 
-In an attempt to gain a robust knowledge of our dataset several visualizations were used. Visualization of our data was done in two sections. Initially each attribute was graphed in order to gain a general understanding of how the samples are distributed for each attribute. This was done with the help of Bar Graphs, Histograms, Boxplots, and the count function. Once a general understanding of each attribute was gained we began to visualize various combinations of attributions. These visualizations were vital in seeing different relationships among our samples. The visualizations that were were used were Balloon Plot, Scatterplot, frequency polygons, dplyr::summarize, and Boxplots.
+In an attempt to gain a robust knowledge of our dataset several visualizations were used. Visualization of our data was done in two sections. Initially each attribute was graphed in order to gain a general understanding of how the samples are distributed for each attribute. This was done with the help of Bar Graphs, Histograms, Boxplots, and the count function. Once a general understanding of each attribute was gained we began to visualize various combinations of attributions. These visualizations were vital in seeing different relationships among our samples. The visualizations that were used were Balloon Plot, Scatterplot, frequency polygons, dplyr::summarize, and Boxplots.
 
-The different graphs that we used:
-Scatter plot
-Box plot
-Bar graph
+The different Visualizations/ML methods that we used in questions:
 Pie chart
-Balloon Plot
-Line Graph
+Bar graph
+Scatter plot
+Linear Regression: In our project this was the most used of the ML techniques. This is because most of our questions had an interest in the price of a vehicle. That means for each question we were investigating only one different variable. We used Logistic regression to check to see how accurate our data was for the linear lines representing the graph. This in turn gave us the information needed to draw a conclusion about the relationship between the price of cars, and the variable in question.
+Single Anova and Two-Way Anova and N-Way Anova
 
-Simple Linear Regression and Multiple Linear Regression:
-In our project this was the most used of the ML techniques. This is because most of our questions had an interest in the price of a vehicle. That means for each question we were investigating only one different variable. We used Logistic regression to check to see how accurate our data was for the linear lines representing the graph. This in turn gave us the information needed to draw a conclusion about the relationship between the price of cars, and the variable in question.
+
+Different ML methods that we used in the Goal:
+Multiple Linear Regression: This was used for the sake of guaging the impact of the contiinuous attributes on the price of the vehicle. 
+
 
 SVR:
+Linear: Used to see if there is a model that can handle every attribute and adjust the model according to its impact on price. 
+
+NonLinear: We wish to see if a nonlinear method would better suit in providing an effective model for predicting vehicle price.
 
 Decision Trees (Partition):
+Used for predictive modeling. Since it is incredibly robust we believed it would be able to handle possible outliers in our data and work around the size of our dataset to produce an optimal model.
+
 
 Random Forest Regression:
+
+
 
 KNN:
 
