@@ -487,7 +487,7 @@ Because of this analysis we can conclude that **the popularity of a vehicle does
 
 **Justification:** With this question we decided to use a scatter plot and color all the points in the scatter plot with a color corresponding to a different manufacturer.
 
-```{r yearProducedPriceManu, echo=FALSE}
+```{r yearProducedPriceManu, fig.height = 9, fig.width = 12, echo=FALSE}
 ggplot(cars_edited) + geom_point(aes(x = year_produced, y = price_usd, color = manufacturer_name))
 ```
 
