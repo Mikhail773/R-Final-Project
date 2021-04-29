@@ -19,27 +19,15 @@ library(randomForest) #  Random Forest Tree Regression
 library(ranger) # RFT more than 53 factors
 ```
 
-This will be to show our code
-
-```{r}
-
-```
-
-This will be to show our graphs
-
-```{r pressure, echo=FALSE}
-
-```
-
 # Abstract: Description of the project and the findings
 
-The dataset in question is of used cars in a popular catalog from the country of Belarus. This dataset will be cleaned, analyzed, to answer several questions about the effect that certain variables have on the price point at which cars are sold at. Ultimately, Multiple Linear Regression Models, SVR, Decision Tree Regression, Random Forest Reggression, and KNN will all be used to predict the market price of a used car in Belarus given the attributes found in the dataset. The accuracy of these models were analyzed and perfomance tested for real-world application with the help of a training and testing dataset. Afterwords, the models were compared to find the most effective model for prediciting the price of a used car in Belarus. **STATE OUR FINDINGS**
+The dataset in question is of used cars in a popular catalog from the country of Belarus. This dataset will be cleaned, analyzed, to answer several questions about the effect that certain variables have on the price point at which cars are sold at. Ultimately, Multiple Linear Regression Models, SVR, Decision Tree Regression, Random Forest Regression, and KNN will all be used to predict the market price of a used car in Belarus given the attributes found in the dataset. The accuracy of these models were analyzed and performance tested for real-world application with the help of a training and testing dataset. Afterwords, the models were compared to find the most effective model for predicting the price of a used car in Belarus. **STATE OUR FINDINGS**
 
-# Introduction: Overview of the problems/goals and how they will be solved **EMMA?**
+# Introduction: Overview of the problems/goals and how they will be solved
 
 # Initial Questions
 
-The main goal is to create a predictive model based on insights gained from analyzing the impact of variables on the selling price of a vehicle. In addition, there will be several questions that will be answered concerning the dataset. The questions that will be answered are as follows:
+The main goal is to create a predictive model based on insights gained from analyzing the impact of variables on the selling price of a vehicle. The goal was chosen for its applicability and general interest of which attributes impact price of a used car. In addition, there will be several questions that will be answered concerning the dataset. These questions aid in solving the main goal and are important insights to be gleaned from the dataset. The questions that will be answered are as follows:
 
 1.  What impact does a region have on price?
 2.  What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
@@ -177,7 +165,7 @@ Decision Tree (Partition): Used for predictive modeling. Since it is incredibly 
 
 Random Forest Regression: Albeit, Random Forest Regression is more complicated than a Decision Tree since it leverages multiple decision trees it is still a crucial model for our dataset. The reason for using this model is for the sake of seeing if we can create an even more accurate model. If we find the accuracy is marginally better it may be preferred to use a Decision Tree since its easier to compute. Nevertheless, the Random Forest Regression is a wonderful tool in creating a predictive model and worth testing out for the sake of optimization.
 
-KNN:
+KNN:K Nearest Neighbor was chosen due to its popularity and simplicity. KNN is able to handle our Categorical as well as Continuous attributes and for that reason it is a good model to be used to predict price. It will be vital to compare this model with the other models to investigate how useful of a model it is for our dataset.
 
 ### PHASE 2 PART: Describe the different ways you tried to answer the questions and goals
 
@@ -474,20 +462,16 @@ Now that we have the data in a way where the models of each of the cars has a co
 ```{r Popularity, echo=FALSE}
 ggplot(models_sorted_avg_with_cnt, aes(x=counts, y=average_price_usd)) + geom_point() + stat_smooth()
 ```
-```
 
 From this scatter plot that has a line of best fit, it is kind of hard to tell what the result will be. Now we can run linear regression on this to be sure of what relationship there is.
 
 ```{r Popularitylm, echo=FALSE}
-#Taking the linear regression
 modelPricePerCount <- lm (average_price_usd ~ counts, data = models_sorted_avg_with_cnt)
-
-#Plotting the linear regression
 ggplot (models_sorted_avg_with_cnt, aes(x=counts, y=average_price_usd)) + geom_point() + stat_smooth(method=lm)
-
 ```
 
 Next we need to be sure of the accuracy of the linear regression line.
+
 
 ```{r}
 modelPricePerCount <- lm (average_price_usd ~ counts, data = models_sorted_avg_with_cnt)
@@ -495,6 +479,7 @@ summary(modelPricePerCount)
 confint(modelPricePerCount)
 sigma(modelPricePerCount)*100/mean(models_sorted_avg_with_cnt$average_price_usd)
 ```
+
 
 Because of this analysis we can conclude that **the popularity of a vehicle does have an impact on the average_price of a vehicle.**
 
