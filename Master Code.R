@@ -678,52 +678,51 @@ R2(LogLMContsPrediction,test.data$price_usd)
 
 ###################################################################################################
 ## SVR Models
-model_count <- cars_edited %>% count(model_name)
-View(model_count)
-single_model_occurances <- model_count %>% filter(n == 1)
-single_model_occurances
-single_model_occurances_list <- as.list(single_model_occurances[1])
-# Remove models that only occur once
-single_model_occurances_list
-cars_edited_models <- cars_edited[!cars_edited$model_name %in% single_model_occurances_list[[1]], ]
-View(cars_edited_models)
-
-# Make another train and test set
-training2.samples <- cars_edited_models$manufacturer_name %>% createDataPartition(p = 0.8, list = FALSE)
-train2.data <- cars_edited_models[training2.samples,]
-test2.data <- cars_edited_models[-training2.samples,]
-View(train2.data)
+# model_count <- cars_edited %>% count(model_name)
+# View(model_count)
+# single_model_occurances <- model_count %>% filter(n == 1)
+# single_model_occurances
+# single_model_occurances_list <- as.list(single_model_occurances[1])
+# # Remove models that only occur once
+# single_model_occurances_list
+# cars_edited_models <- cars_edited[!cars_edited$model_name %in% single_model_occurances_list[[1]], ]
+# View(cars_edited_models)
+# 
+# # Make another train and test set
+# training2.samples <- cars_edited_models$manufacturer_name %>% createDataPartition(p = 0.8, list = FALSE)
+# train2.data <- cars_edited_models[training2.samples,]
+# test2.data <- cars_edited_models[-training2.samples,]
+# View(train2.data)
 
 ### Linear SVR
-modelSVRLin <- train( price_usd ~
-                        manufacturer_name
-                      + transmission
-                      + color
-                      + odometer_value
-                      + year_produced
-                      + engine_fuel
-                      + engine_type
-                      + engine_capacity
-                      + body_type
-                      + drivetrain
-                      + is_exchangeable
-                      + location_region
-                      + number_of_photos
-                      + up_counter
-                      + duration_listed
-                      , data=train.data, method = "svmLinear",
-                      trControl = trainControl("cv", number =10),
-                      preProcess = c("center", "scale"),
-                      tuneLength = 10
-)
-
-summary(modelSVRLin)
-modelSVRLin$bestTune
-SVRPredictionLinCont <- predict(modelSVRLin, test.data)
-rmse(test.data$price_usd, SVRPredictionLinCont)
-R2(SVRPredictionLinCont,test.data$price_usd)
-confusionMatrix(SVRPredictionLinCont$price_usd ,observed.price_usd, positive = "pos")
-
+# modelSVRLin <- train( price_usd ~
+#                         manufacturer_name
+#                       + transmission
+#                       + color
+#                       + odometer_value
+#                       + year_produced
+#                       + engine_fuel
+#                       + engine_type
+#                       + engine_capacity
+#                       + body_type
+#                       + drivetrain
+#                       + is_exchangeable
+#                       + location_region
+#                       + number_of_photos
+#                       + up_counter
+#                       + duration_listed
+#                       , data=train.data, method = "svmLinear",
+#                       trControl = trainControl("cv", number =10),
+#                       preProcess = c("center", "scale"),
+#                       tuneLength = 10
+# )
+# 
+# summary(modelSVRLin)
+# modelSVRLin$bestTune
+# SVRPredictionLinCont <- predict(modelSVRLin, test.data)
+# rmse(test.data$price_usd, SVRPredictionLinCont)
+# R2(SVRPredictionLinCont,test.data$price_usd)
+# confusionMatrix(SVRPredictionLinCont$price_usd ,observed.price_usd, positive = "pos")
 
 modelSVRLinTrain <- train( price_usd ~ ., data = train2.data, method = "svmLinear",
                            trControl = trainControl("cv", number =10),
@@ -740,34 +739,34 @@ confusionMatrix(modelSVRLinTrainPrediction$price_usd ,observed.price_usd, positi
 
 ### Nonlinear SVR
 ## Polynomial Method
-modelSVRPoly <- train( price_usd ~
-                         manufacturer_name
-                       + transmission
-                       + color
-                       + odometer_value
-                       + year_produced
-                       + engine_fuel
-                       + engine_type
-                       + engine_capacity
-                       + body_type
-                       + drivetrain
-                       + is_exchangeable
-                       + location_region
-                       + number_of_photos
-                       + up_counter
-                       + duration_listed
-                       , data=train.data, method = "svmPoly",
-                       trControl = trainControl("cv", number =10),
-                       preProcess = c("center", "scale"),
-                       tuneLength = 10
-)
-
-summary(modelSVRPoly)
-modelSVRPoly$bestTune
-SVRPredictionPoly <- predict(modelSVRPoly, test.data)
-rmse(test.data$price_usd, SVRPredictionPoly)
-R2(SVRPredictionPoly,test.data$price_usd)
-confusionMatrix(SVRPredictionPoly$price_usd ,observed.price_usd, positive = "pos")
+# modelSVRPoly <- train( price_usd ~
+#                          manufacturer_name
+#                        + transmission
+#                        + color
+#                        + odometer_value
+#                        + year_produced
+#                        + engine_fuel
+#                        + engine_type
+#                        + engine_capacity
+#                        + body_type
+#                        + drivetrain
+#                        + is_exchangeable
+#                        + location_region
+#                        + number_of_photos
+#                        + up_counter
+#                        + duration_listed
+#                        , data=train.data, method = "svmPoly",
+#                        trControl = trainControl("cv", number =10),
+#                        preProcess = c("center", "scale"),
+#                        tuneLength = 10
+# )
+# 
+# summary(modelSVRPoly)
+# modelSVRPoly$bestTune
+# SVRPredictionPoly <- predict(modelSVRPoly, test.data)
+# rmse(test.data$price_usd, SVRPredictionPoly)
+# R2(SVRPredictionPoly,test.data$price_usd)
+# confusionMatrix(SVRPredictionPoly$price_usd ,observed.price_usd, positive = "pos")
 
 
 modelSVRPolyTrain <- train(price_usd ~ ., data = train2.data, method = "svmPoly",
@@ -785,34 +784,34 @@ confusionMatrix(modelSVRPolyTrainPrediction$price_usd ,observed.price_usd, posit
 
 ####
 # Radial Method
-modelSVRRadial <- train( price_usd ~
-                           manufacturer_name
-                         + transmission
-                         + color
-                         + odometer_value
-                         + year_produced
-                         + engine_fuel
-                         + engine_type
-                         + engine_capacity
-                         + body_type
-                         + drivetrain
-                         + is_exchangeable
-                         + location_region
-                         + number_of_photos
-                         + up_counter
-                         + duration_listed
-                         , data=train.data, method = "svmRadial",
-                         trControl = trainControl("cv", number =10),
-                         preProcess = c("center", "scale"),
-                         tuneLength = 10
-)
-
-summary(modelSVRRadial)
-modelSVRRadial$bestTune
-SVRPredictionRadial <- predict(modelSVRRadial, test.data)
-rmse(test.data$price_usd, SVRPredictionRadial)
-R2(SVRPredictionRadial,test.data$price_usd)
-confusionMatrix(SVRPredictionRadial$price_usd ,observed.price_usd, positive = "pos")
+# modelSVRRadial <- train( price_usd ~
+#                            manufacturer_name
+#                          + transmission
+#                          + color
+#                          + odometer_value
+#                          + year_produced
+#                          + engine_fuel
+#                          + engine_type
+#                          + engine_capacity
+#                          + body_type
+#                          + drivetrain
+#                          + is_exchangeable
+#                          + location_region
+#                          + number_of_photos
+#                          + up_counter
+#                          + duration_listed
+#                          , data=train.data, method = "svmRadial",
+#                          trControl = trainControl("cv", number =10),
+#                          preProcess = c("center", "scale"),
+#                          tuneLength = 10
+# )
+# 
+# summary(modelSVRRadial)
+# modelSVRRadial$bestTune
+# SVRPredictionRadial <- predict(modelSVRRadial, test.data)
+# rmse(test.data$price_usd, SVRPredictionRadial)
+# R2(SVRPredictionRadial,test.data$price_usd)
+# confusionMatrix(SVRPredictionRadial$price_usd ,observed.price_usd, positive = "pos")
 
 
 modelSVRRadialTrain <- train(price_usd ~ ., data = train2.data, method = "svmRadial",
@@ -872,28 +871,28 @@ summary(random_forest)
 plot(random_forest)
 
 # RF Tree without Model_name
-random_forest_tree <- randomForest(price_usd ~ manufacturer_name
-                                   + transmission
-                                   + color
-                                   + odometer_value
-                                   + year_produced
-                                   + engine_fuel
-                                   + engine_type
-                                   + engine_capacity
-                                   + body_type
-                                   + drivetrain
-                                   + is_exchangeable
-                                   + location_region
-                                   + number_of_photos
-                                   + up_counter
-                                   + duration_listed
-                                   , data=train.data)
-summary(random_forest_tree)
-print(random_forest_tree)
-rf_predict_rf_noncont <- predict(random_forest_tree, test.data , type='response')
-rmse(rf_predict_rf_noncont,test.data$price_usd)
-R2(rf_predict_rf_noncont,test.data$price_usd)
-confusionMatrix(rf_predict_rf_noncont$price_usd ,observed.price_usd, positive = "pos")
+# random_forest_tree <- randomForest(price_usd ~ manufacturer_name
+#                                    + transmission
+#                                    + color
+#                                    + odometer_value
+#                                    + year_produced
+#                                    + engine_fuel
+#                                    + engine_type
+#                                    + engine_capacity
+#                                    + body_type
+#                                    + drivetrain
+#                                    + is_exchangeable
+#                                    + location_region
+#                                    + number_of_photos
+#                                    + up_counter
+#                                    + duration_listed
+#                                    , data=train.data)
+# summary(random_forest_tree)
+# print(random_forest_tree)
+# rf_predict_rf_noncont <- predict(random_forest_tree, test.data , type='response')
+# rmse(rf_predict_rf_noncont,test.data$price_usd)
+# R2(rf_predict_rf_noncont,test.data$price_usd)
+# confusionMatrix(rf_predict_rf_noncont$price_usd ,observed.price_usd, positive = "pos")
 
 
 random_forest_ranger <- train(price_usd ~ . ,
