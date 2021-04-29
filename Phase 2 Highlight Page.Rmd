@@ -73,7 +73,7 @@ head(cars, 20)
 
 Afterwords, it was crucial to obtain a quick summary of our dataset in order to investigate the steps needed to clean the dataset. This was done with the following line of code:
 
-```{r Cars Summary}
+```{r Cars Summary, fig.height = 15, fig.width = 20 }
 summary(cars)
 ```
 
@@ -292,11 +292,11 @@ How the analysis of the graphs lead to the answer:
 
 **Justification:** To answer this question we decided to use a pie chart so we can see the average prices per region in comparison with each other.
 
-```{r regionPrice, echo=FALSE}
+```{r regionPrice, fig.height = 5, fig.width = 8, echo=FALSE}
 regionPriceDF <- group_by(cars_edited, location_region)
 regionPriceDF_averages <- summarise(regionPriceDF, average_price_usd = mean(price_usd))
 percentRegion <- paste0(round(100*regionPriceDF_averages$average_price_usd/sum(regionPriceDF_averages$average_price_usd), 2), "%")
-pie(regionPriceDF_averages$average_price_usd, labels = percentRegion, main = "Region Price Distribution pie chart", col = rainbow(length(regionPriceDF_averages$average_price_usd)))
+pie(regionPriceDF_averages$average_price_usd, labels = percentRegion, main = "Region Price Distribution", col = rainbow(length(regionPriceDF_averages$average_price_usd)))
 legend("topright", c("Brest Region", "Gomel Region", "Grodno Region", "Minsk Region", "Mogilev Region", "Vitebsk Region"), cex = 0.8,
        fill = rainbow(length(regionPriceDF_averages$average_price_usd)))
 ```
@@ -318,9 +318,10 @@ Looking at the results of the one-way anova we can confirm our assumed conclusio
 
 **Justification:** To Tackle the question to this problem we decided to use a bar graph, since we have categorical data and continuous data.
 
-```{r manufacturerVsPrice, echo=FALSE}
+```{r manufacturerVsPrice, fig.height = 9, fig.width = 12}
 manuPriceDF <- group_by(cars_edited, manufacturer_name)
 manuPriceDF_averages <- summarise(manuPriceDF, average_price_usd = mean(price_usd))
+View(manuPriceDF_averages)
 ggplot(manuPriceDF_averages, aes(x = average_price_usd, y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name),stat="identity") + geom_text(aes(label =  paste0("$",round(average_price_usd)), hjust = 1))
 ```
 
@@ -423,7 +424,7 @@ Since the accuracy of the linear regression is 96.69% **we can conclude that the
 
 Justification: For this question we chose to use a mosaic plot because we are comparing more than 2 variables.
 
-```{r EngBodyImpact, echo=FALSE}
+```{r EngBodyImpact, fig.height = 9, fig.width = 12, echo=FALSE}
 mosaicplot(table(cars_edited$body_type, cars_edited$engine_type), shade=TRUE, las=2, main="Engine Type vs Body Type")
 ```
 
@@ -465,12 +466,14 @@ models_sorted_averages <- summarise(models_sorted, average_price_usd = mean(pric
 
 #Get the count of each model
 models_sorted_avg_with_cnt <- models_sorted_averages %>% mutate(counts = count(cars_edited, model_name) %>% dplyr::select(2))
+models_sorted_avg_with_cnt$counts <- as.numeric(unlist(models_sorted_avg_with_cnt$counts))
 ```
 
 Now that we have the data in a way where the models of each of the cars has a count, with a price we can graph it.
 
 ```{r Popularity, echo=FALSE}
-ggplot (models_sorted_avg_with_cnt, aes( x =counts, y=average_price_usd)) + geom_point() + stat_smooth()
+ggplot(models_sorted_avg_with_cnt, aes(x=counts, y=average_price_usd)) + geom_point() + stat_smooth()
+```
 ```
 
 From this scatter plot that has a line of best fit, it is kind of hard to tell what the result will be. Now we can run linear regression on this to be sure of what relationship there is.

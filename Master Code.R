@@ -107,7 +107,6 @@ set.seed(123)
 training.samples <- cars_edited$manufacturer_name %>% createDataPartition(p = 0.8, list = FALSE)
 train.data <- cars_edited[training.samples,]
 test.data <- cars_edited[-training.samples,]
-observed.price_usd <- test.data$price_usd
 
 View(train.data)
 View(test.data)
@@ -724,7 +723,7 @@ R2(LogLMContsPrediction,test.data$price_usd)
 # R2(SVRPredictionLinCont,test.data$price_usd)
 # confusionMatrix(SVRPredictionLinCont$price_usd ,observed.price_usd, positive = "pos")
 
-modelSVRLinTrain <- train( price_usd ~ ., data = train2.data, method = "svmLinear",
+modelSVRLinTrain <- train( price_usd ~ ., data = train.data, method = "svmLinear",
                            trControl = trainControl("cv", number =10),
                            preProcess = c("center", "scale"),
                            tuneLength = 10
@@ -769,7 +768,7 @@ confusionMatrix(modelSVRLinTrainPrediction$price_usd ,observed.price_usd, positi
 # confusionMatrix(SVRPredictionPoly$price_usd ,observed.price_usd, positive = "pos")
 
 
-modelSVRPolyTrain <- train(price_usd ~ ., data = train2.data, method = "svmPoly",
+modelSVRPolyTrain <- train(price_usd ~ ., data = train.data, method = "svmPoly",
                            trControl = trainControl("cv", number =10),
                            preProcess = c("center", "scale"),
                            tuneLength = 10
@@ -814,7 +813,7 @@ confusionMatrix(modelSVRPolyTrainPrediction$price_usd ,observed.price_usd, posit
 # confusionMatrix(SVRPredictionRadial$price_usd ,observed.price_usd, positive = "pos")
 
 
-modelSVRRadialTrain <- train(price_usd ~ ., data = train2.data, method = "svmRadial",
+modelSVRRadialTrain <- train(price_usd ~ ., data = train.data, method = "svmRadial",
                              trControl = trainControl("cv", number =10),
                              preProcess = c("center", "scale"),
                              tuneLength = 10
@@ -834,20 +833,21 @@ DT <- rpart(price_usd ~ ., method = "anova", data = cars_edited)
 summary(DT)
 print(DT)
 
-model_DT <- rpart(price_usd ~ ., method = "anova", data = train.data)
-summary(model_DT)
-par(xpd = NA)
-plot(model_DT, uniform = TRUE)
-text(model_DT, digits = 3)
-print(DT)
-
-prediction_DT <- model_DT %>% predict(test.data)
-rmse(prediction_DT,test.data$price_usd)
-R2(prediction_DT,test.data$price_usd)
-confusionMatrix(prediction_DT$price_usd ,observed.price_usd, positive = "pos")
+# model_DT <- rpart(price_usd ~ ., method = "anova", data = train.data)
+# summary(model_DT)
+# par(xpd = NA)
+# plot(model_DT, uniform = TRUE)
+# text(model_DT, digits = 3)
+# print(DT)
+# 
+# prediction_DT <- model_DT %>% predict(test.data)
+# rmse(prediction_DT,test.data$price_usd)
+# R2(prediction_DT,test.data$price_usd)
+# confusionMatrix(prediction_DT$price_usd ,observed.price_usd, positive = "pos")
 
 model_DT_Train <- train(price_usd ~ ., data = train.data, method = "rpart",
                         trControl = trainControl("cv",number = 10),
+                        preProcess = c("center","scale"),
                         tuneLength = 10)
 model_DT_Train$bestTune
 summary(model_DT_Train)
@@ -897,7 +897,11 @@ plot(random_forest)
 
 random_forest_ranger <- train(price_usd ~ . ,
                               data = train.data,
-                              method = "ranger")
+                              method = "ranger",
+                              trControl = trainControl("cv", number = 10),
+                              preProcess = c("center","scale"),
+                              tuneLength = 10
+)
 summary(random_forest_ranger)
 print(random_forest_ranger)
 rf_predict_ranger <- predict(random_forest_ranger, test.data , type='response')
@@ -994,6 +998,42 @@ summary(Cars_continuous)
 
 #Summary of Attributes_without Outliers
 summary(cars_edited_without_outliers)
+
+# Train No_Outliers
+trainingCont.samples <- cars_edited_without_outliers$manufacturer_name %>% createDataPartition(p = 0.8, list = FALSE)
+trainCont.data <- cars_edited_without_outliers[training.samples,]
+testCont.data <- cars_edited_without_outliers[-training.samples,]
+
+
+
+LMOutliers <- lm(price_usd ~ odometer_value
+         + year_produced
+         + number_of_photos
+         + duration_listed
+         + up_counter
+         , data = cars_edited_without_outliers)
+step.LMOutliers <- LM %>% stepAIC(trace = FALSE)
+vif(step.LMOutliers)
+summary(step.LMOutliers)
+
+# R^2 for test/train dataset
+LMContOutliers <- lm(price_usd ~ odometer_value
+             + year_produced
+             + number_of_photos
+             + duration_listed
+             + up_counter
+             , data = trainCont.data)
+
+vif(LMContOutliers)
+step.LMContsOutliers <- LMContOutliers %>% stepAIC(trace = FALSE)
+vif(step.LMContsOutliers)
+summary(step.LMContsOutliers)
+coef(step.LMContsOutliers)
+confint(step.LMContsOutliers)
+LMContOutliersPrediction <- predict(step.LMContsOutliers, test.data)
+rmse(test.data$price_usd, LMContOutliersPrediction)
+rmse(test.data$price_usd, LMContOutliersPrediction)/mean(test.data$price_usd)  ##0.7025614
+R2(LMContOutliersPrediction,test.data$price_usd) ## R^2 for test/train is 51.10202%
 
 ##############################################################################################################
 #
