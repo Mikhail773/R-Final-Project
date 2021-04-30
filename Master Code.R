@@ -342,12 +342,6 @@ pie(regionPriceDF_averages$average_price_usd, labels = percentRegion, main = "Re
 legend("right", c("Brest Region", "Gomel Region", "Grodno Region", "Minsk Region", "Mogilev Region", "Vitebsk Region"), cex = 0.8,
        fill = rainbow(length(regionPriceDF_averages$average_price_usd)))
 
-# regionPriceDF <- Cars_No_Outliers %>% select(location_region, price_usd)
-# aggregatedRegions <- aggregate(regionPriceDF,
-#                                by = list(regionPriceDF$location_region), FUN = mean)
-# #Creating pie chart to display data
-# pie(aggregatedRegions$price_usd,aggregatedRegions$Group.1)
-
 #one-way anova
 group_by(regionPriceDF, regionPriceDF$location_region) %>%
   summarise(
@@ -379,11 +373,6 @@ manuPriceDF_averages <- summarise(manuPriceDF, average_price_usd = mean(price_us
 View(manuPriceDF_averages)
 ggplot(manuPriceDF_averages, aes(x = average_price_usd, y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name),stat="identity") + geom_text(aes(label =  paste0("$",round(average_price_usd)), hjust = 1))
 
-# #price/manufacturers
-# manuPriceDF <- Cars_No_Outliers %>% select(manufacturer_name, price_usd)
-# aggregatedManufacturers <- aggregate(manuPriceDF,
-#                                      by = list(manuPriceDF$manufacturer_name), FUN = mean)
-
 #one-way anova
 manuSumm <- group_by(manuPriceDF, manuPriceDF$manufacturer_name) %>%
   summarise(
@@ -395,16 +384,6 @@ manuSumm <- group_by(manuPriceDF, manuPriceDF$manufacturer_name) %>%
 res.aovTwo <- aov(manuPriceDF$price_usd ~ manuPriceDF$manufacturer_name,
                   data = manuPriceDF)
 summary(res.aovTwo)
-#making bar graph
-#showing the correlation between particular manufacturers and price
-#therefore not all manufacturers are needed to show some brands
-# can charge more than others.
-# aggManu<-data.frame(aggregatedManufacturers)
-# aggManu$manufacturer_name <- NULL
-# aggManuSmall <- aggManu[-c(50, 51, 52, 53, 54, 55, 40, 41, 42, 43, 44, 45, 46,
-#                            47, 48, 49, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
-#                            36, 37, 38, 39, 25, 24, 23, 22, 21, 20, 9 ,10, 19, 2),]
-# barplot(aggManuSmall$price_usd~aggManuSmall$Group.1, xlab="Manufacturer", ylab="Price")
 
 ###################################################################################################
 #
@@ -507,11 +486,7 @@ sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
 #
 # Limousine and pickup trucks appear to have the only impact.
 #
-#
 # What is the impact of Engine Type and Body Type on the selling price?
-#
-#
-#
 
 #Mosaic Plot
 mosaicplot(table(cars_edited$body_type, cars_edited$engine_type), shade=TRUE, las=2, main="Engine Type vs Body Type")
@@ -529,7 +504,6 @@ TukeyHSD(body_engine_type_on_price.aov3)
 
 #Limousine and pickup trucks appear to have the only impact
 
-
 ###################################################################################################
 #
 # (Mikhail Mikhaylov)
@@ -539,7 +513,6 @@ TukeyHSD(body_engine_type_on_price.aov3)
 #
 # The popularity of a vehicle does seem to have an impact on the average_price of a vehicle
 #
-
 
 # Finding out model popularity
 models_counted <- cars_edited %>% count(model_name) %>% arrange(desc(n))
@@ -623,18 +596,6 @@ summary(manufacturer_price)
 ###################################################################################################
 
 ## Multiple Linear Regression Models
-# Check Accuracy
-LM <- lm(price_usd ~ odometer_value
-         + year_produced
-         + number_of_photos
-         + duration_listed
-         + up_counter
-         , data = cars_edited)
-step.LM <- LM %>% stepAIC(trace = FALSE)
-vif(step.LM)
-summary(step.LM)
-# Accuracy is 52.61%
-# At Least one model is significantly related to the outcome variable since p < 0.05
 
 # R^2 for test/train dataset
 LMCont <- lm(price_usd ~ odometer_value
@@ -650,9 +611,14 @@ vif(step.LMConts)
 summary(step.LMConts)
 coef(step.LMConts)
 confint(step.LMConts)
+
+# Predict using Multiple Linear Regression Model
 LMContPrediction <- predict(step.LMConts, test.data)
+# Prediction error, rmse
 rmse(test.data$price_usd, LMContPrediction)
-rmse(test.data$price_usd, LMContPrediction)/mean(test.data$price_usd)  ##67.57975
+# Calculate percentage error
+sigma(step.LMConts)/mean(test.data$price_usd)
+# Compute R-square
 R2(LMContPrediction,test.data$price_usd) ## R^2 for test/train is 50.95891%
 
 # Log transformation
@@ -669,60 +635,21 @@ vif(step.logConts)
 summary(step.logConts)
 coef(step.logConts)
 confint(step.logConts)
+
+# Predict using Multiple Linear Regression Model
 LogLMContsPrediction <- step.logConts %>% predict(test.data)
+# Prediction error, rmse
 rmse(test.data$price_usd, LogLMContsPrediction)
-rmse(test.data$price_usd, LogLMContsPrediction)/mean(test.data$price_usd)  ##67.57975
+# Calculate percentage error
+sigma(step.logConts)/mean(test.data$price_usd)  ##67.57975
+
+# Compute R-square
 R2(LogLMContsPrediction,test.data$price_usd)
 # Log transformation is less accurate
 
 ###################################################################################################
 ## SVR Models
-# model_count <- cars_edited %>% count(model_name)
-# View(model_count)
-# single_model_occurances <- model_count %>% filter(n == 1)
-# single_model_occurances
-# single_model_occurances_list <- as.list(single_model_occurances[1])
-# # Remove models that only occur once
-# single_model_occurances_list
-# cars_edited_models <- cars_edited[!cars_edited$model_name %in% single_model_occurances_list[[1]], ]
-# View(cars_edited_models)
-# 
-# # Make another train and test set
-# training2.samples <- cars_edited_models$manufacturer_name %>% createDataPartition(p = 0.8, list = FALSE)
-# train2.data <- cars_edited_models[training2.samples,]
-# test2.data <- cars_edited_models[-training2.samples,]
-# View(train2.data)
-
-### Linear SVR
-# modelSVRLin <- train( price_usd ~
-#                         manufacturer_name
-#                       + transmission
-#                       + color
-#                       + odometer_value
-#                       + year_produced
-#                       + engine_fuel
-#                       + engine_type
-#                       + engine_capacity
-#                       + body_type
-#                       + drivetrain
-#                       + is_exchangeable
-#                       + location_region
-#                       + number_of_photos
-#                       + up_counter
-#                       + duration_listed
-#                       , data=train.data, method = "svmLinear",
-#                       trControl = trainControl("cv", number =10),
-#                       preProcess = c("center", "scale"),
-#                       tuneLength = 10
-# )
-# 
-# summary(modelSVRLin)
-# modelSVRLin$bestTune
-# SVRPredictionLinCont <- predict(modelSVRLin, test.data)
-# rmse(test.data$price_usd, SVRPredictionLinCont)
-# R2(SVRPredictionLinCont,test.data$price_usd)
-# confusionMatrix(SVRPredictionLinCont$price_usd ,observed.price_usd, positive = "pos")
-
+# Create SVR Model using Linear Method
 modelSVRLinTrain <- train( price_usd ~ ., data = train.data, method = "svmLinear",
                            trControl = trainControl("cv", number =10),
                            preProcess = c("center", "scale"),
@@ -735,46 +662,24 @@ summary(modelSVRLinTrain)
 modelSVRLinTrain$bestTune
 #C
 #1 1
+
+# Predict using SVR Model with Linear Method
 modelSVRLinTrainPrediction <- predict(modelSVRLinTrain, test.data)
+
+# Prediction error, rmse
 rmse(test.data$price_usd, modelSVRLinTrainPrediction)
 #[1] 3257.887
-rmse(test.data$price_usd, modelSVRLinTrainPrediction)/mean(test.data$price_usd)  ##67.57975
+
+# Calculate percentage error
+sigma(modelSVRLinTrain)/mean(test.data$price_usd)  ##67.57975
 #[1] 0.488692
+
+# Compute R-square
 R2(modelSVRLinTrainPrediction,test.data$price_usd)
 #[1] 0.7772176
 
-### Nonlinear SVR
-## Polynomial Method
-# modelSVRPoly <- train( price_usd ~
-#                          manufacturer_name
-#                        + transmission
-#                        + color
-#                        + odometer_value
-#                        + year_produced
-#                        + engine_fuel
-#                        + engine_type
-#                        + engine_capacity
-#                        + body_type
-#                        + drivetrain
-#                        + is_exchangeable
-#                        + location_region
-#                        + number_of_photos
-#                        + up_counter
-#                        + duration_listed
-#                        , data=train.data, method = "svmPoly",
-#                        trControl = trainControl("cv", number =10),
-#                        preProcess = c("center", "scale"),
-#                        tuneLength = 10
-# )
-# 
-# summary(modelSVRPoly)
-# modelSVRPoly$bestTune
-# SVRPredictionPoly <- predict(modelSVRPoly, test.data)
-# rmse(test.data$price_usd, SVRPredictionPoly)
-# R2(SVRPredictionPoly,test.data$price_usd)
-# confusionMatrix(SVRPredictionPoly$price_usd ,observed.price_usd, positive = "pos")
-
-
+# Create SVR Model using Polynomial Method
+Method
 modelSVRPolyTrain <- train(price_usd ~ ., data = train.data, method = "svmPoly",
                            trControl = trainControl("cv", number =10),
                            preProcess = c("center", "scale"),
@@ -783,43 +688,20 @@ modelSVRPolyTrain <- train(price_usd ~ ., data = train.data, method = "svmPoly",
 
 summary(modelSVRPolyTrain)
 modelSVRPolyTrain$bestTune
+
+# Predict using SVR Model with Linear Method
 modelSVRPolyTrainPrediction <- predict(modelSVRPolyTrain, test.data)
+
+# Prediction error, rmse
 rmse(test.data$price_usd, modelSVRPolyTrainPrediction)
+
+# Calculate percentage error
+sigma(modelSVRPolyTrain)/mean(test.data$price_usd)
+
+# Compute R-square
 R2(modelSVRPolyTrainPrediction,test.data$price_usd)
-confusionMatrix(modelSVRPolyTrainPrediction$price_usd ,observed.price_usd, positive = "pos")
 
-####
-# Radial Method
-# modelSVRRadial <- train( price_usd ~
-#                            manufacturer_name
-#                          + transmission
-#                          + color
-#                          + odometer_value
-#                          + year_produced
-#                          + engine_fuel
-#                          + engine_type
-#                          + engine_capacity
-#                          + body_type
-#                          + drivetrain
-#                          + is_exchangeable
-#                          + location_region
-#                          + number_of_photos
-#                          + up_counter
-#                          + duration_listed
-#                          , data=train.data, method = "svmRadial",
-#                          trControl = trainControl("cv", number =10),
-#                          preProcess = c("center", "scale"),
-#                          tuneLength = 10
-# )
-# 
-# summary(modelSVRRadial)
-# modelSVRRadial$bestTune
-# SVRPredictionRadial <- predict(modelSVRRadial, test.data)
-# rmse(test.data$price_usd, SVRPredictionRadial)
-# R2(SVRPredictionRadial,test.data$price_usd)
-# confusionMatrix(SVRPredictionRadial$price_usd ,observed.price_usd, positive = "pos")
-
-
+# Create SVR Model using Radial Method
 modelSVRRadialTrain <- train(price_usd ~ ., data = train.data, method = "svmRadial",
                              trControl = trainControl("cv", number =10),
                              preProcess = c("center", "scale"),
@@ -828,79 +710,53 @@ modelSVRRadialTrain <- train(price_usd ~ ., data = train.data, method = "svmRadi
 
 summary(modelSVRRadialTrain)
 modelSVRRadialTrain$bestTune
-modelSVRRadialTrainPrediction <- predict(modelSVRRadialTrain, test.data)
-rmse(test.data$price_usd, modelSVRRadialTrainPrediction)
-R2(modelSVRRadialTrainPrediction,test.data$price_usd)
-confusionMatrix(modelSVRRadialTrainPrediction$price_usd ,observed.price_usd, positive = "pos")
 
+# Predict using SVR Model with Radial Method
+modelSVRRadialTrainPrediction <- predict(modelSVRRadialTrain, test.data)
+
+# Prediction error, rmse
+rmse(test.data$price_usd, modelSVRRadialTrainPrediction)
+
+# Calculate percentage error
+sigma(modelSVRRadialTrain)/mean(test.data$price_usd)
+
+# Compute R-square
+R2(modelSVRRadialTrainPrediction,test.data$price_usd)
 
 ###################################################################################################
 ## Decision Tree Regression Model
-DT <- rpart(price_usd ~ ., method = "anova", data = cars_edited)
-summary(DT)
-print(DT)
-
-# model_DT <- rpart(price_usd ~ ., method = "anova", data = train.data)
-# summary(model_DT)
-# par(xpd = NA)
-# plot(model_DT, uniform = TRUE)
-# text(model_DT, digits = 3)
-# print(DT)
-# 
-# prediction_DT <- model_DT %>% predict(test.data)
-# rmse(prediction_DT,test.data$price_usd)
-# R2(prediction_DT,test.data$price_usd)
-# confusionMatrix(prediction_DT$price_usd ,observed.price_usd, positive = "pos")
 
 model_DT_Train <- train(price_usd ~ ., data = train.data, method = "rpart",
                         trControl = trainControl("cv",number = 10),
                         preProcess = c("center","scale"),
                         tuneLength = 10)
+
 model_DT_Train$bestTune
+plot(model_DT_Train)
 summary(model_DT_Train)
-par(xpd = NA)
-plot(model_DT_Train$finalModel, uniform = TRUE)
+
+# Plot the final tree model
+par(xpd = NA) # Avoid clipping the text in some device
+plot(model_DT_Train$finalModel)
 text(model_DT_Train$finalModel, digits = 3)
-print(model_DT_Train$finalModel)
+
+#Decision rules in the model
 model_DT_Train$finalModel
 
+# Make predictions on the test data
 prediction_DT_Train <- model_DT_Train %>% predict(test.data)
+
+# Prediction error, rmse
 rmse(prediction_DT_Train,test.data$price_usd)
-R2(prediction_DT_Train,test.data$price_usd)
-confusionMatrix(prediction_DT_Train$price_usd ,observed.price_usd, positive = "pos")
+
+# Calculate percentage error
+sigma(model_DT_Train)/mean(test.data$price_usd)
+
+# Compute R-square
+R2(model_DT_Train,test.data$price_usd)
 
 ###################################################################################################
 ## Random Forest Model
-random_forest <- train(price_usd ~ . ,
-                       data = cars_edited,
-                       method = "ranger")
-summary(random_forest)
-plot(random_forest)
-
-# RF Tree without Model_name
-# random_forest_tree <- randomForest(price_usd ~ manufacturer_name
-#                                    + transmission
-#                                    + color
-#                                    + odometer_value
-#                                    + year_produced
-#                                    + engine_fuel
-#                                    + engine_type
-#                                    + engine_capacity
-#                                    + body_type
-#                                    + drivetrain
-#                                    + is_exchangeable
-#                                    + location_region
-#                                    + number_of_photos
-#                                    + up_counter
-#                                    + duration_listed
-#                                    , data=train.data)
-# summary(random_forest_tree)
-# print(random_forest_tree)
-# rf_predict_rf_noncont <- predict(random_forest_tree, test.data , type='response')
-# rmse(rf_predict_rf_noncont,test.data$price_usd)
-# R2(rf_predict_rf_noncont,test.data$price_usd)
-# confusionMatrix(rf_predict_rf_noncont$price_usd ,observed.price_usd, positive = "pos")
-
 
 random_forest_ranger <- train(price_usd ~ . ,
                               data = train.data,
@@ -909,12 +765,27 @@ random_forest_ranger <- train(price_usd ~ . ,
                               preProcess = c("center","scale"),
                               tuneLength = 10
 )
-summary(random_forest_ranger)
-print(random_forest_ranger)
+
+random_forest_ranger$bestTune
+plot(random_forest_ranger)
+summary(random_forest_ranger$finalModel)
+
+# Plot the final tree model
+par(xpd = NA) # Avoid clipping the text in some device
+plot(random_forest_ranger$finalModel)
+text(random_forest_ranger$finalModel, digits = 3)
+
+# Make predictions on the test data
 rf_predict_ranger <- predict(random_forest_ranger, test.data , type='response')
+
+# Prediction error, rmse
 rmse(rf_predict_ranger,test.data$price_usd)
+
+# Calculate percentage error
+sigma(rf_predict_ranger)/mean(test.data$price_usd)
+
+# Compute R-square
 R2(rf_predict_ranger,test.data$price_usd)
-confusionMatrix(rf_predict_ranger$price_usd ,observed.price_usd, positive = "pos")
 
 ###################################################################################################
 ## KNN Model
@@ -925,8 +796,11 @@ model_knn <- train(
   preProcess = c("center","scale"),
   tuneLength = 20
 )
+
+summary(model_knn$finalModel)
+
 # Plot model accuracy vs different values of k
-plot(model)
+plot(model_knn)
 
 # Print the best tuning parameter k that maximizes model accuracy
 model$bestTune
@@ -936,9 +810,14 @@ knn_predictions <- model_knn %>% predict(test.data)
 head(knn_predictions)
 
 # Compute the prediction error RMSE
-RMSE(knn_predictions, test.data$price_usd)
+rmse(knn_predictions, test.data$price_usd)
 
-colnames(cars_edited)
+# Calculate percentage error
+sigma(knn_predictions)/mean(test.data$price_usd)
+
+# Compute R-square
+R2(knn_predictions,test.data$price_usd)
+
 ##############################################################################################################
 #
 # Considering Outliers
