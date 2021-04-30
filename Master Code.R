@@ -730,11 +730,18 @@ modelSVRLinTrain <- train( price_usd ~ ., data = train.data, method = "svmLinear
 )
 
 summary(modelSVRLinTrain)
+#Length  Class   Mode 
+#1   ksvm     S4 
 modelSVRLinTrain$bestTune
+#C
+#1 1
 modelSVRLinTrainPrediction <- predict(modelSVRLinTrain, test.data)
 rmse(test.data$price_usd, modelSVRLinTrainPrediction)
+#[1] 3257.887
+rmse(test.data$price_usd, modelSVRLinTrainPrediction)/mean(test.data$price_usd)  ##67.57975
+#[1] 0.488692
 R2(modelSVRLinTrainPrediction,test.data$price_usd)
-confusionMatrix(modelSVRLinTrainPrediction$price_usd ,observed.price_usd, positive = "pos")
+#[1] 0.7772176
 
 ### Nonlinear SVR
 ## Polynomial Method
