@@ -731,9 +731,10 @@ model_DT_Train <- train(price_usd ~ ., data = train.data, method = "rpart",
                         preProcess = c("center","scale"),
                         tuneLength = 10)
 
+summary(model_DT_Train)
 model_DT_Train$bestTune
 plot(model_DT_Train)
-summary(model_DT_Train)
+
 
 # Plot the final tree model
 par(xpd = NA) # Avoid clipping the text in some device
@@ -766,9 +767,10 @@ random_forest_ranger <- train(price_usd ~ . ,
                               tuneLength = 10
 )
 
+summary(random_forest_ranger)
 random_forest_ranger$bestTune
 plot(random_forest_ranger)
-summary(random_forest_ranger$finalModel)
+
 
 # Plot the final tree model
 par(xpd = NA) # Avoid clipping the text in some device
@@ -799,11 +801,11 @@ model_knn <- train(
 
 summary(model_knn$finalModel)
 
-# Plot model accuracy vs different values of k
-plot(model_knn)
-
 # Print the best tuning parameter k that maximizes model accuracy
 model$bestTune
+
+# Plot model accuracy vs different values of k
+plot(model_knn)
 
 # Make predictions on the test data
 knn_predictions <- model_knn %>% predict(test.data)
