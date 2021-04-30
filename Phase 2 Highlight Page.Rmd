@@ -498,4 +498,4 @@ manufacturer_price <- aov(price_usd ~ manufacturer_name * year_produced, data = 
 summary(manufacturer_price)
 ```
 
-With these results we can confirm our original assumption. **Thus, the manufacturer does change how the production year affects the selling price.**
+With these results we can confirm our original assumption. **The manufacturer does change how the production year affects the selling price.**
