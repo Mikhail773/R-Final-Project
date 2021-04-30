@@ -614,10 +614,10 @@ confint(step.LMConts)
 
 # Predict using Multiple Linear Regression Model
 LMContPrediction <- predict(step.LMConts, test.data)
+
 # Prediction error, rmse
 rmse(test.data$price_usd, LMContPrediction)
-# Calculate percentage error
-sigma(step.LMConts)/mean(test.data$price_usd)
+
 # Compute R-square
 R2(LMContPrediction,test.data$price_usd) ## R^2 for test/train is 50.95891%
 
@@ -638,10 +638,9 @@ confint(step.logConts)
 
 # Predict using Multiple Linear Regression Model
 LogLMContsPrediction <- step.logConts %>% predict(test.data)
+
 # Prediction error, rmse
 rmse(test.data$price_usd, LogLMContsPrediction)
-# Calculate percentage error
-sigma(step.logConts)/mean(test.data$price_usd)  ##67.57975
 
 # Compute R-square
 R2(LogLMContsPrediction,test.data$price_usd)
@@ -670,10 +669,6 @@ modelSVRLinTrainPrediction <- predict(modelSVRLinTrain, test.data)
 rmse(test.data$price_usd, modelSVRLinTrainPrediction)
 #[1] 3257.887
 
-# Calculate percentage error
-sigma(modelSVRLinTrain)/mean(test.data$price_usd)  ##67.57975
-#[1] 0.488692
-
 # Compute R-square
 R2(modelSVRLinTrainPrediction,test.data$price_usd)
 #[1] 0.7772176
@@ -695,9 +690,6 @@ modelSVRPolyTrainPrediction <- predict(modelSVRPolyTrain, test.data)
 # Prediction error, rmse
 rmse(test.data$price_usd, modelSVRPolyTrainPrediction)
 
-# Calculate percentage error
-sigma(modelSVRPolyTrain)/mean(test.data$price_usd)
-
 # Compute R-square
 R2(modelSVRPolyTrainPrediction,test.data$price_usd)
 
@@ -716,9 +708,6 @@ modelSVRRadialTrainPrediction <- predict(modelSVRRadialTrain, test.data)
 
 # Prediction error, rmse
 rmse(test.data$price_usd, modelSVRRadialTrainPrediction)
-
-# Calculate percentage error
-sigma(modelSVRRadialTrain)/mean(test.data$price_usd)
 
 # Compute R-square
 R2(modelSVRRadialTrainPrediction,test.data$price_usd)
@@ -750,9 +739,6 @@ prediction_DT_Train <- model_DT_Train %>% predict(test.data)
 # Prediction error, rmse
 rmse(prediction_DT_Train,test.data$price_usd)
 
-# Calculate percentage error
-sigma(model_DT_Train)/mean(test.data$price_usd)
-
 # Compute R-square
 R2(model_DT_Train,test.data$price_usd)
 
@@ -783,9 +769,6 @@ rf_predict_ranger <- predict(random_forest_ranger, test.data , type='response')
 # Prediction error, rmse
 rmse(rf_predict_ranger,test.data$price_usd)
 
-# Calculate percentage error
-sigma(rf_predict_ranger)/mean(test.data$price_usd)
-
 # Compute R-square
 R2(rf_predict_ranger,test.data$price_usd)
 
@@ -813,9 +796,6 @@ head(knn_predictions)
 
 # Compute the prediction error RMSE
 rmse(knn_predictions, test.data$price_usd)
-
-# Calculate percentage error
-sigma(knn_predictions)/mean(test.data$price_usd)
 
 # Compute R-square
 R2(knn_predictions,test.data$price_usd)
