@@ -487,6 +487,9 @@ sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
 # Limousine and pickup trucks appear to have the only impact.
 #
 # What is the impact of Engine Type and Body Type on the selling price?
+#
+# 
+#
 
 #Mosaic Plot
 mosaicplot(table(cars_edited$body_type, cars_edited$engine_type), shade=TRUE, las=2, main="Engine Type vs Body Type")

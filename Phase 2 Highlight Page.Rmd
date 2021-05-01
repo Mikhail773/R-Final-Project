@@ -21,9 +21,11 @@ library(ranger) # RFT more than 53 factors
 
 # Abstract: Description of the project and the findings
 
-The dataset in question is of used cars in a popular catalog from the country of Belarus. This dataset will be cleaned, analyzed, to answer several questions about the effect that certain variables have on the price point at which cars are sold at. Ultimately, Multiple Linear Regression Models, SVR, Decision Tree Regression, Random Forest Regression, and KNN will all be used to predict the market price of a used car in Belarus given the attributes found in the dataset. The accuracy of these models were analyzed and performance tested for real-world application with the help of a training and testing dataset. Afterwords, the models were compared to find the most effective model for predicting the price of a used car in Belarus. **STATE OUR FINDINGS**
+The dataset in question is of used cars in a popular catalog from the country of Belarus. This dataset will be cleaned and analyzed, to answer several questions about the effect that certain variables have on the price point at which cars are sold at. Ultimately, Multiple Linear Regression Models, SVR, Decision Tree Regression, Random Forest Regression, and KNN will all be used to predict the market price of a used car in Belarus given the attributes found in the dataset. The accuracy of these models were analyzed and performance tested for real-world application with the help of a training and testing dataset. Afterwords, the models were compared to find the most effective model for predicting the price of a used car in Belarus. **STATE OUR FINDINGS**
 
 # Introduction: Overview of the problems/goals and how they will be solved
+
+We went through many datasets to find the one we were all interested in. We chose this dataset because it had a perfect amount of rows, and there was a mix of continuous and categorical variables. Since cars are such a big investment we all wondered what affected the price on cars. This is what sparked our initial questions and goals. Solving our proposed questions and goal we hope to gain insights in what affects car prices which would leave us with more knowledge we can use later in life. To solve our questions and answer our goal we are going to use R to make graphs to answer our questions. We will make sure to use different statistical analyses to make sure our graphs are confirmed to be accurate.
 
 # Initial Questions
 
