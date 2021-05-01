@@ -619,7 +619,7 @@ confint(step.LMConts)
 LMContPrediction <- predict(step.LMConts, test.data)
 
 # Prediction error, rmse
-rmse(test.data$price_usd, LMContPrediction)
+RMSE(LMContPrediction,test.data$price_usd)
 
 # Compute R-square
 R2(LMContPrediction,test.data$price_usd) ## R^2 for test/train is 50.95891%
@@ -643,7 +643,7 @@ confint(step.logConts)
 LogLMContsPrediction <- step.logConts %>% predict(test.data)
 
 # Prediction error, rmse
-rmse(test.data$price_usd, LogLMContsPrediction)
+RMSE(LogLMContsPrediction,test.data$price_usd)
 
 # Compute R-square
 R2(LogLMContsPrediction,test.data$price_usd)
@@ -669,7 +669,7 @@ modelSVRLinTrain$bestTune
 modelSVRLinTrainPrediction <- predict(modelSVRLinTrain, test.data)
 
 # Prediction error, rmse
-rmse(test.data$price_usd, modelSVRLinTrainPrediction)
+RMSE(modelSVRLinTrainPrediction,test.data$price_usd)
 #[1] 3257.887
 
 # Compute R-square
@@ -691,7 +691,7 @@ modelSVRPolyTrain$bestTune
 modelSVRPolyTrainPrediction <- predict(modelSVRPolyTrain, test.data)
 
 # Prediction error, rmse
-rmse(test.data$price_usd, modelSVRPolyTrainPrediction)
+RMSE(modelSVRPolyTrainPrediction,test.data$price_usd)
 
 # Compute R-square
 R2(modelSVRPolyTrainPrediction,test.data$price_usd)
@@ -710,7 +710,7 @@ modelSVRRadialTrain$bestTune
 modelSVRRadialTrainPrediction <- predict(modelSVRRadialTrain, test.data)
 
 # Prediction error, rmse
-rmse(test.data$price_usd, modelSVRRadialTrainPrediction)
+RMSE(modelSVRRadialTrainPrediction,test.data$price_usd)
 
 # Compute R-square
 R2(modelSVRRadialTrainPrediction,test.data$price_usd)
@@ -740,10 +740,10 @@ model_DT_Train$finalModel
 prediction_DT_Train <- model_DT_Train %>% predict(test.data)
 
 # Prediction error, rmse
-rmse(prediction_DT_Train,test.data$price_usd)
+RMSE(prediction_DT_Train,test.data$price_usd)
 
 # Compute R-square
-R2(model_DT_Train,test.data$price_usd)
+R2(prediction_DT_Train,test.data$price_usd)
 
 ###################################################################################################
 ## Random Forest Model
@@ -770,7 +770,7 @@ text(random_forest_ranger$finalModel, digits = 3)
 rf_predict_ranger <- predict(random_forest_ranger, test.data , type='response')
 
 # Prediction error, rmse
-rmse(rf_predict_ranger,test.data$price_usd)
+RMSE(rf_predict_ranger,test.data$price_usd)
 
 # Compute R-square
 R2(rf_predict_ranger,test.data$price_usd)
@@ -798,7 +798,7 @@ knn_predictions <- model_knn %>% predict(test.data)
 head(knn_predictions)
 
 # Compute the prediction error RMSE
-rmse(knn_predictions, test.data$price_usd)
+RMSE(knn_predictions,test.data$price_usd)
 
 # Compute R-square
 R2(knn_predictions,test.data$price_usd)
