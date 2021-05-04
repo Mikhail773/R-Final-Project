@@ -7,14 +7,12 @@
 library(tidyverse)
 library(e1071) #SVM
 library(car) #predict
-library(Metrics) #rmse
 library(caret) #partiiton
 library(MASS) #stepwise
 library(kernlab) #SVM
 library(rpart) # Decision Tree Regression
 library(randomForest) #  Random Forest Tree Regression
 library(ranger) # RFT more than 53 factors
-#library(multcomp) #glht
 ###################################################################################################
 #
 # Evaluate the data
@@ -27,7 +25,8 @@ View(cars) #view the data
 
 ###################################################################################################
 #
-# Edit(modify) the data
+# Edit(modify) the data: Recoding was done to the file and the CSV file was saved that way. 
+# This prevented issues arising from locale settings and made working on the code easier as a group.
 #
 
 #Removing unnecessary columns from cars. Store that data in cars_edited
@@ -36,7 +35,7 @@ View(cars) #view the data
 cars_edited <- cars %>% dplyr::select(-8 & -(12:13) & -(20:29))
 View(cars_edited) #view the data
 
-
+# This recoding was done on the csv file and saved permanently to avoid future locale issues.
 # #Recode foreign language into their English meaning (location_region)
 # cars_edited <-
 #   cars_edited %>% mutate(
@@ -53,7 +52,7 @@ View(cars_edited) #view the data
 #
 # #Recode foreign language into their English meaning (manufacturer_name)
 # cars_edited <-
-#   cars_edited %>% mutate(
+#   cars_edited %>%   mutate(
 #     manufacturer_name = recode(
 #       cars_edited$manufacturer_name,
 #       'ВАЗ' = "AvtoVAZ",
@@ -85,8 +84,7 @@ colSums(is.na(cars))
 # NA is in the categorical attribute engine-capacity
 
 # Lets arbitrarily pick 999 to denote NA. (Engine-Capacity is categorical so this can be done)
-cars_edited <-
-  cars_edited %>% mutate(engine_capacity = coalesce(engine_capacity, 999))
+cars_edited <- cars_edited %>% mutate(engine_capacity = coalesce(engine_capacity, 999))
 
 # Check for Duplicates and remove them
 which(duplicated(cars_edited))
@@ -157,6 +155,7 @@ View(test.data)
 # 16) Bar graph Drive train: How many cars have certain drive trains
 # 20) Bar graph Is exchangeable: Counting the number of cars that are exchangeable
 # 21) Bar graph Location region: Count the number of cars in a region
+# 31) What is the distribution of manufacturers?
 #
 # Histogram Graph:
 # 1) Getting the unique entries for all columns and displaying how often they appear
@@ -252,6 +251,9 @@ ggplot(cars_edited) + geom_boxplot(mapping = aes(duration_listed))
 # 30) Histogram Duration listed: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
 
+# 31)What is the distribution of manufacturers?
+ggplot(cars_edited, aes(y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name)) + geom_text(stat='count', aes(label=..count..), hjust=1)
+
 ###################################################################################################
 #
 # Plotting Graphs to investigate relationships
@@ -276,10 +278,8 @@ ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
 #
 #
 # Misc:
-# Line 287 Group cars by manufacturer, and get it's mean price
-# Line 302 Group by car body type and get it's mean price
 # 9) The correlation between car body type, price, AND engine fuel
-#
+# 11) Group cars by manufacturer, and get it's mean price
 
 # 1) Graph to show the amount of cars(by manufacturer name) in a region BALLOON PLOT
 ggplot(cars_edited, aes(location_region, manufacturer_name)) + geom_count()
@@ -289,9 +289,6 @@ ggplot(cars_edited, aes(year_produced, price_usd)) + geom_point() + geom_smooth(
 
 # 3) Graph to show the amount of cars(density) according to it's price LINE GRAPH
 ggplot(cars_edited, aes(price_usd, ..density..)) + geom_freqpoly(binwidth = 500)
-
-#Group cars by manufacturer, and get it's mean price
-cars_edited %>% group_by(manufacturer_name) %>% summarize(mean(price_usd)) %>% View()
 
 # 4) Graph to show the number of cars in specific colors(10 red cars, 8 blue cars etc.) by region BAR GRAPH
 ggplot(cars_edited, aes(color)) + geom_bar(aes(fill = location_region))
@@ -317,6 +314,9 @@ ggplot(cars_edited) + geom_point(mapping = aes(x = body_type, y = price_usd, col
 # 10 ) Graph to show the price of a car according to it's number of photos incl. engine fuel SCATTER PLOT
 ggplot(cars_edited) + geom_point(mapping = aes(x = number_of_photos, y = price_usd, color = engine_fuel))
 
+# 11) Group cars by manufacturer, and get it's mean price
+cars_edited %>% group_by(manufacturer_name) %>% summarize(mean(price_usd)) %>% View()
+
 ###################################################################################################
 #
 # Answering Questions
@@ -325,10 +325,9 @@ ggplot(cars_edited) + geom_point(mapping = aes(x = number_of_photos, y = price_u
 #
 # (Emma Doyle)
 #
-# 1)
-#
-# Box Plots, Bar Graph, ANOVA?: What impact does a region have on price?
-# What impact does region have on price?
+# 1) What impact does region have on price?
+# Region does correlate with price. However, a correlation between region and price does not necessary mean that one leads to another. 
+# The best indicator of the relationship will be seen in the total model.
 # Regions: Minsk, Gomel, Brest, Vitebsk, Mogilev, Grodno
 #
 
@@ -358,17 +357,12 @@ summary(res.aov)
 ###################################################################################################
 #
 # (Emma Doyle)
-#
-# 2)
-#
-# Pie Graph/Box Plot, One-Way Anova?:
-#
-# What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
-#
-#
-#
+# 
+# 2) Do manufacturers have a significant impact on the asking price of a vehicle?
+# Manufacturers does correlate to the asking price of a vehicle.
+# Our final models will shows us exactly how large this correlation is with regards to the other attributes.
 
-manuPriceDF <- group_by(cars_edited, manufacturer_name)
+# Do manufacturers have a significant impact on the asking price of a vehicle?
 manuPriceDF_averages <- summarise(manuPriceDF, average_price_usd = mean(price_usd))
 View(manuPriceDF_averages)
 ggplot(manuPriceDF_averages, aes(x = average_price_usd, y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name),stat="identity") + geom_text(aes(label =  paste0("$",round(average_price_usd)), hjust = 1))
@@ -389,17 +383,18 @@ summary(res.aovTwo)
 #
 # (Reid Hoffmeier)
 #
-# 3) Scatter Plot/Box-Plot, Simple Regression Analysis:
-# What is the relationship between odometer and price?
-#
-# The higher the odometer milage the lower the price.
+# 3) What is the relationship between odometer and price?
+# There is a low negative correlation between price and odometer. 
+# We can conclude that although there is an impact many more attributes effect the price of a vehicle.
 #
 
 #Scatter plot: Odometer and price
 ggplot (cars_edited, aes( x =odometer_value, y=price_usd)) + geom_point() + stat_smooth()
 
 #Getting cor value
-cor(cars_edited$odometer_value, cars_edited$price_usd)
+cor.test(cars_edited$odometer_value, cars_edited$price_usd)
+# Since the p-value is less than 0.05 we can conclude that Price and Odometer have a low negative correlation
+# The correlation coefficient is -0.4212043 and p-value of < 2.2e-16.
 
 #Getting the formula for linear regression
 odometer_on_price <- lm (price_usd ~ odometer_value, data = cars_edited)
@@ -410,8 +405,10 @@ ggplot (cars_edited, aes(x=odometer_value, y=price_usd)) + geom_point() + stat_s
 
 #Finding how well this line fits our data
 summary(odometer_on_price)
+# R^2 is very low which affirms that odometer is not a good indicator of price. We can suspect that several more variables are in play.
 confint(odometer_on_price)
 sigma(odometer_on_price)*100/mean(cars_edited$price_usd)
+# Our prediction error rate is extremely high (87.80444%) which explains the low correlation
 
 ###################################################################################################
 #
@@ -419,27 +416,32 @@ sigma(odometer_on_price)*100/mean(cars_edited$price_usd)
 #
 # 4) Scatter Plot, Simple Regression Analysis:
 # Does the number of photos a vehicle has impact the selling price?
-#
-# Yes, the more photos a vehicle has, the higher the selling price.
+# A low positive correlation between number of photos a vehicle has and the selling price.
+# However, on its own photo amount is not a good predictor of price and for that reason we must use several more attributes when predicting price.
 #
 
 #Scatter plot: Number of photos and price
 ggplot(cars_edited, aes( x =number_of_photos, y=price_usd)) + geom_point() + stat_smooth()
 
 #getting the cor value
-cor(cars_edited$number_of_photos, cars_edited$price_usd)
+cor.test(cars_edited$number_of_photos, cars_edited$price_usd)
+# Since the p-value is less than 0.05 we can conclude that Price and Number of photos have a low positive correlation
+# The correlation coefficient is 0.3168586 and p-value of < 2.2e-16.
 
 #Getting the formula for linear regression
 number_of_photos_on_price <- lm (price_usd ~ number_of_photos, data = cars_edited)
 number_of_photos_on_price
 
-#Scatter plot: Number of photos and price with linear regresison line
+#Scatter plot: Number of photos and price with linear regression line
 ggplot (cars_edited, aes(x=number_of_photos, y=price_usd)) + geom_point() + stat_smooth(method=lm)
 
 #Finding how well this line fits the data
 summary(number_of_photos_on_price)
+# R^2 is very low which affirms that number of photos is not a good indicator of price. 
+# We can suspect that several more variables are in play.
 confint(number_of_photos_on_price)
 sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
+# Our prediction error rate is extremely high (91.82279%) which explains the low correlation
 
 ###################################################################################################
 #
@@ -447,35 +449,26 @@ sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
 #
 # 5) Scatter Plot, Simple Regression Analysis:
 # Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
-#
-# Yes, the number of times a vehicle has been upped raises the selling price (It's linear)
+# The number of times a vehicle has been upped has a negligible impact on the selling price
 #
 
 #Regression analysis
-ggplot (cars_edited, aes( x =up_counter, y=price_usd)) + geom_point() + stat_smooth()
+ggplot(cars_edited, aes( x =up_counter, y=price_usd)) + geom_point() + stat_smooth()
 
 #Correlation
-cor(cars_edited$up_counter, cars_edited$price_usd)
+cor.test(cars_edited$up_counter, cars_edited$price_usd)
 up_counter_on_price <- lm (price_usd ~ up_counter, data = cars_edited)
 up_counter_on_price
 
-###################################################################################################
-#
-# Explanation of regression line in this problem
-#
-# The estimated regression line equation can be written as
-# price_usd = 6493.05 + 8.569*up_counter
-# The Intercept (b0) is 6493.05.  It can be interpreted as the predicted price in usd for an up counter of 0.  This means that if there are no up counters used, the average sales price would be around $6493.05.
-# The regression beta coefficient for the variable up_counter (b1) is 8.569.  For an up_counter value of 100, Average sales price would be 6493.05+8.569*100, $7349.95, and increase of $857.00.
-#
+#Finding how well this line fits the data
+summary(up_counter_on_price)
+# R^2 is extremely low which affirms that number of photos is not a good indicator of price. 
+confint(up_counter_on_price)
+sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
+# Our prediction error rate is extremely high (96.65168%) which confirms to us that up_counter is a terrible predictor of price(as we can see by the correlation test)
 
 #Scatter plot: up counter and price with regression line
 ggplot (cars_edited, aes(x=up_counter, y=price_usd)) + geom_point() + stat_smooth(method=lm)
-summary(up_counter_on_price)
-
-#Confidence Interval
-confint(up_counter_on_price)
-sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
 
 ###################################################################################################
 #
@@ -483,37 +476,32 @@ sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
 # 6) Mosaic Plot/ Chi-Squared Test, Two-Way ANOVA:
 #
 # Relationship between Engine Type and Body Type?
-#
-# Limousine and pickup trucks appear to have the only impact.
+# Sedan and Gasoline is the most common followed by Gasoline and Hatchback
 #
 # What is the impact of Engine Type and Body Type on the selling price?
-#
-# 
-#
+# Limousine and pickup trucks appear to have the only impact.
 
-#Mosaic Plot
-mosaicplot(table(cars_edited$body_type, cars_edited$engine_type), shade=TRUE, las=2, main="Engine Type vs Body Type")
+engine_body.data <- table(cars_edited$body_type, cars_edited$engine_type)
+chisq.test(engine_body.data)
+# Balloon Plot
+ggplot(cars_edited, aes(body_type, engine_type)) + geom_count()
 
 #Aov3
-body_engine_type_on_price.aov3 <- aov(price_usd ~ engine_type * body_type, data = cars_edited)
-summary(body_engine_type_on_price.aov3)
-model.tables(body_engine_type_on_price.aov3, type="means", se = TRUE)
+body_engine_type_on_price.aov <- aov(price_usd ~ engine_type * body_type, data = cars_edited)
+summary(body_engine_type_on_price.aov)
+model.tables(body_engine_type_on_price.aov, type="means", se = TRUE)
 
 #Tukey HSD
 TukeyHSD(body_engine_type_on_price.aov3)
-
-#General Linear Hypothesis
-#summary(glht(body_engine_type_on_price.aov3, lincft = mcp))
-
-#Limousine and pickup trucks appear to have the only impact
 
 ###################################################################################################
 #
 # (Mikhail Mikhaylov)
 #
 # 7) Dplyr count with group_by, One-Way Anova:
-# What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
-#
+# What is the most popular model?
+# Most popular is Passat
+# Can we conclude that the popularity of a model has a direct impact on the price of a vehicle?
 # The popularity of a vehicle does seem to have an impact on the average_price of a vehicle
 #
 
@@ -537,13 +525,14 @@ models_sorted_avg_with_cnt$counts <- as.numeric(unlist(models_sorted_avg_with_cn
 ggplot (models_sorted_avg_with_cnt, aes( x =counts, y=average_price_usd)) + geom_point() + stat_smooth()
 
 #Taking the linear regression
-modelPricePerCount <- lm (average_price_usd ~ counts, data = models_sorted_avg_with_cnt)
+modelPricePerCount <- lm (price_usd ~ model_name, data = cars_edited)
 
 #Plotting the linear regression
 ggplot (models_sorted_avg_with_cnt, aes(x=counts, y=average_price_usd)) + geom_point() + stat_smooth(method=lm)
 
 #Making sure the linear regression line matches the model
 summary(modelPricePerCount)
+# R^2 is extremely low which affirms that number of photos is not a good indicator of price. 
 confint(modelPricePerCount)
 sigma(modelPricePerCount)*100/mean(models_sorted_avg_with_cnt$average_price_usd)
 
