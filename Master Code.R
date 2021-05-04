@@ -503,6 +503,7 @@ TukeyHSD(body_engine_type_on_price.aov3)
 # Most popular is Passat
 # Can we conclude that the popularity of a model has a direct impact on the price of a vehicle?
 # The popularity of a vehicle does seem to have an impact on the average_price of a vehicle
+# More attributes would be needed to predict price
 #
 
 # Finding out model popularity
@@ -510,37 +511,21 @@ models_counted <- cars_edited %>% count(model_name) %>% arrange(desc(n))
 View(models_counted)
 # Most popular is Passat
 
-# Find price average for each model and append count to it
-models_sorted <- group_by(cars_edited, model_name)
-View(models_sorted)
-models_sorted_averages <- summarise(models_sorted, average_price_usd = mean(price_usd))
-View(models_sorted_averages)
-
-# Figure out count for each model
-models_sorted_avg_with_cnt <- models_sorted_averages %>% mutate(counts = count(cars_edited, model_name) %>% dplyr::select(2))
-View(models_sorted_avg_with_cnt)
-models_sorted_avg_with_cnt$counts <- as.numeric(unlist(models_sorted_avg_with_cnt$counts))
-
-#Scatter plot: count of models VS price
-ggplot (models_sorted_avg_with_cnt, aes( x =counts, y=average_price_usd)) + geom_point() + stat_smooth()
+# Do an anova test to see if model name significantly impacts price of a vehicle
+model_price <- aov(price_usd ~ model_name, data = cars_edited)
+summary(model_price)
+# The popularity of a vehicle does seem to have an impact on the price of a vehicle
 
 #Taking the linear regression
-modelPricePerCount <- lm (price_usd ~ model_name, data = cars_edited)
-
-#Plotting the linear regression
-ggplot (models_sorted_avg_with_cnt, aes(x=counts, y=average_price_usd)) + geom_point() + stat_smooth(method=lm)
+modelPrice <- lm (price_usd ~ model_name, data = cars_edited)
 
 #Making sure the linear regression line matches the model
-summary(modelPricePerCount)
-# R^2 is extremely low which affirms that number of photos is not a good indicator of price. 
-confint(modelPricePerCount)
-sigma(modelPricePerCount)*100/mean(models_sorted_avg_with_cnt$average_price_usd)
-
-
-model_price <- aov(average_price_usd ~ counts, data = models_sorted_avg_with_cnt)
-summary(model_price)
-
-# The popularity of a vehicle does seem to have an impact on the average_price of a vehicle
+summary(modelPrice)
+# R^2(0.6162) is relatively good which affirms that model name is a good indicator of price. 
+confint(modelPrice)
+sigma(modelPrice)*100/mean(cars_edited$price_usd)
+# Our prediction error rate is lower than for other attributes (60.86683%) which confirms to us that model name is a better predictor of price
+# Nevertheless, a prediction error of 60.86683% tells us that for prediction we will need more attributes.
 
 ###################################################################################################
 #
@@ -548,36 +533,38 @@ summary(model_price)
 # 8) Scatter plot, Two-Way ANOVA/ :
 # What is the average age of each vehicle manufacturer?
 #
-# 1) A view of the age of each vehicle manufacturer
-#
-# And whether the manufacturer changes how the production year impacts the selling price?
-#
+# 1) 
+# A view of the age of each vehicle manufacturer
+# Does the manufacturer change how the production year impacts the selling price?
 # The manufacturer does change how the production year affects the selling price
 #
 
 #Group cars by manufacturer name
 manufacturer_year <- group_by(cars_edited, manufacturer_name)
 
-#Summarise the manufacturer years average
+#Summarize the manufacturer years average
 manufacturer_year_averages <- summarise(manufacturer_year, average = mean(year_produced, na.rm = TRUE))
 # 1) Average age of each vehicle manufacturer
 View(manufacturer_year_averages)
 
-# Figure out count for each Manufacturer
-manu_sorted_avg_with_cnt <- manufacturer_year_averages %>% mutate(counts = count(cars_edited, manufacturer_name) %>% dplyr::select(2))
-View(manu_sorted_avg_with_cnt)
-
-#Scatter plot: Manufacturer name and average year
-ggplot(manufacturer_year_averages) + geom_point(aes(x = manufacturer_name, y = average))
-
 #Scatter plot: Year produced by price and colored by manufacturer name
 ggplot(cars_edited) + geom_point(aes(x = year_produced, y = price_usd, color = manufacturer_name))
 
-#Summary of manufacturer price
+# Do an anova test to see if year produced significantly impacts price of a vehicle
 manufacturer_price <- aov(price_usd ~ manufacturer_name * year_produced, data = cars_edited)
 summary(manufacturer_price)
-
 # The manufacturer does change how the production year affects the selling price
+
+#Taking the linear regression
+yearPrice <- lm (price_usd ~ year_produced, data = cars_edited)
+
+#Making sure the linear regression line matches the model
+summary(yearPrice)
+# R^2(0.4977) is relatively good which affirms that year produced is a good indicator of price. 
+confint(yearPrice)
+sigma(yearPrice)*100/mean(cars_edited$price_usd)
+# Our prediction error rate is lower than for other attributes (68.61004%) which confirms to us that year produced is a decent predictor of price(albeit not at good as model name)
+# A prediction error of 68.61004% tells us that for prediction we will need more attributes than just year produced.
 
 ###################################################################################################
 #
