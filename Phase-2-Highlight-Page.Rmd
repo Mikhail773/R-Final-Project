@@ -443,8 +443,12 @@ modelSVRPolyTrain <- train(price_usd ~ ., data = train.data, method = "svmPoly",
                            tuneLength = 10
 )
 
-summary(modelSVRPolyTrain)
-modelSVRPolyTrain$bestTune
+summary(modelSVRRadialTrain)
+#Length  Class   Mode
+#1   ksvm     S4					 
+modelSVRRadialTrain$bestTune
+#sigma   C
+#10 0.001556481 128	
 
 # Predict using SVR Model with Linear Method
 modelSVRPolyTrainPrediction <- predict(modelSVRPolyTrain, test.data)
@@ -493,12 +497,7 @@ model_DT_Train <- train(price_usd ~ ., data = train.data, method = "rpart",
                         tuneLength = 10)
 
 summary(model_DT_Train)
-model_DT_Train$bestTune
-plot(model_DT_Train)
-
 ```
-
-![](images/paste-EDEE9EB8.png)
 
 ```{r eval=FALSE, include=TRUE}
 # Plot the final tree model
@@ -506,6 +505,8 @@ par(xpd = NA) # Avoid clipping the text in some device
 plot(model_DT_Train$finalModel)
 text(model_DT_Train$finalModel, digits = 3)
 ```
+
+![](plot(model_DT_Train$finalModel)_1920_1080.png){width="682" height="476"}
 
 ```{r eval=FALSE, include=TRUE}
 #Decision rules in the model model_DT_Train$finalModel
@@ -565,12 +566,13 @@ model_knn <- train(
 )
 
 summary(model_knn$finalModel)
-
 ```
 
 ```{r eval=FALSE, include=TRUE}
-# Print the best tuning parameter k that maximizes model accuracy model$bestTune 
-model$bestTune
+# Print the best tuning parameter k that maximizes model accuracy
+model_knn$bestTune
+#k
+#1 5
 ```
 
 ```{r eval=FALSE, include=TRUE}
@@ -578,19 +580,23 @@ model$bestTune
 plot(model_knn)
 ```
 
+![](model_knn_1920_1080.png)
+
 ```{r eval=FALSE, include=TRUE}
 # Make predictions on the test data
 knn_predictions <- model_knn %>% predict(test.data)
 head(knn_predictions)
+#[1] 9560.000 9000.000 4580.000 5648.494 8575.200 7720.000
 ```
 
 ```{r eval=FALSE, include=TRUE}
-# Compute the prediction error RMSE RMSE(knn_predictions,test.data$price_usd)
-```
+# Compute the prediction error RMSE
+RMSE(knn_predictions,test.data$price_usd)
+#[1] 3693.127
 
-```{r eval=FALSE, include=TRUE}
-
-# Compute R-square R2(knn_predictions,test.data$price_usd) 
+# Compute R-square
+R2(knn_predictions,test.data$price_usd)
+#[1] 0.6802895
 ```
 
 ## Compare results obtained using different ML methods

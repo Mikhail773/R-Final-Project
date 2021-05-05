@@ -739,7 +739,7 @@ text(model_DT_Train$finalModel, digits = 3)
 
 #Decision rules in the model
 model_DT_Train$finalModel
-See model_DT_Train$finalModel.txt						  
+# See model_DT_Train$finalModel.txt						  
 
 # Make predictions on the test data
 prediction_DT_Train <- model_DT_Train %>% predict(test.data)
