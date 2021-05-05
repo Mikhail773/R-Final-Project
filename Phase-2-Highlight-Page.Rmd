@@ -559,35 +559,47 @@ Our choices: Linear Regression Decision Trees SVR (Linear and NonLinear) Random 
 
 Q: What impact does a region have on price?
 
-A: With this data set region doesn't have an impact on vehicle price.
+A: Although the region does impact price the extent of this impact would have to be assessed in a model that includes more attributes. The reason for this is because correlation does not necessitate causation. In other words, more attributes may be at play and to get a better understanding of the impact of region on price it will be vital to access the role region has in the overall models.
 
 Q: What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
 
-A: We can confirm that there is a relationship between the manufacturer and asking price.
+A: We can confirm that there is a relationship between the manufacturer and asking price. The relationship seems to be one of the larger factor for asking price, but is not significant enough to predict price on its own.
 
 Q: What is the relationship between odometer and price?
 
-A: The higher the odometer the lower the price is for the vehicle.
+A: There is a low negative correlation between price and odometer.
 
 Q: Does the number of photos a vehicle has impact the selling price?
 
-A: Yes, the more photos a vehicle has, the higher the selling price.
+A: A low positive correlation between number of photos a vehicle has and the selling price.
 
 Q: Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
 
-A: Yes, the number of times a vehicle has been upped raises the selling price
+A: The number of times a vehicle has been upped has a negligible impact on the selling price.
 
 Q: Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
 
-A: Limousine and pickup trucks appear to have the only impact.
+A: Sedan and Gasoline is the most common followed by Gasoline and Hatchback. Engine Type and Body Type do have an impact on the selling price, but the extend of this impact will need to be investigated in our overall model.
 
 Q: What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
 
-A:The popularity of a vehicle does seem to have an impact on the average_price of a vehicle.
+A: The most popular is the Passat. Furthermore, The popularity of a vehicle does seem to have an impact on the average_price of a vehicle. However, more attributes would be needed to predict price
 
 Q: What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?
 
-A: The manufacturer does change how the production year affects the selling price.
+A:
+
+```{r}
+#Group cars by manufacturer name
+manufacturer_year <- group_by(cars_edited, manufacturer_name)
+
+#Summarize the manufacturer years average
+manufacturer_year_averages <- summarise(manufacturer_year, average = mean(year_produced, na.rm = TRUE))
+# 1) Average age of each vehicle manufacturer
+manufacturer_year_averages
+```
+
+The manufacturer does change how the production year affects the selling price.
 
 ## What are the justifications for your answers?
 
@@ -740,7 +752,9 @@ Based on this mosaic plot we can see that the body types Pickup, and Limousine a
 body_engine_type_on_price.aov3 <- aov(price_usd ~ engine_type * body_type, data = cars_edited)
 summary(body_engine_type_on_price.aov3)
 model.tables(body_engine_type_on_price.aov3, type="means", se = TRUE)
+```
 
+```{r eval=FALSE, include=TRUE}
 #Tukey HSD
 TukeyHSD(body_engine_type_on_price.aov3)
 ```

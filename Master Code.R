@@ -510,12 +510,7 @@ sigma(modelPrice)*100/mean(cars_edited$price_usd)
 # (Mikhail Mikhaylov)
 # 8) Scatter plot, Two-Way ANOVA/ :
 # What is the average age of each vehicle manufacturer?
-#
-# 1) 
-# A view of the age of each vehicle manufacturer
 # Does the manufacturer change how the production year impacts the selling price?
-# The manufacturer does change how the production year affects the selling price
-#
 
 #Group cars by manufacturer name
 manufacturer_year <- group_by(cars_edited, manufacturer_name)
