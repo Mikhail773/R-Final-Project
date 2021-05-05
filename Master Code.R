@@ -117,7 +117,6 @@ View(test.data)
 #
 # 1) What is the distribution of manufacturers?
 # 4) Plotting cars by color and quantity
-# 9) Bar graph Engine capacity: Graph to see how the data is skewed
 # 10) Bar graph Body type: count how many cars have the same body type
 # 13) Bar graph Is exchangeable: Counting the number of cars that are exchangeable
 #
@@ -144,7 +143,7 @@ View(test.data)
 # TABLE:
 #
 # 2) A table to show unique car model names and quantity
-#
+# 9) Table for Engine capacity
 
 # 1)What is the distribution of manufacturers?
 ggplot(cars_edited, aes(y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name)) + geom_text(stat='count', aes(label=..count..), hjust=1)
@@ -185,8 +184,8 @@ pie(TypeCounted$n, labels = percentType, main = "Type Distribution", col = rainb
 legend("right", c("diesel", "electric", "gasoline"), cex = 0.8,
        fill = rainbow(nrow(TypeCounted)))
 
-# 9) Bar graph Engine capacity: Graph to see how the data is skewed
-ggplot(cars_edited,aes(engine_capacity)) + geom_bar(stat = "count")  + geom_text(stat='count', aes(label=..count..), vjust= -1)
+# 9) Table for Engine capacity
+View(cars_edited %>% count(engine_capacity))
 
 # 10) Bar graph Body type: count how many cars have the same body type
 ggplot(cars_edited, aes(x = body_type), stat = "count") + geom_bar() + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
@@ -254,7 +253,6 @@ ggplot(cars_edited) + geom_histogram(aes(duration_listed))
 #
 # Box Plot:
 # 8) The outliers with body type and price
-#
 #
 # Misc:
 # 9) The correlation between car body type, price, AND engine fuel

@@ -153,13 +153,14 @@ test.data <- cars_edited[-training.samples,]
 
 ## Visualizations used to analyze data
 
-In an attempt to gain a robust knowledge of our dataset several visualizations were used. Visualization of our data was done in two sections. Initially each attribute was graphed in order to gain a general understanding of how the samples are distributed for each attribute. This was done with the help of Bar Graphs, Histograms, Boxplots, the count function, and pie graphs. Once a general understanding of each attribute was gained we began to visualize various combinations of attributions. These visualizations were vital in seeing different relationships among our samples. The visualizations that were used were Balloon Plot, Scatterplot, frequency polygons, dplyr::summarize, and Boxplots.
+In an attempt to gain a robust knowledge of our dataset several visualizations were used. Visualization of our data was done in two sections. Initially each attribute was graphed in order to gain a general understanding of how the samples are distributed for each attribute. This was done with the help of Bar Graphs, Histograms, Boxplots, the count function, and pie graphs.
 
-```{r , fig.height = 9, fig.width = 12}
-
+```{r, fig.height = 12, fig.width = 8, echo=FALSE}
 # 1)What is the distribution of manufacturers?
 ggplot(cars_edited, aes(y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name)) + geom_text(stat='count', aes(label=..count..), hjust=1)
+```
 
+```{r , fig.height = 10, fig.width = 10}
 # 2) A table to show unique car model names and quantity
 View(cars_edited %>% count(model_name))
 
@@ -170,24 +171,24 @@ percentTransmission <- paste0(round(100*transmissionCounted$n/sum(transmissionCo
 pie(transmissionCounted$n, labels = percentTransmission, main = "Transmission Distribution", col = rainbow(nrow(transmissionCounted)))
 legend("right", c("Automatic", "Mechanical"), cex = 0.8,
        fill = rainbow(length(transmissionCounted)))
+```
 
+```{r , fig.height = 10, fig.width = 10}
 # 4) Plotting cars by color and quantity
 ggplot(cars_edited, aes(x = color)) + geom_bar(stat = "count", aes(fill = color)) + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+```
 
-# 5) Histogram Odometer Value: Graph to see how the data is skewed
-ggplot(cars_edited, aes(odometer_value)) + geom_histogram()
-
-# 6) Histogram Year produced: Graph to see how the data is skewed
-ggplot(cars_edited) + geom_histogram(aes(year_produced))
-
+```{r , fig.height = 10, fig.width = 10}
 # 7) Graph to show what fuel distribution
 FuelGrouped <- group_by(cars_edited, engine_fuel)
 FuelCounted <- count(FuelGrouped) 
 percentFuel <- paste0(round(100*FuelCounted$n/sum(FuelCounted$n), 2), "%")
 pie(FuelCounted$n, labels = percentFuel, main = "Fuel Distribution", col = rainbow(nrow(FuelCounted)))
-legend("right", c("compressed natural gas", "diesel", "electric", "gasoline", "hybrid-diesel", "hybrid-petrol"), cex = 0.8,
+legend("bottomright", c("compressed natural gas", "diesel", "electric", "gasoline", "hybrid-diesel", "hybrid-petrol"), cex = 0.8,
        fill = rainbow(nrow(FuelCounted)))
+```
 
+```{r , fig.height = 10, fig.width = 10}
 # 8) Pie graph to show engine type Distribution (Electric, Diesel, Gasoline)
 TypeGrouped <- group_by(cars_edited, engine_type)
 TypeCounted <- count(TypeGrouped) 
@@ -196,8 +197,8 @@ pie(TypeCounted$n, labels = percentType, main = "Type Distribution", col = rainb
 legend("right", c("diesel", "electric", "gasoline"), cex = 0.8,
        fill = rainbow(nrow(TypeCounted)))
 
-# 9) Bar graph Engine capacity: Graph to see how the data is skewed
-ggplot(cars_edited,aes(engine_capacity)) + geom_bar(stat = "count")  + geom_text(stat='count', aes(label=..count..), vjust= -1)
+# 9) Table for Engine capacity
+View(cars_edited %>% count(engine_capacity))
 
 # 10) Bar graph Body type: count how many cars have the same body type
 ggplot(cars_edited, aes(x = body_type), stat = "count") + geom_bar() + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
@@ -221,6 +222,9 @@ pie(exchangeableCounted$n, labels = percentexchangeable, main = "Exchangeability
 legend("right", c("False", "True"), cex = 0.8,
        fill = rainbow(nrow(exchangeableCounted)))
 
+```
+
+```{r , fig.height = 10, fig.width = 10}
 # 14) Pie Graph Location region: Count the number of cars in a region
 regionPriceDF <- group_by(cars_edited, location_region)
 regionPriceDF_averages <- summarise(regionPriceDF, average_price_usd = mean(price_usd))
@@ -228,7 +232,9 @@ percentRegion <- paste0(round(100*regionPriceDF_averages$average_price_usd/sum(r
 pie(regionPriceDF_averages$average_price_usd, labels = percentRegion, main = "Region Price Distribution", col = rainbow(length(regionPriceDF_averages$average_price_usd)))
 legend("right", c("Brest Region", "Gomel Region", "Grodno Region", "Minsk Region", "Mogilev Region", "Vitebsk Region"), cex = 0.8,
        fill = rainbow(length(regionPriceDF_averages$average_price_usd)))
+```
 
+```{r , fig.height = 10, fig.width = 10}
 # 15) Histogram Number of photos: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(mapping = aes(number_of_photos))
 
@@ -243,12 +249,53 @@ ggplot(cars_edited) + geom_boxplot(mapping = aes(duration_listed))
 
 # 19) Histogram Duration listed: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(aes(duration_listed))
-
 ```
 
-The different Visualizations/ML methods that we used in questions: Pie chart Bar graph Scatter plot Linear Regression: In our project this was the most used of the ML techniques. This is because most of our questions had an interest in the price of a vehicle. That means for each question we were investigating only one different variable. We used Logistic regression to check to see how accurate our data was for the linear lines representing the graph. This in turn gave us the information needed to draw a conclusion about the relationship between the price of cars, and the variable in question. Single Anova and Two-Way Anova and N-Way Anova
+Once a general understanding of each attribute was gained we began to visualize various combinations of attributions. These visualizations were vital in seeing different relationships among our samples. The visualizations that were used were Balloon Plot, Scatterplot, frequency polygons, dplyr::summarize, and Boxplots.
 
-Different ML methods that we used in the Goal:
+```{r , fig.height = 10, fig.width = 10}
+# 1) Graph to show the amount of cars(by manufacturer name) in a region BALLOON PLOT
+ggplot(cars_edited, aes(location_region, manufacturer_name)) + geom_count()
+```
+
+```{r , fig.height = 10, fig.width = 10}
+# 2) Graph to show the price of a car according to its year produced SCATTER PLOT
+ggplot(cars_edited, aes(year_produced, price_usd)) + geom_point() + geom_smooth()
+
+# 3) Graph to show the amount of cars(density) according to it's price LINE GRAPH
+ggplot(cars_edited, aes(price_usd, ..density..)) + geom_freqpoly(binwidth = 500)
+
+# 4) Graph to show the number of cars in specific colors(10 red cars, 8 blue cars etc.) by region BAR GRAPH
+ggplot(cars_edited, aes(color)) + geom_bar(aes(fill = location_region))
+
+# 5) Graph to show the price of a car according to it's millage(odometer) SCATTER PLOT
+ggplot(cars_edited, aes(odometer_value, price_usd)) + geom_point(aes(color = is_exchangeable)) + geom_smooth()
+
+# 6)Graph to show the price of a car according to it's year produced AND body type SCATTER PLOT
+ggplot(cars_edited, aes(year_produced, price_usd)) + geom_point(aes(color = body_type)) + geom_smooth()
+
+# 7) Graph to show the price of a car according to it's Odometer AND engine fuel SCATTER PLOT
+ggplot(cars_edited, mapping = aes(x = odometer_value, y = price_usd)) + geom_point() + geom_smooth()
+
+# Group by car body type and get it's mean price
+group_by(cars_edited, body_type) %>% summarise(price_mean = mean(price_usd)) -> mean_cars
+
+# 8) Graph to show the outliers with body type and price BOX PLOT
+ggplot(cars_edited) + geom_boxplot(mapping = aes(x = reorder(body_type, price_usd), y = price_usd))
+```
+
+```{r , fig.height = 10, fig.width = 10}
+# 9) Graph to show the correlation between car body type, price, AND engine fuel
+ggplot(cars_edited) + geom_point(mapping = aes(x = body_type, y = price_usd, color = engine_fuel))
+
+# 10 ) Graph to show the price of a car according to it's number of photos incl. engine fuel SCATTER PLOT
+ggplot(cars_edited) + geom_point(mapping = aes(x = number_of_photos, y = price_usd, color = engine_fuel))
+
+# 11) Group cars by manufacturer, and get it's mean price
+cars_edited %>% group_by(manufacturer_name) %>% summarize(mean(price_usd)) %>% View()
+```
+
+Several machine learning techniques were used in an attempt to create the most accurate prediction model. The models used in the project were as follows:
 
 Multiple Linear Regression: This was used for the sake of gauging the impact of the continuous attributes on the price of the vehicle. This model is simple to understand and involves less computing power than more advance models which led to our decision to utilize this ML method as our first model.
 
@@ -260,7 +307,7 @@ Random Forest Regression: Albeit, Random Forest Regression is more complicated t
 
 KNN:K Nearest Neighbor was chosen due to its popularity and simplicity. KNN is able to handle our Categorical as well as Continuous attributes and for that reason it is a good model to be used to predict price. It will be vital to compare this model with the other models to investigate how useful of a model it is for our dataset.
 
-### PHASE 2 PART: Describe the different ways you tried to answer the questions and goals
+### PHASE 2 Portion: Describe the different ways you tried to answer the questions and goals
 
 ## How did you reach your conclusions?
 
