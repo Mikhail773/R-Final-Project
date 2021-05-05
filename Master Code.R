@@ -50,7 +50,7 @@ View(cars_edited) #view the data
 #     )
 #   )
 #
-# #Recode foreign language into their English meaning (manufacturer_name)
+# Recode foreign language into their English meaning (manufacturer_name)
 # cars_edited <-
 #   cars_edited %>%   mutate(
 #     manufacturer_name = recode(
@@ -63,7 +63,7 @@ View(cars_edited) #view the data
 #     )
 #   )
 #
-# #Recode foreign language into their English meaning (model_name)
+# Recode foreign language into their English meaning (model_name)
 # cars_edited <-
 #   cars_edited %>% mutate(
 #     model_name = recode(
@@ -76,7 +76,7 @@ View(cars_edited) #view the data
 #     )
 #   )
 
-# Recode foreign language into their English meaning (engine_fuel)
+# Recode engine_fuel to clear up confusion between compressed gas and gasoline
 cars_edited <- cars_edited %>% mutate(engine_fuel = dplyr::recode(engine_fuel,'gas' = "compressed natural gas"))
 
 # Check the na's in the dataset
@@ -93,10 +93,6 @@ cars_edited <- cars_edited %>% distinct()
 # View the changes the mutate made
 View(cars_edited)
 
-#Change model_name to factor. Useful later on for prediction modeling
-str(cars_edited)
-cars_edited$model_name <- as.factor(cars_edited$model_name)
-cars_edited$engine_fuel <- as.factor(cars_edited$engine_fuel)
 ###################################################################################################
 #
 # Split Dataset into Training and Testing for our Models
@@ -105,9 +101,6 @@ set.seed(123)
 training.samples <- cars_edited$manufacturer_name %>% createDataPartition(p = 0.8, list = FALSE)
 train.data <- cars_edited[training.samples,]
 test.data <- cars_edited[-training.samples,]
-
-View(train.data)
-View(test.data)
 
 ###################################################################################################
 #
@@ -147,6 +140,7 @@ View(test.data)
 
 # 1)What is the distribution of manufacturers?
 ggplot(cars_edited, aes(y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name)) + geom_text(stat='count', aes(label=..count..), hjust=1)
+# We can see a large difference in the amount cars for each manufacturers. Volkswagen, Opel, BMW, Audio, AvtoVAZ, Ford, Renault, and Mercedes-Benz are the majot manufacturers.
 
 # 2) A table to show unique car model names and quantity
 View(cars_edited %>% count(model_name))
@@ -158,37 +152,40 @@ percentTransmission <- paste0(round(100*transmissionCounted$n/sum(transmissionCo
 pie(transmissionCounted$n, labels = percentTransmission, main = "Transmission Distribution", col = rainbow(nrow(transmissionCounted)))
 legend("right", c("Automatic", "Mechanical"), cex = 0.8,
        fill = rainbow(length(transmissionCounted)))
+# Mechanical is significantly more common than Automatic. This will definitely be an attribute to consider in our final model
 
 # 4) Plotting cars by color and quantity
 ggplot(cars_edited, aes(x = color)) + geom_bar(stat = "count", aes(fill = color)) + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+# There is a lot of diversity in the colors and once again although there are categories with more values there is still a decent amount of variation
 
 # 5) Histogram Odometer Value: Graph to see how the data is skewed
 ggplot(cars_edited, aes(odometer_value)) + geom_histogram()
+# The data is left-skewed with what appears to be outliers as around 1,000,000 miles. 
 
 # 6) Histogram Year produced: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(aes(year_produced))
+# The graph seems to almost be normally distributed minus what appears to be some outliers on the the older end of the years
 
 # 7) Graph to show what fuel distribution
-FuelGrouped <- group_by(cars_edited, engine_fuel)
-FuelCounted <- count(FuelGrouped) 
-percentFuel <- paste0(round(100*FuelCounted$n/sum(FuelCounted$n), 2), "%")
-pie(FuelCounted$n, labels = percentFuel, main = "Fuel Distribution", col = rainbow(nrow(FuelCounted)))
-legend("right", c("compressed natural gas", "diesel", "electric", "gasoline", "hybrid-diesel", "hybrid-petrol"), cex = 0.8,
-       fill = rainbow(nrow(FuelCounted)))
+ggplot(cars_edited, aes(x = engine_fuel)) + geom_bar(stat = "count", aes(fill = engine_fuel)) + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+# There are only 2 major engine fuels(gasoline and diesel)
 
 # 8) Pie graph to show engine type Distribution (Electric, Diesel, Gasoline)
 TypeGrouped <- group_by(cars_edited, engine_type)
 TypeCounted <- count(TypeGrouped) 
 percentType <- paste0(round(100*TypeCounted$n/sum(TypeCounted$n), 2), "%")
-pie(TypeCounted$n, labels = percentType, main = "Type Distribution", col = rainbow(nrow(TypeCounted)))
+pie(TypeCounted$n, labels = percentType, main = "Engine Type Distribution", col = rainbow(nrow(TypeCounted)))
 legend("right", c("diesel", "electric", "gasoline"), cex = 0.8,
        fill = rainbow(nrow(TypeCounted)))
+# Not surprisingly gasoline and diesel are the 2 most common Engine Type considering the fuel distribution
 
 # 9) Table for Engine capacity
 View(cars_edited %>% count(engine_capacity))
+# Engine Capacity seems to be left-skewed which may indicate outliers
 
 # 10) Bar graph Body type: count how many cars have the same body type
 ggplot(cars_edited, aes(x = body_type), stat = "count") + geom_bar() + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+# There is some diversity in body type and the diversity in categories may lend itself to useful data for a future model
 
 # 11) Graph Drivetrain distribution:
 drivetrainGrouped <- group_by(cars_edited, drivetrain)
@@ -197,9 +194,11 @@ percentdrivetrain <- paste0(round(100*drivetrainCounted$n/sum(drivetrainCounted$
 pie(drivetrainCounted$n, labels = percentdrivetrain, main = "Drivetrain Distribution", col = rainbow(nrow(drivetrainCounted)))
 legend("right", c("all", "front", "rear"), cex = 0.8,
        fill = rainbow(nrow(drivetrainCounted)))
+# Although most vehicles are front wheel drive there is enough all and real wheel drive to gather some promising insights 
 
 # 12) Number of cars with same price
 ggplot(cars_edited, aes(x = price_usd), stat = "count") + geom_histogram()
+# This graph is extremely left-skewed. The sheer usefulness of price in our dataset will make this our main response attribute.
 
 # 13) Pie Graph exchangeability Distribution
 exchangeableGrouped <- group_by(cars_edited, is_exchangeable)
@@ -208,6 +207,7 @@ percentexchangeable <- paste0(round(100*exchangeableCounted$n/sum(exchangeableCo
 pie(exchangeableCounted$n, labels = percentexchangeable, main = "Exchangeability Distribution", col = rainbow(nrow(exchangeableCounted)))
 legend("right", c("False", "True"), cex = 0.8,
        fill = rainbow(nrow(exchangeableCounted)))
+# Exchangeability is more common than anticipated. It will be interesting to see if pricier or cheaper cars consent to exchanges
 
 # 14) Pie Graph Location region: Count the number of cars in a region
 regionPriceDF <- group_by(cars_edited, location_region)
@@ -215,83 +215,86 @@ regionPriceDFCount <- count(regionPriceDF)
 percentRegion <- paste0(round(100*regionPriceDFCount$n/sum(regionPriceDFCount$n), 2), "%")
 pie(regionPriceDFCount$n, labels = percentRegion, main = "Region Price Distribution", col = rainbow(nrow(regionPriceDFCount)))
 legend("right", c("Brest Region", "Gomel Region", "Grodno Region", "Minsk Region", "Mogilev Region", "Vitebsk Region"), cex = 0.8,
-       fill = rainbow(length(regionPriceDF_averages$average_price_usd)))
+       fill = rainbow(nrow(regionPriceDFCount)))
+# Minsk accounts for a very large amount of vehicles(makes sense considering the population sizes) with even distributions everywhere else. 
+# The usefulness of the attribute may be less since Minsk is such a large portion of the data.
 
 # 15) Histogram Number of photos: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(mapping = aes(number_of_photos))
+# Graph is very left-skewed. I suspect photos may increase the value of a vehicle, but tests will need to be done on this
 
 # 16) Box plot Number of photos: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_boxplot(mapping = aes(number_of_photos))
+# There are many outliers. With extra time we may be able to investigate the impact of these outliers on the data.
 
 # 17) Histogram Up counter: investigating how our outliers look with our modifications
 ggplot(cars_edited) + geom_histogram(mapping = aes(up_counter))
+# Clearly an outliers exists since there is a large scale. 
 
 # 18) Box plot Duration listed: investigating how our outliers look with our modifications
 ggplot(cars_edited) + geom_boxplot(mapping = aes(duration_listed))
+# There is a significant amount of outliers. There is no evidence to conclude these should be eliminated.
 
 # 19) Histogram Duration listed: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(aes(duration_listed))
-
+# There are many new cars that are listed in this catalog.
 ###################################################################################################
 #
 # Plotting Graphs to investigate relationships
 #
 # Scatter Plot:
 # 2) Price of a car according to its year produced
-# 6) Price of a car according to it's year produced AND body type
-# 7) Price of a car according to it's Odometer AND engine fuel
-# 10) Price of a car according to it's number of photos incl. engine fuel
+# 4) Graph to show the price of a car according to it's millage(odometer)
+# 5) Graph to show the price of a car according to it's year produced AND body type
+# 9) Price of a car according to it's number of photos incl. engine fuel
 #
 # Balloon Plot:
 # 1) The amount of cars(by manufacturer name) in a region
 #
-# Line Graph:
-# 3) the amount of cars(density) according to it's price
-#
 # Bar Graph:
-# 4) The number of cars in specific colors(10 red cars, 8 blue cars etc.) by region
+# 3) Show the number of cars in specific colors(10 red cars, 8 blue cars etc.) by region
 #
 # Box Plot:
-# 8) The outliers with body type and price
+# 7) Show the outliers with body type and price
 #
 # Misc:
-# 9) The correlation between car body type, price, AND engine fuel
-# 11) Group cars by manufacturer, and get it's mean price
+# 6) Group by car body type and get it's mean price
+# 8) Show the correlation between car body type, price, AND engine fuel
+# 10) Group cars by manufacturer, and get it's mean price
 
 # 1) Graph to show the amount of cars(by manufacturer name) in a region BALLOON PLOT
 ggplot(cars_edited, aes(location_region, manufacturer_name)) + geom_count()
+# Due to the quantity of categories a test will need to be done to gather significant data
 
 # 2) Graph to show the price of a car according to its year produced SCATTER PLOT
 ggplot(cars_edited, aes(year_produced, price_usd)) + geom_point() + geom_smooth()
+# There exists a parabolic relationship between year_produced and price_usd
 
-# 3) Graph to show the amount of cars(density) according to it's price LINE GRAPH
-ggplot(cars_edited, aes(price_usd, ..density..)) + geom_freqpoly(binwidth = 500)
-
-# 4) Graph to show the number of cars in specific colors(10 red cars, 8 blue cars etc.) by region BAR GRAPH
+# 3) Graph to show the number of cars in specific colors(10 red cars, 8 blue cars etc.) by region BAR GRAPH
 ggplot(cars_edited, aes(color)) + geom_bar(aes(fill = location_region))
+# From looking at the bar graph there does not seem to be any significant differences in color distribution for locations
 
-# 5) Graph to show the price of a car according to it's millage(odometer) SCATTER PLOT
+# 4) Graph to show the price of a car according to it's millage(odometer) SCATTER PLOT
 ggplot(cars_edited, aes(odometer_value, price_usd)) + geom_point(aes(color = is_exchangeable)) + geom_smooth()
+# This graph is incredible diverse and indicates that there is a need for advanced models to access price relationships.
 
-# 6)Graph to show the price of a car according to it's year produced AND body type SCATTER PLOT
+# 5)Graph to show the price of a car according to it's year produced AND body type SCATTER PLOT
 ggplot(cars_edited, aes(year_produced, price_usd)) + geom_point(aes(color = body_type)) + geom_smooth()
+# There seems to be a parabolic relationship between year_produced and price_usd
 
-# 7) Graph to show the price of a car according to it's Odometer AND engine fuel SCATTER PLOT
-ggplot(cars_edited, mapping = aes(x = odometer_value, y = price_usd)) + geom_point() + geom_smooth()
+# 6) Group by car body type and get it's mean price
+group_by(cars_edited, body_type) %>% summarise(price_mean = mean(price_usd))
 
-# Group by car body type and get it's mean price
-group_by(cars_edited, body_type) %>% summarise(price_mean = mean(price_usd)) -> mean_cars
-
-# 8) Graph to show the outliers with body type and price BOX PLOT
+# 7) Graph to show the outliers with body type and price BOX PLOT
 ggplot(cars_edited) + geom_boxplot(mapping = aes(x = reorder(body_type, price_usd), y =
                                                    price_usd))
-# 9) Graph to show the correlation between car body type, price, AND engine fuel
+# 8) Graph to show the correlation between car body type, price, AND engine fuel
 ggplot(cars_edited) + geom_point(mapping = aes(x = body_type, y = price_usd, color = engine_fuel))
 
-# 10 ) Graph to show the price of a car according to it's number of photos incl. engine fuel SCATTER PLOT
+# 9) Graph to show the price of a car according to it's number of photos incl. engine fuel SCATTER PLOT
 ggplot(cars_edited) + geom_point(mapping = aes(x = number_of_photos, y = price_usd, color = engine_fuel))
 
-# 11) Group cars by manufacturer, and get it's mean price
+# 10) Group cars by manufacturer, and get it's mean price
 cars_edited %>% group_by(manufacturer_name) %>% summarize(mean(price_usd)) %>% View()
 
 ###################################################################################################
