@@ -1,0 +1,254 @@
+3600, 6700, 3700, 7000, 5400, 4100, 3700, 4200, 3450, 2700, 1600, 
+550, 4000, 4220.81, 3300, 2750, 4800, 4300, 3200)), control = list(
+    20, 7, 0, 4, 5, 2, 0, 30, 0))
+  n= 30815 
+
+           CP nsplit rel error
+1  0.42786943      0 1.0000000
+2  0.11235623      1 0.5721306
+3  0.05927532      2 0.4597743
+4  0.04210808      3 0.4004990
+5  0.04097962      4 0.3583909
+6  0.01751355      5 0.3174113
+7  0.01204913      7 0.2823842
+8  0.01174088      8 0.2703351
+9  0.01087715      9 0.2585942
+10 0.01032955     11 0.2368399
+
+Variable importance
+                 year_produced 
+                            42 
+                odometer_value 
+                            19 
+               drivetrainfront 
+                             8 
+               engine_capacity 
+                             7 
+                  body_typesuv 
+                             7 
+        transmissionmechanical 
+                             5 
+        manufacturer_nameSkoda 
+                             3 
+              number_of_photos 
+                             2 
+                drivetrainrear 
+                             2 
+          manufacturer_nameBMW 
+                             2 
+              model_nameKodiaq 
+                             1 
+manufacturer_nameMercedes-Benz 
+                             1 
+
+Node number 1: 30815 observations,    complexity param=0.4278694
+  mean=6624.525, MSE=4.092566e+07 
+  left son=2 (19519 obs) right son=3 (11296 obs)
+  Primary splits:
+      year_produced          < 0.44244      to the left,  improve=0.4278694, (0 missing)
+      transmissionmechanical < -0.3504286   to the right, improve=0.2273496, (0 missing)
+      odometer_value         < -0.37466     to the right, improve=0.1981516, (0 missing)
+      body_typesuv           < 1.076696     to the left,  improve=0.1907425, (0 missing)
+      engine_capacity        < 0.05033474   to the left,  improve=0.1051084, (0 missing)
+  Surrogate splits:
+      odometer_value         < -0.3606975   to the right, agree=0.804, adj=0.465, (0 split)
+      transmissionmechanical < -0.3504286   to the right, agree=0.692, adj=0.158, (0 split)
+      body_typesuv           < 1.076696     to the left,  agree=0.680, adj=0.127, (0 split)
+      number_of_photos       < 0.7893266    to the left,  agree=0.661, adj=0.076, (0 split)
+      manufacturer_nameSkoda < 2.891863     to the left,  agree=0.653, adj=0.054, (0 split)
+
+Node number 2: 19519 observations,    complexity param=0.04097962
+  mean=3441.156, MSE=7163877 
+  left son=4 (12302 obs) right son=5 (7217 obs)
+  Primary splits:
+      year_produced          < -0.302871    to the left,  improve=0.3695900, (0 missing)
+      engine_capacity        < 0.01443144   to the left,  improve=0.2073387, (0 missing)
+      transmissionmechanical < -0.3504286   to the right, improve=0.1771563, (0 missing)
+      body_typesuv           < 1.076696     to the left,  improve=0.1447837, (0 missing)
+      drivetrainfront        < -0.4921427   to the right, improve=0.1098300, (0 missing)
+  Surrogate splits:
+      transmissionmechanical < -0.3504286   to the right, agree=0.699, adj=0.187, (0 split)
+      body_typesuv           < 1.076696     to the left,  agree=0.666, adj=0.097, (0 split)
+      engine_capacity        < 0.05033474   to the left,  agree=0.661, adj=0.083, (0 split)
+      colorsilver            < 0.8317268    to the left,  agree=0.649, adj=0.050, (0 split)
+      model_nameC5           < 5.363533     to the left,  agree=0.639, adj=0.023, (0 split)
+
+Node number 3: 11296 observations,    complexity param=0.1123562
+  mean=12125.25, MSE=5.149575e+07 
+  left son=6 (7915 obs) right son=7 (3381 obs)
+  Primary splits:
+      drivetrainfront        < -0.4921427   to the right, improve=0.2435897, (0 missing)
+      engine_capacity        < -0.02147187  to the left,  improve=0.2017978, (0 missing)
+      year_produced          < 1.063532     to the left,  improve=0.1812765, (0 missing)
+      transmissionmechanical < -0.3504286   to the right, improve=0.1479332, (0 missing)
+      body_typesuv           < 1.076696     to the left,  improve=0.1445200, (0 missing)
+  Surrogate splits:
+      engine_capacity                < -0.01429121  to the left,  agree=0.839, adj=0.463, (0 split)
+      body_typesuv                   < 1.076696     to the left,  agree=0.809, adj=0.363, (0 split)
+      drivetrainrear                 < 1.03984      to the left,  agree=0.771, adj=0.236, (0 split)
+      manufacturer_nameBMW           < 1.71977      to the left,  agree=0.756, adj=0.185, (0 split)
+      manufacturer_nameMercedes-Benz < 1.889199     to the left,  agree=0.737, adj=0.123, (0 split)
+
+Node number 4: 12302 observations
+  mean=2194.85, MSE=2831444 
+
+Node number 5: 7217 observations
+  mean=5565.591, MSE=7387957 
+
+Node number 6: 7915 observations,    complexity param=0.04210808
+  mean=9810.456, MSE=2.234572e+07 
+  left son=12 (5007 obs) right son=13 (2908 obs)
+  Primary splits:
+      year_produced          < 1.187751     to the left,  improve=0.30024650, (0 missing)
+      odometer_value         < -1.224851    to the right, improve=0.14260750, (0 missing)
+      engine_capacity        < -0.02147187  to the left,  improve=0.08024237, (0 missing)
+      body_typehatchback     < 0.7545663    to the right, improve=0.07948711, (0 missing)
+      transmissionmechanical < -0.3504286   to the right, improve=0.07309346, (0 missing)
+  Surrogate splits:
+      odometer_value         < -1.103472    to the right, agree=0.796, adj=0.444, (0 split)
+      model_nameRapid        < 6.655909     to the left,  agree=0.654, adj=0.057, (0 split)
+      body_typesuv           < 1.076696     to the left,  agree=0.650, adj=0.048, (0 split)
+      manufacturer_nameSkoda < 2.891863     to the left,  agree=0.649, adj=0.044, (0 split)
+      manufacturer_nameLADA  < 8.068014     to the left,  agree=0.643, adj=0.030, (0 split)
+
+Node number 7: 3381 observations,    complexity param=0.05927532
+  mean=17544.24, MSE=7.782741e+07 
+  left son=14 (2333 obs) right son=15 (1048 obs)
+  Primary splits:
+      year_produced          < 1.187751     to the left,  improve=0.28408880, (0 missing)
+      odometer_value         < -1.304756    to the right, improve=0.16841320, (0 missing)
+      model_nameKodiaq       < 8.91603      to the left,  improve=0.11296180, (0 missing)
+      manufacturer_nameSkoda < 2.891863     to the left,  improve=0.08420200, (0 missing)
+      transmissionmechanical < -0.3504286   to the right, improve=0.06503672, (0 missing)
+  Surrogate splits:
+      odometer_value           < -1.10041     to the right, agree=0.825, adj=0.434, (0 split)
+      engine_capacity          < -0.007110546 to the right, agree=0.725, adj=0.113, (0 split)
+      model_nameKodiaq         < 8.91603      to the left,  agree=0.712, adj=0.072, (0 split)
+      manufacturer_nameSkoda   < 2.891863     to the left,  agree=0.711, adj=0.067, (0 split)
+      manufacturer_nameRenault < 1.769367     to the left,  agree=0.703, adj=0.041, (0 split)
+
+Node number 12: 5007 observations
+  mean=7836.468, MSE=9057142 
+
+Node number 13: 2908 observations,    complexity param=0.01087715
+  mean=13209.27, MSE=2.696484e+07 
+  left son=26 (2359 obs) right son=27 (549 obs)
+  Primary splits:
+      engine_capacity        < -0.0250622   to the left,  improve=0.17456050, (0 missing)
+      odometer_value         < -1.836973    to the right, improve=0.15700730, (0 missing)
+      year_produced          < 1.933062     to the left,  improve=0.13465790, (0 missing)
+      transmissionmechanical < -0.3504286   to the right, improve=0.07596789, (0 missing)
+      number_of_photos       < 0.7893266    to the left,  improve=0.07121528, (0 missing)
+  Surrogate splits:
+      body_typeminibus       < 2.506309     to the left,  agree=0.825, adj=0.073, (0 split)
+      model_name6            < 5.908988     to the left,  agree=0.825, adj=0.071, (0 split)
+      manufacturer_nameMazda < 2.550666     to the left,  agree=0.823, adj=0.060, (0 split)
+      model_nameCamry        < 8.440748     to the left,  agree=0.818, adj=0.036, (0 split)
+      model_nameSportage     < 7.590188     to the left,  agree=0.817, adj=0.033, (0 split)
+
+Node number 14: 2333 observations,    complexity param=0.01204913
+  mean=14392.74, MSE=3.174361e+07 
+  left son=28 (1034 obs) right son=29 (1299 obs)
+  Primary splits:
+      year_produced          < 0.690877     to the left,  improve=0.20518360, (0 missing)
+      engine_capacity        < 0.04315408   to the left,  improve=0.18939610, (0 missing)
+      model_nameLand Cruiser < 10.30746     to the left,  improve=0.06527757, (0 missing)
+      transmissionmechanical < -0.3504286   to the right, improve=0.06158064, (0 missing)
+      number_of_photos       < 2.420507     to the left,  improve=0.03791005, (0 missing)
+  Surrogate splits:
+      odometer_value                < -0.3845568   to the right, agree=0.668, adj=0.251, (0 split)
+      number_of_photos              < -0.3524996   to the left,  agree=0.573, adj=0.036, (0 split)
+      location_regionMinsk Region   < -0.2690793   to the left,  agree=0.570, adj=0.029, (0 split)
+      model_nameQ7                  < 10.53069     to the right, agree=0.566, adj=0.021, (0 split)
+      location_regionVitebsk Region < 1.564634     to the right, agree=0.566, adj=0.021, (0 split)
+
+Node number 15: 1048 observations,    complexity param=0.01751355
+  mean=24559.92, MSE=1.090869e+08 
+  left son=30 (942 obs) right son=31 (106 obs)
+  Primary splits:
+      odometer_value         < -1.833321    to the right, improve=0.1708335, (0 missing)
+      year_produced          < 1.933062     to the left,  improve=0.1628483, (0 missing)
+      engine_capacity        < 0.05033474   to the left,  improve=0.1511464, (0 missing)
+      transmissionmechanical < -0.3504286   to the right, improve=0.1399168, (0 missing)
+      model_nameKodiaq       < 8.91603      to the left,  improve=0.1134321, (0 missing)
+  Surrogate splits:
+      year_produced          < 1.933062     to the left,  agree=0.989, adj=0.887, (0 split)
+      model_nameKodiaq       < 8.91603      to the left,  agree=0.970, adj=0.708, (0 split)
+      manufacturer_nameSkoda < 2.891863     to the left,  agree=0.967, adj=0.670, (0 split)
+      model_nameRenegade     < 50.66639     to the left,  agree=0.902, adj=0.028, (0 split)
+      up_counter             < 7.000994     to the left,  agree=0.902, adj=0.028, (0 split)
+
+Node number 26: 2359 observations,    complexity param=0.01087715
+  mean=12162.64, MSE=2.022117e+07 
+  left son=52 (2147 obs) right son=53 (212 obs)
+  Primary splits:
+      odometer_value         < -1.836988    to the right, improve=0.2881852, (0 missing)
+      year_produced          < 1.933062     to the left,  improve=0.2539544, (0 missing)
+      manufacturer_nameSkoda < 2.891863     to the left,  improve=0.1514007, (0 missing)
+      model_nameKodiaq       < 8.91603      to the left,  improve=0.1079599, (0 missing)
+      number_of_photos       < 0.7893266    to the left,  improve=0.1013023, (0 missing)
+  Surrogate splits:
+      year_produced    < 1.933062     to the left,  agree=0.984, adj=0.821, (0 split)
+      model_nameRapid  < 6.655909     to the left,  agree=0.939, adj=0.316, (0 split)
+      model_nameKodiaq < 8.91603      to the left,  agree=0.918, adj=0.090, (0 split)
+      up_counter       < 7.18421      to the left,  agree=0.912, adj=0.019, (0 split)
+      duration_listed  < 6.752522     to the left,  agree=0.911, adj=0.014, (0 split)
+
+Node number 27: 549 observations
+  mean=17706.55, MSE=3.100926e+07 
+
+Node number 28: 1034 observations
+  mean=11532.23, MSE=1.430847e+07 
+
+Node number 29: 1299 observations,    complexity param=0.01174088
+  mean=16669.7, MSE=3.392411e+07 
+  left son=58 (676 obs) right son=59 (623 obs)
+  Primary splits:
+      engine_capacity          < 0.04315408   to the left,  improve=0.33600120, (0 missing)
+      transmissionmechanical   < -0.3504286   to the right, improve=0.08161227, (0 missing)
+      model_nameLand Cruiser   < 10.30746     to the left,  improve=0.07875577, (0 missing)
+      manufacturer_nameToyota  < 2.642927     to the left,  improve=0.04796363, (0 missing)
+      manufacturer_nameAvtoVAZ < 4.388881     to the right, improve=0.03435645, (0 missing)
+  Surrogate splits:
+      transmissionmechanical < -0.3504286   to the right, agree=0.606, adj=0.178, (0 split)
+      manufacturer_nameBMW   < 1.71977      to the left,  agree=0.583, adj=0.130, (0 split)
+      up_counter             < 0.2105595    to the left,  agree=0.562, adj=0.087, (0 split)
+      is_exchangeableTRUE    < 0.3082355    to the left,  agree=0.558, adj=0.079, (0 split)
+      model_nameX6           < 10.3803      to the left,  agree=0.557, adj=0.075, (0 split)
+
+Node number 30: 942 observations,    complexity param=0.01751355
+  mean=23111.81, MSE=9.836746e+07 
+  left son=60 (734 obs) right son=61 (208 obs)
+  Primary splits:
+      engine_capacity          < 0.05033474   to the left,  improve=0.26594790, (0 missing)
+      transmissionmechanical   < -0.3504286   to the right, improve=0.13456910, (0 missing)
+      number_of_photos         < 1.604917     to the left,  improve=0.08047380, (0 missing)
+      manufacturer_nameRenault < 1.769367     to the right, improve=0.07751278, (0 missing)
+      model_nameDuster         < 10.3803      to the right, improve=0.07634152, (0 missing)
+  Surrogate splits:
+      model_nameX5              < 5.684555     to the left,  agree=0.793, adj=0.062, (0 split)
+      model_nameQ7              < 10.53069     to the left,  agree=0.792, adj=0.058, (0 split)
+      model_nameX6              < 10.3803      to the left,  agree=0.792, adj=0.058, (0 split)
+      manufacturer_nameInfiniti < 7.649103     to the left,  agree=0.786, adj=0.029, (0 split)
+      model_nameML350           < 11.39378     to the left,  agree=0.786, adj=0.029, (0 split)
+
+Node number 31: 106 observations
+  mean=37428.94, MSE=2.010136e+07 
+
+Node number 52: 2147 observations
+  mean=11404.08, MSE=1.301735e+07 
+
+Node number 53: 212 observations
+  mean=19844.87, MSE=2.833283e+07 
+
+Node number 58: 676 observations
+  mean=13428.58, MSE=1.397904e+07 
+
+Node number 59: 623 observations
+  mean=20186.55, MSE=3.179916e+07 
+
+Node number 60: 734 observations
+  mean=20389.07, MSE=6.755022e+07 
+
+Node number 61: 208 observations
+  mean=32719.98, MSE=8.863931e+07 
