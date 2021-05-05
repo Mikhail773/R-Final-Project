@@ -573,35 +573,10 @@ confint(step.LMConts)
 LMContPrediction <- predict(step.LMConts, test.data)
 
 # Prediction error, rmse
-RMSE(LMContPrediction,test.data$price_usd)
+RMSE(LMContPrediction,test.data$price_usd) # RMSE is 4573.511
 
 # Compute R-square
 R2(LMContPrediction,test.data$price_usd) ## R^2 for test/train is 50.95891%
-
-# Log transformation
-LogLMConts <- lm(log(price_usd) ~ odometer_value
-                 + year_produced
-                 + number_of_photos
-                 + duration_listed
-                 + up_counter
-                 , data = train.data)
-
-vif(LogLMConts)
-step.logConts <- LogLMConts %>% stepAIC(trace = FALSE)
-vif(step.logConts)
-summary(step.logConts)
-coef(step.logConts)
-confint(step.logConts)
-
-# Predict using Multiple Linear Regression Model
-LogLMContsPrediction <- step.logConts %>% predict(test.data)
-
-# Prediction error, rmse
-RMSE(LogLMContsPrediction,test.data$price_usd)
-
-# Compute R-square
-R2(LogLMContsPrediction,test.data$price_usd)
-# Log transformation is less accurate
 
 ###################################################################################################
 ## SVR Models
