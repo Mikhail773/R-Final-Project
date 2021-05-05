@@ -83,8 +83,8 @@ cars_edited <- cars_edited %>% mutate(engine_fuel = dplyr::recode(engine_fuel,'g
 colSums(is.na(cars))
 # NA is in the categorical attribute engine-capacity
 
-# Lets arbitrarily pick 999 to denote NA. (Engine-Capacity is categorical so this can be done)
-cars_edited <- cars_edited %>% mutate(engine_capacity = coalesce(engine_capacity, 999))
+# Lets arbitrarily pick -1 to denote NA. (Engine-Capacity is categorical so this can be done)
+cars_edited <- cars_edited %>% mutate(engine_capacity = coalesce(engine_capacity, -1))
 
 # Check for Duplicates and remove them
 which(duplicated(cars_edited))
@@ -113,146 +113,125 @@ View(test.data)
 #
 # Investigating Variables: Viewing the data with our modifications
 #
-# TABLE:
-#
-# 2) Show unique car model names and how many there are
-# 7) Show unique years produced for cars, and how many there are
-# 12) Show unique engine types and how many there are
-# 17) Number of cars with same price
-# 22) Posts with number of photos per car
-# 25) The count unique up time for each car
-# 28) The count of unique Duration listed for each car
-#
-# BOX PLOTS:
-#
-# 5) Odometer Value
-# 8) year produced
-# 13) Engine capacity
-# 18) Price USD
-# 23) Number of photos
-# 26) Up counter
-# 29) Duration listed
-#
-# DATA SKEWED:
-#
-# 6) Odometer Value
-# 9) Year produced
-# 14) Engine capacity
-# 19) Price USD
-# 24) Number of photos
-# 27) Up counter
-# 30) Duration listed
-#
-# Other Graphs:
-#
 # Bar Graphs:
 #
-# 3) Plotting the number of cars with automatic or mechanical transmissions
+# 1) What is the distribution of manufacturers?
 # 4) Plotting cars by color and quantity
-# 10) Graph to show what cars use what engine type (type of fuel)
-# 11) graph to show engine type (Electric, Diesel, Gasoline)
-# 15) Bar graph Body type: count how many cars have the same body type
-# 16) Bar graph Drive train: How many cars have certain drive trains
-# 20) Bar graph Is exchangeable: Counting the number of cars that are exchangeable
-# 21) Bar graph Location region: Count the number of cars in a region
-# 31) What is the distribution of manufacturers?
+# 9) Bar graph Engine capacity: Graph to see how the data is skewed
+# 10) Bar graph Body type: count how many cars have the same body type
+# 13) Bar graph Is exchangeable: Counting the number of cars that are exchangeable
 #
-# Histogram Graph:
-# 1) Getting the unique entries for all columns and displaying how often they appear
+# BOX PLOTS:
+# 16) Box plot Number of photos: Graph to see how the data is skewed
+# 17) Box plot Duration listed: investigating how our outliers look with our modifications
+#
+# Histogram PLOTS:
+#
+# 5) Histogram Odometer Value: Graph to see how the data is skewed
+# 6) Histogram Year produced: Graph to see how the data is skewed
+# 12) Number of cars with same price
+# 15) Histogram Number of photos: Graph to see how the data is skewed
+# 18) Histogram Up counter: investigating how our outliers look with our modifications
+# 19) Histogram Duration listed: Graph to see how the data is skewed
+#
+# Pie Graph:
+# 3) Plotting the number of cars with automatic or mechanical transmissions
+# 7) Graph to show what fuel distribution
+# 8) Pie graph to show engine type Distribution (Electric, Diesel, Gasoline)
+# 11) Graph Drivetrain distribution:
+# 14) Pie Graph Location region: Count the number of cars in a region
+#
+# TABLE:
+#
+# 2) A table to show unique car model names and quantity
 #
 
-# 1) Getting the unique entries for all columns and displaying how often they appear
-ggplot(cars_edited, mapping = aes(y = manufacturer_name)) + geom_histogram(stat ="count") + geom_text(stat = "count", aes(label = after_stat(count)), hjust = -1)
+# 1)What is the distribution of manufacturers?
+ggplot(cars_edited, aes(y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name)) + geom_text(stat='count', aes(label=..count..), hjust=1)
 
-# 2) A table to show unique car model names and how many there are
+# 2) A table to show unique car model names and quantity
 View(cars_edited %>% count(model_name))
 
 # 3) Plotting the number of cars with automatic or mechanical transmissions
-ggplot(cars_edited, mapping = aes(x = transmission)) + geom_bar(stat = "count") + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+transmissionGrouped <- group_by(cars_edited, transmission)
+transmissionCounted <- count(transmissionGrouped)
+percentTransmission <- paste0(round(100*transmissionCounted$n/sum(transmissionCounted$n), 2), "%")
+pie(transmissionCounted$n, labels = percentTransmission, main = "Transmission Distribution", col = rainbow(nrow(transmissionCounted)))
+legend("right", c("Automatic", "Mechanical"), cex = 0.8,
+       fill = rainbow(length(transmissionCounted)))
 
-# 4) Plotting cars by color and how many there are
-ggplot(cars_edited, mapping = aes(x = color)) + geom_bar(stat = "count") + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+# 4) Plotting cars by color and quantity
+ggplot(cars_edited, aes(x = color)) + geom_bar(stat = "count", aes(fill = color)) + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
 
-# 5) Box plot Odometer Value: investigating how our outliers look with our modifications
-ggplot(cars_edited) + geom_boxplot(mapping = aes(odometer_value))
+# 5) Histogram Odometer Value: Graph to see how the data is skewed
+ggplot(cars_edited, aes(odometer_value)) + geom_histogram()
 
-# 6) Histogram Odometer Value: Graph to see how the data is skewed
-ggplot(cars_edited) + geom_histogram(mapping = aes(odometer_value))
+# 6) Histogram Year produced: Graph to see how the data is skewed
+ggplot(cars_edited) + geom_histogram(aes(year_produced))
 
-# 7) A table to show unique years produced for cars, and how many there are
-View(cars_edited %>% count(year_produced))
+# 7) Graph to show what fuel distribution
+FuelGrouped <- group_by(cars_edited, engine_fuel)
+FuelCounted <- count(FuelGrouped) 
+percentFuel <- paste0(round(100*FuelCounted$n/sum(FuelCounted$n), 2), "%")
+pie(FuelCounted$n, labels = percentFuel, main = "Fuel Distribution", col = rainbow(nrow(FuelCounted)))
+legend("right", c("compressed natural gas", "diesel", "electric", "gasoline", "hybrid-diesel", "hybrid-petrol"), cex = 0.8,
+       fill = rainbow(nrow(FuelCounted)))
 
-# 8) Box plot year produced: investigating how our outliers look with our modifications
-ggplot(cars_edited) + geom_boxplot(mapping = aes(year_produced))
+# 8) Pie graph to show engine type Distribution (Electric, Diesel, Gasoline)
+TypeGrouped <- group_by(cars_edited, engine_type)
+TypeCounted <- count(TypeGrouped) 
+percentType <- paste0(round(100*TypeCounted$n/sum(TypeCounted$n), 2), "%")
+pie(TypeCounted$n, labels = percentType, main = "Type Distribution", col = rainbow(nrow(TypeCounted)))
+legend("right", c("diesel", "electric", "gasoline"), cex = 0.8,
+       fill = rainbow(nrow(TypeCounted)))
 
-# 9) Histogram Year produced: Graph to see how the data is skewed
-ggplot(cars_edited) + geom_histogram(mapping = aes(year_produced))
+# 9) Bar graph Engine capacity: Graph to see how the data is skewed
+ggplot(cars_edited,aes(engine_capacity)) + geom_bar(stat = "count")  + geom_text(stat='count', aes(label=..count..), vjust= -1)
 
-# 10) Graph to show what cars use what engine type (type of fuel)
-ggplot(cars_edited, aes(x = engine_fuel), stat = "count") + geom_bar(mapping = aes(fill = engine_type))  + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+# 10) Bar graph Body type: count how many cars have the same body type
+ggplot(cars_edited, aes(x = body_type), stat = "count") + geom_bar() + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
 
-# 11) graph to show engine type (Electric, Diesel, Gasoline)
-ggplot(cars_edited, aes(x = engine_type), stat = "count") + geom_bar()  + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
+# 11) Graph Drivetrain distribution:
+drivetrainGrouped <- group_by(cars_edited, drivetrain)
+drivetrainCounted <- count(drivetrainGrouped) 
+percentdrivetrain <- paste0(round(100*drivetrainCounted$n/sum(drivetrainCounted$n), 2), "%")
+pie(drivetrainCounted$n, labels = percentdrivetrain, main = "Drivetrain Distribution", col = rainbow(nrow(drivetrainCounted)))
+legend("right", c("all", "front", "rear"), cex = 0.8,
+       fill = rainbow(nrow(drivetrainCounted)))
 
-# 12) A table to show unique engine types and how many there are
-View(cars_edited %>% count(engine_capacity))
+# 12) Number of cars with same price
+ggplot(cars_edited, aes(x = price_usd), stat = "count") + geom_histogram()
 
-# 13) Box plot Engine capacity: investigating how our outliers look with our modifications
-ggplot(cars_edited) + geom_boxplot(mapping = aes(engine_capacity))
+# 13) Pie Grapg exchangeabilit Distribution
+exchangeableGrouped <- group_by(cars_edited, is_exchangeable)
+exchangeableCounted <- count(exchangeableGrouped) 
+percentexchangeable <- paste0(round(100*exchangeableCounted$n/sum(exchangeableCounted$n), 2), "%")
+pie(exchangeableCounted$n, labels = percentexchangeable, main = "Exchangeability Distribution", col = rainbow(nrow(exchangeableCounted)))
+legend("right", c("False", "True"), cex = 0.8,
+       fill = rainbow(nrow(exchangeableCounted)))
 
-# 14) Bar graph Engine capacity: Graph to see how the data is skewed
-ggplot(cars_edited) + geom_bar(mapping = aes(engine_capacity))
+# 14) Pie Graph Location region: Count the number of cars in a region
+regionPriceDF <- group_by(cars_edited, location_region)
+regionPriceDF_averages <- summarise(regionPriceDF, average_price_usd = mean(price_usd))
+percentRegion <- paste0(round(100*regionPriceDF_averages$average_price_usd/sum(regionPriceDF_averages$average_price_usd), 2), "%")
+pie(regionPriceDF_averages$average_price_usd, labels = percentRegion, main = "Region Price Distribution", col = rainbow(length(regionPriceDF_averages$average_price_usd)))
+legend("right", c("Brest Region", "Gomel Region", "Grodno Region", "Minsk Region", "Mogilev Region", "Vitebsk Region"), cex = 0.8,
+       fill = rainbow(length(regionPriceDF_averages$average_price_usd)))
 
-# 15) Bar graph Body type: count how many cars have the same body type
-ggplot(cars_edited, mapping = aes(x = body_type), stat = "count") + geom_bar() + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
-
-# 16) Bar graph Drive train: How many cars have certain drive trains
-ggplot(cars_edited, mapping = aes(x = drivetrain), stat = "count") + geom_bar() + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
-
-# 17) Number of cars with same price
-View(cars_edited %>% count(price_usd))
-
-# 18) Box plot Price USD: investigating how our outliers look with our modifications
-ggplot(cars_edited) + geom_boxplot(mapping = aes(price_usd))
-
-# 19) Histogram Price USD: Check to see how skewed the data is
-ggplot(cars_edited) + geom_histogram(mapping = aes(price_usd))
-
-# 20) Bar graph Is exchangeable: Counting the number of cars that are exchangeable
-ggplot(cars_edited, mapping = aes(x = is_exchangeable)) + geom_bar(stat = "count") + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
-
-# 21) Bar graph Location region: Count the number of cars in a region
-ggplot(cars_edited, mapping = aes(x = location_region)) + geom_bar(stat = "count") + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
-
-# 22) View: posts with number of photos per car
-View(cars_edited %>% count(number_of_photos))
-
-# 23) Box plot Number of photos: investigating how our outliers look with our modifications
-ggplot(cars_edited) + geom_boxplot(mapping = aes(number_of_photos))
-
-# 24) Histogram Number of photos: Graph to see how the data is skewed
+# 15) Histogram Number of photos: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(mapping = aes(number_of_photos))
 
-# 25) View Up counter: The count unique up time for each car
-View(cars_edited %>% count(up_counter))
+# 16) Box plot Number of photos: Graph to see how the data is skewed
+ggplot(cars_edited) + geom_boxplot(mapping = aes(number_of_photos))
 
-# 26) Box plot Up counter: investigating how our outliers look with our modifications
-ggplot(cars_edited) + geom_boxplot(mapping = aes(up_counter))
-
-# 27) Histogram Up counter: Graph to see how the data is skewed
-ggplot(cars_edited) + geom_histogram(mapping = aes(up_counter))
-
-# 28) View Duration listed: The count of unique Duration listed for each car
-View(cars_edited %>% count(duration_listed))
-
-# 29) Box plot Duration listed: investigating how our outliers look with our modifications
+# 17) Box plot Duration listed: investigating how our outliers look with our modifications
 ggplot(cars_edited) + geom_boxplot(mapping = aes(duration_listed))
 
-# 30) Histogram Duration listed: Graph to see how the data is skewed
-ggplot(cars_edited) + geom_histogram(mapping = aes(duration_listed))
+# 18) Histogram Up counter: investigating how our outliers look with our modifications
+ggplot(cars_edited) + geom_histogram(mapping = aes(up_counter))
 
-# 31)What is the distribution of manufacturers?
-ggplot(cars_edited, aes(y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name)) + geom_text(stat='count', aes(label=..count..), hjust=1)
+# 19) Histogram Duration listed: Graph to see how the data is skewed
+ggplot(cars_edited) + geom_histogram(aes(duration_listed))
 
 ###################################################################################################
 #
