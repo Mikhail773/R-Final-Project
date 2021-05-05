@@ -369,7 +369,7 @@ RMSE(LMContPrediction,test.data$price_usd) # RMSE is 4573.511
 R2(LMContPrediction,test.data$price_usd) ## R^2 for test/train is 50.95891%
 ```
 
-From the code above we see that our rmse is 4573.511 which represents an error rate of 4573.511/mean(test.data\$price_usd) = 68.60393 which is not good at all. Meanwhile, the R2 is 0.5095891, meaning that the observed and predicted outcome values are not very correlated, which is not good. These results are not surprising whatsoever and merely inform us that the price of a vehicle in Belarus is dependent on more attributes than simply our continuous attributes. We shall procede with more robust models in order to achieve a better result.
+From the code above we see that our rmse is 4573.511 which represents an error rate of 4573.511/mean(test.data\$price_usd) = 68.60393 which is not good at all. Meanwhile, the R2 is 0.5095891, meaning that the observed and predicted outcome values are not very correlated, which is not good. These results are not surprising whatsoever and merely inform us that the price of a vehicle in Belarus is dependent on more attributes than simply our continuous attributes. We shall proceed with more robust models in order to achieve a better result.
 
 After doing the Linear Regression Model we attempted to use SVR in order to create a more robust predictive model.
 
@@ -447,9 +447,11 @@ modelSVRRadialTrainPrediction <- predict(modelSVRRadialTrain, test.data)
 
 # Prediction error, rmse
 RMSE(modelSVRRadialTrainPrediction,test.data$price_usd)
+#[1] 4752.231
 
 # Compute R-square
 R2(modelSVRRadialTrainPrediction,test.data$price_usd)
+#[1] 0.5937837
 ```
 
 Even though the SVR model did much better than the Linear Regression Model it was vital to investigate more models in an attempt to create an even more accurate model. The Decision Tree was a price candidate since it is incredibly robust and relies on very few assumptions. Its simpler nature also makes it a model that would be preferred over other models(such as Random Forest Regression or KNN).
@@ -466,26 +468,32 @@ summary(model_DT_Train)
 model_DT_Train$bestTune
 plot(model_DT_Train)
 
+```
 
+![](images/paste-EDEE9EB8.png)
+
+```{r eval=FALSE, include=TRUE}
 # Plot the final tree model
 par(xpd = NA) # Avoid clipping the text in some device
 plot(model_DT_Train$finalModel)
 text(model_DT_Train$finalModel, digits = 3)
-
-#Decision rules in the model
-model_DT_Train$finalModel
-
-# Make predictions on the test data
-prediction_DT_Train <- model_DT_Train %>% predict(test.data)
-
-# Prediction error, rmse
-RMSE(prediction_DT_Train,test.data$price_usd)
-
-# Compute R-square
-R2(prediction_DT_Train,test.data$price_usd)
 ```
 
-**Result of the Decision Tree**
+![](https://media.discordapp.net/attachments/821152215866933259/838154444000591872/plotmodel_DT_TrainfinalModelText4k.png){width="683" height="493"}
+
+```{r eval=FALSE, include=TRUE}
+#Decision rules in the model model_DT_Train$finalModel
+
+# Make predictions on the test data prediction_DT_Train <- model_DT_Train %>% predict(test.data)
+
+# Prediction error, rmse RMSE(prediction_DT_Train,test.data$price_usd)
+
+ #[1] 3245.413
+
+# Compute R-square R2(prediction_DT_Train,test.data$price_usd) 
+
+#[1] 0.7529956
+```
 
 ## Random Forest Tree Model
 
@@ -514,11 +522,11 @@ rf_predict_ranger <- predict(random_forest_ranger, test.data , type='response')
 # Prediction error, rmse
 RMSE(rf_predict_ranger,test.data$price_usd)
 
+
 # Compute R-square
 R2(rf_predict_ranger,test.data$price_usd)
-```
 
-**RESULTS OF RFT**
+```
 
 # KNN Model
 
@@ -532,24 +540,44 @@ model_knn <- train(
 
 summary(model_knn$finalModel)
 
-# Print the best tuning parameter k that maximizes model accuracy
-model$bestTune
+```
 
+![](https://cdn.discordapp.com/attachments/821152215866933259/838919468587286588/unknown.png)
+
+```{r eval=FALSE, include=TRUE}
+# Print the best tuning parameter k that maximizes model accuracy model$bestTune 
+model$bestTune
+```
+
+![](https://media.discordapp.net/attachments/821152215866933259/838919870908989480/unknown.png)
+
+```{r eval=FALSE, include=TRUE}
 # Plot model accuracy vs different values of k
 plot(model_knn)
+```
 
+![](https://media.discordapp.net/attachments/821152215866933259/839497051728511006/model_knn_428_332.png)
+
+```{r eval=FALSE, include=TRUE}
 # Make predictions on the test data
 knn_predictions <- model_knn %>% predict(test.data)
 head(knn_predictions)
-
-# Compute the prediction error RMSE
-RMSE(knn_predictions,test.data$price_usd)
-
-# Compute R-square
-R2(knn_predictions,test.data$price_usd)
 ```
 
-**KNN RESULTS**
+![](https://media.discordapp.net/attachments/821152215866933259/838925691906424832/unknown.png)
+
+```{r eval=FALSE, include=TRUE}
+# Compute the prediction error RMSE RMSE(knn_predictions,test.data$price_usd)
+```
+
+![](https://media.discordapp.net/attachments/821152215866933259/838925915769405460/unknown.png)
+
+```{r eval=FALSE, include=TRUE}
+
+# Compute R-square R2(knn_predictions,test.data$price_usd) 
+```
+
+![](https://media.discordapp.net/attachments/821152215866933259/838926058740252672/unknown.png)
 
 ## Compare results obtained using different ML methods
 
