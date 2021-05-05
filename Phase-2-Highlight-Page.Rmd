@@ -1,7 +1,7 @@
 ---
 title: "Cars Analysis and Modeling"
 author: "Group 1"
-date: "3/31/2021"
+date: "5/05/2021"
 output: html_document
 ---
 
@@ -10,7 +10,6 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(e1071) #SVM
 library(car) #predict
-library(Metrics) #rmse
 library(caret) #partiiton
 library(MASS) #stepwise
 library(kernlab) #SVM
@@ -598,6 +597,8 @@ RMSE(knn_predictions,test.data$price_usd)
 R2(knn_predictions,test.data$price_usd)
 #[1] 0.6802895
 ```
+
+![](images/plot(model_knn)_428_332.png)
 
 ## Compare results obtained using different ML methods
 
