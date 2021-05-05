@@ -123,7 +123,7 @@ View(test.data)
 #
 # BOX PLOTS:
 # 16) Box plot Number of photos: Graph to see how the data is skewed
-# 17) Box plot Duration listed: investigating how our outliers look with our modifications
+# 18) Box plot Duration listed: investigating how our outliers look with our modifications
 #
 # Histogram PLOTS:
 #
@@ -131,7 +131,7 @@ View(test.data)
 # 6) Histogram Year produced: Graph to see how the data is skewed
 # 12) Number of cars with same price
 # 15) Histogram Number of photos: Graph to see how the data is skewed
-# 18) Histogram Up counter: investigating how our outliers look with our modifications
+# 17) Histogram Up counter: investigating how our outliers look with our modifications
 # 19) Histogram Duration listed: Graph to see how the data is skewed
 #
 # Pie Graph:
@@ -224,11 +224,11 @@ ggplot(cars_edited) + geom_histogram(mapping = aes(number_of_photos))
 # 16) Box plot Number of photos: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_boxplot(mapping = aes(number_of_photos))
 
-# 17) Box plot Duration listed: investigating how our outliers look with our modifications
-ggplot(cars_edited) + geom_boxplot(mapping = aes(duration_listed))
-
-# 18) Histogram Up counter: investigating how our outliers look with our modifications
+# 17) Histogram Up counter: investigating how our outliers look with our modifications
 ggplot(cars_edited) + geom_histogram(mapping = aes(up_counter))
+
+# 18) Box plot Duration listed: investigating how our outliers look with our modifications
+ggplot(cars_edited) + geom_boxplot(mapping = aes(duration_listed))
 
 # 19) Histogram Duration listed: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(aes(duration_listed))

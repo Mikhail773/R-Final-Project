@@ -153,7 +153,7 @@ test.data <- cars_edited[-training.samples,]
 
 ## Visualizations used to analyze data
 
-In an attempt to gain a robust knowledge of our dataset several visualizations were used. Visualization of our data was done in two sections. Initially each attribute was graphed in order to gain a general understanding of how the samples are distributed for each attribute. This was done with the help of Bar Graphs, Histograms, Boxplots, and the count function. Once a general understanding of each attribute was gained we began to visualize various combinations of attributions. These visualizations were vital in seeing different relationships among our samples. The visualizations that were used were Balloon Plot, Scatterplot, frequency polygons, dplyr::summarize, and Boxplots.
+In an attempt to gain a robust knowledge of our dataset several visualizations were used. Visualization of our data was done in two sections. Initially each attribute was graphed in order to gain a general understanding of how the samples are distributed for each attribute. This was done with the help of Bar Graphs, Histograms, Boxplots, the count function, and pie graphs. Once a general understanding of each attribute was gained we began to visualize various combinations of attributions. These visualizations were vital in seeing different relationships among our samples. The visualizations that were used were Balloon Plot, Scatterplot, frequency polygons, dplyr::summarize, and Boxplots.
 
 ```{r , fig.height = 9, fig.width = 12}
 
@@ -235,11 +235,11 @@ ggplot(cars_edited) + geom_histogram(mapping = aes(number_of_photos))
 # 16) Box plot Number of photos: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_boxplot(mapping = aes(number_of_photos))
 
-# 17) Box plot Duration listed: investigating how our outliers look with our modifications
-ggplot(cars_edited) + geom_boxplot(mapping = aes(duration_listed))
-
-# 18) Histogram Up counter: investigating how our outliers look with our modifications
+# 17) Histogram Up counter: investigating how our outliers look with our modifications
 ggplot(cars_edited) + geom_histogram(mapping = aes(up_counter))
+
+# 18) Box plot Duration listed: investigating how our outliers look with our modifications
+ggplot(cars_edited) + geom_boxplot(mapping = aes(duration_listed))
 
 # 19) Histogram Duration listed: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(aes(duration_listed))
