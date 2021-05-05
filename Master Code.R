@@ -583,21 +583,88 @@ LMCont <- lm(price_usd ~ odometer_value
              , data = train.data)
 
 vif(LMCont)
+#  odometer_value    year_produced number_of_photos 
+#1.311552         1.375432         1.088560 
+#duration_listed       up_counter 
+#1.985559         1.995992 
 step.LMConts <- LMCont %>% stepAIC(trace = FALSE)
 vif(step.LMConts)
+#odometer_value    year_produced number_of_photos 
+#1.311552         1.375432         1.088560 
+#duration_listed       up_counter 
+#1.985559         1.995992 
 summary(step.LMConts)
+#See summary(step.LMConts).txt
 coef(step.LMConts)
+#(Intercept)   odometer_value    year_produced 
+#-9.916423e+05    -4.419525e-03     4.981272e+02 
+#number_of_photos  duration_listed       up_counter 
+#1.481601e+02     2.241819e+00     2.252599e+00 
 confint(step.LMConts)
-
+#                2.5 %        97.5 %
+#(Intercept)      -1.005960e+06 -9.773249e+05
+#odometer_value   -4.833614e-03 -4.005436e-03
+#year_produced     4.909951e+02  5.052594e+02
+#number_of_photos  1.398282e+02  1.564919e+02
+#duration_listed   1.625863e+00  2.857775e+00
+#up_counter        6.685618e-01  3.836636e+00
+#
 # Predict using Multiple Linear Regression Model
 LMContPrediction <- predict(step.LMConts, test.data)
 
 # Prediction error, rmse
-RMSE(LMContPrediction,test.data$price_usd) # RMSE is 4573.511
-
+RMSE(LMContPrediction,test.data$price_usd)
+#[1] 4573.511
 # Compute R-square
 R2(LMContPrediction,test.data$price_usd) ## R^2 for test/train is 50.95891%
+#[1] 0.5095891
+# Log transformation
+LogLMConts <- lm(log(price_usd) ~ odometer_value
+                 + year_produced
+                 + number_of_photos
+                 + duration_listed
+                 + up_counter
+                 , data = train.data)
 
+vif(LogLMConts)
+#  odometer_value    year_produced number_of_photos 
+#1.311552         1.375432         1.088560 
+#duration_listed       up_counter 
+#1.985559         1.995992 
+
+step.logConts <- LogLMConts %>% stepAIC(trace = FALSE)
+vif(step.logConts)
+#  odometer_value    year_produced number_of_photos 
+#1.311231         1.375118         1.070669 
+#duration_listed 
+#1.000910 
+summary(step.logConts)
+#See summary(step.logConts).txt
+
+coef(step.logConts)
+#     (Intercept)   odometer_value    year_produced 
+#-1.946299e+02     1.674743e-07     1.012069e-01 
+#number_of_photos  duration_listed 
+#1.907346e-02     5.426537e-04 
+confint(step.logConts)
+#                         2.5 %        97.5 %
+#(Intercept)      -1.965454e+02 -1.927144e+02
+#odometer_value    1.120756e-07  2.228729e-07
+#year_produced     1.002527e-01  1.021610e-01
+#number_of_photos  1.796785e-02  2.017907e-02
+#duration_listed   4.841392e-04  6.011683e-04
+
+# Predict using Multiple Linear Regression Model
+LogLMContsPrediction <- step.logConts %>% predict(test.data)
+
+# Prediction error, rmse
+RMSE(LogLMContsPrediction,test.data$price_usd)
+#[1] 9325.461
+
+# Compute R-square
+R2(LogLMContsPrediction,test.data$price_usd)
+#[1] 0.4949189
+# Log transformation is less accurate
 ###################################################################################################
 # SVR Models
 # 
@@ -629,7 +696,7 @@ R2(modelSVRLinTrainPrediction,test.data$price_usd)
 #[1] 0.7772176
 
 # Create SVR Model using Polynomial Method
-Method
+
 modelSVRPolyTrain <- train(price_usd ~ ., data = train.data, method = "svmPoly",
                            trControl = trainControl("cv", number =10),
                            preProcess = c("center", "scale"),
@@ -656,16 +723,22 @@ modelSVRRadialTrain <- train(price_usd ~ ., data = train.data, method = "svmRadi
 )
 
 summary(modelSVRRadialTrain)
+#Length  Class   Mode
+#1   ksvm     S4					 
 modelSVRRadialTrain$bestTune
+#sigma   C
+#10 0.001556481 128				   
 
 # Predict using SVR Model with Radial Method
 modelSVRRadialTrainPrediction <- predict(modelSVRRadialTrain, test.data)
 
 # Prediction error, rmse
 RMSE(modelSVRRadialTrainPrediction,test.data$price_usd)
+#[1] 4752.231			 
 
 # Compute R-square
 R2(modelSVRRadialTrainPrediction,test.data$price_usd)
+#[1] 0.5937837
 
 ###################################################################################################
 #
@@ -678,7 +751,11 @@ model_DT_Train <- train(price_usd ~ ., data = train.data, method = "rpart",
                         tuneLength = 10)
 
 summary(model_DT_Train)
+#See summary(model_DT_Train)(2nd Run).txt
+#For results
 model_DT_Train$bestTune
+#          cp
+#1 0.01032955
 plot(model_DT_Train)
 
 
@@ -689,15 +766,18 @@ text(model_DT_Train$finalModel, digits = 3)
 
 #Decision rules in the model
 model_DT_Train$finalModel
+# See model_DT_Train$finalModel.txt						  
 
 # Make predictions on the test data
 prediction_DT_Train <- model_DT_Train %>% predict(test.data)
 
 # Prediction error, rmse
 RMSE(prediction_DT_Train,test.data$price_usd)
+#[1] 3245.413	 
 
 # Compute R-square
 R2(prediction_DT_Train,test.data$price_usd)
+#[1] 0.7529956			  
 
 ###################################################################################################
 #
@@ -744,9 +824,20 @@ model_knn <- train(
 )
 
 summary(model_knn$finalModel)
+#Length Class      Mode     
+#learn          2   -none-     list     
+#k              1   -none-     numeric  
+#theDots        0   -none-     list     
+#xNames      1215   -none-     character
+#problemType    1   -none-     character
+#tuneValue      1   data.frame list     
+#obsLevels      1   -none-     logical  
+#param          0   -none-     list	
 
 # Print the best tuning parameter k that maximizes model accuracy
-model$bestTune
+model_knn$bestTune
+#k
+#1 5
 
 # Plot model accuracy vs different values of k
 plot(model_knn)
@@ -754,12 +845,15 @@ plot(model_knn)
 # Make predictions on the test data
 knn_predictions <- model_knn %>% predict(test.data)
 head(knn_predictions)
+#[1] 9560.000 9000.000 4580.000 5648.494 8575.200 7720.000
 
 # Compute the prediction error RMSE
 RMSE(knn_predictions,test.data$price_usd)
+#[1] 3693.127
 
 # Compute R-square
 R2(knn_predictions,test.data$price_usd)
+#[1] 0.6802895
 
 ##############################################################################################################
 #
@@ -880,4 +974,3 @@ detach("package:datasets", unload = TRUE)  # For base
 
 # Clear console
 cat("\014")
-

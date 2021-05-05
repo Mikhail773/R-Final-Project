@@ -1,0 +1,30 @@
+
+Call:
+lm(formula = log(price_usd) ~ odometer_value + year_produced + 
+    number_of_photos + duration_listed, data = train.data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-7.6642 -0.3165  0.0190  0.3529  8.0477 
+
+Coefficients:
+                   Estimate Std. Error  t value Pr(>|t|)
+(Intercept)      -1.946e+02  9.773e-01 -199.157  < 2e-16
+odometer_value    1.675e-07  2.826e-08    5.925 3.15e-09
+year_produced     1.012e-01  4.868e-04  207.897  < 2e-16
+number_of_photos  1.907e-02  5.641e-04   33.814  < 2e-16
+duration_listed   5.427e-04  2.985e-05   18.177  < 2e-16
+                    
+(Intercept)      ***
+odometer_value   ***
+year_produced    ***
+number_of_photos ***
+duration_listed  ***
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.5867 on 30810 degrees of freedom
+Multiple R-squared:  0.6735,	Adjusted R-squared:  0.6735 
+F-statistic: 1.589e+04 on 4 and 30810 DF,  p-value: < 2.2e-16
+
