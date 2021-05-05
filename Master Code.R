@@ -201,7 +201,7 @@ legend("right", c("all", "front", "rear"), cex = 0.8,
 # 12) Number of cars with same price
 ggplot(cars_edited, aes(x = price_usd), stat = "count") + geom_histogram()
 
-# 13) Pie Grapg exchangeabilit Distribution
+# 13) Pie Graph exchangeability Distribution
 exchangeableGrouped <- group_by(cars_edited, is_exchangeable)
 exchangeableCounted <- count(exchangeableGrouped) 
 percentexchangeable <- paste0(round(100*exchangeableCounted$n/sum(exchangeableCounted$n), 2), "%")
@@ -211,9 +211,9 @@ legend("right", c("False", "True"), cex = 0.8,
 
 # 14) Pie Graph Location region: Count the number of cars in a region
 regionPriceDF <- group_by(cars_edited, location_region)
-regionPriceDF_averages <- summarise(regionPriceDF, average_price_usd = mean(price_usd))
-percentRegion <- paste0(round(100*regionPriceDF_averages$average_price_usd/sum(regionPriceDF_averages$average_price_usd), 2), "%")
-pie(regionPriceDF_averages$average_price_usd, labels = percentRegion, main = "Region Price Distribution", col = rainbow(length(regionPriceDF_averages$average_price_usd)))
+regionPriceDFCount <- count(regionPriceDF)
+percentRegion <- paste0(round(100*regionPriceDFCount$n/sum(regionPriceDFCount$n), 2), "%")
+pie(regionPriceDFCount$n, labels = percentRegion, main = "Region Price Distribution", col = rainbow(nrow(regionPriceDFCount)))
 legend("right", c("Brest Region", "Gomel Region", "Grodno Region", "Minsk Region", "Mogilev Region", "Vitebsk Region"), cex = 0.8,
        fill = rainbow(length(regionPriceDF_averages$average_price_usd)))
 
@@ -303,7 +303,7 @@ cars_edited %>% group_by(manufacturer_name) %>% summarize(mean(price_usd)) %>% V
 # (Emma Doyle)
 #
 # 1) What impact does region have on price?
-# Region does correlate with price. However, a correlation between region and price does not necessary mean that one leads to another. 
+# Region does impact price. However, the extent of this impact would have to be assessed in a model that includes more attributes.
 # The best indicator of the relationship will be seen in the total model.
 # Regions: Minsk, Gomel, Brest, Vitebsk, Mogilev, Grodno
 #
@@ -313,10 +313,8 @@ cars_edited %>% group_by(manufacturer_name) %>% summarize(mean(price_usd)) %>% V
 regionPriceDF <- group_by(cars_edited, location_region)
 regionPriceDF_averages <- summarise(regionPriceDF, average_price_usd = mean(price_usd))
 View(regionPriceDF_averages)
-percentRegion <- paste0(round(100*regionPriceDF_averages$average_price_usd/sum(regionPriceDF_averages$average_price_usd), 2), "%")
-pie(regionPriceDF_averages$average_price_usd, labels = percentRegion, main = "Region Price Distribution", col = rainbow(length(regionPriceDF_averages$average_price_usd)))
-legend("right", c("Brest Region", "Gomel Region", "Grodno Region", "Minsk Region", "Mogilev Region", "Vitebsk Region"), cex = 0.8,
-       fill = rainbow(length(regionPriceDF_averages$average_price_usd)))
+Average_price_usd <- regionPriceDF_averages$average_price_usd
+ggplot(regionPriceDF_averages,aes(x= location_region, y = Average_price_usd)) + geom_bar(stat = "identity") 
 
 #one-way anova
 group_by(regionPriceDF, regionPriceDF$location_region) %>%
@@ -338,6 +336,9 @@ summary(res.aov)
 # 2) Do manufacturers have a significant impact on the asking price of a vehicle?
 # Manufacturers does correlate to the asking price of a vehicle.
 # Our final models will shows us exactly how large this correlation is with regards to the other attributes.
+
+# 1)What is the distribution of manufacturers?
+ggplot(cars_edited, aes(y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name)) + geom_text(stat='count', aes(label=..count..), hjust=1)
 
 # Do manufacturers have a significant impact on the asking price of a vehicle?
 manuPriceDF_averages <- summarise(manuPriceDF, average_price_usd = mean(price_usd))
@@ -378,7 +379,7 @@ odometer_on_price <- lm (price_usd ~ odometer_value, data = cars_edited)
 odometer_on_price
 
 #Scatter plot: Odometer and price with linear regression line
-ggplot (cars_edited, aes(x=odometer_value, y=price_usd)) + geom_point() + stat_smooth(method=lm)
+ggplot(cars_edited, aes(x=odometer_value, y=price_usd)) + geom_point() + stat_smooth(method=lm)
 
 #Finding how well this line fits our data
 summary(odometer_on_price)

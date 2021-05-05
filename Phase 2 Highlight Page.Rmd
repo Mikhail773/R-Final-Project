@@ -224,12 +224,11 @@ legend("right", c("False", "True"), cex = 0.8,
 
 ```
 
-```{r , fig.height = 10, fig.width = 10}
-# 14) Pie Graph Location region: Count the number of cars in a region
+```{# 14) Pie Graph Location region: Count the number of cars in a region}
 regionPriceDF <- group_by(cars_edited, location_region)
-regionPriceDF_averages <- summarise(regionPriceDF, average_price_usd = mean(price_usd))
-percentRegion <- paste0(round(100*regionPriceDF_averages$average_price_usd/sum(regionPriceDF_averages$average_price_usd), 2), "%")
-pie(regionPriceDF_averages$average_price_usd, labels = percentRegion, main = "Region Price Distribution", col = rainbow(length(regionPriceDF_averages$average_price_usd)))
+regionPriceDFCount <- count(regionPriceDF)
+percentRegion <- paste0(round(100*regionPriceDFCount$n/sum(regionPriceDFCount$n), 2), "%")
+pie(regionPriceDFCount$n, labels = percentRegion, main = "Region Price Distribution", col = rainbow(nrow(regionPriceDFCount)))
 legend("right", c("Brest Region", "Gomel Region", "Grodno Region", "Minsk Region", "Mogilev Region", "Vitebsk Region"), cex = 0.8,
        fill = rainbow(length(regionPriceDF_averages$average_price_usd)))
 ```
@@ -311,19 +310,19 @@ KNN:K Nearest Neighbor was chosen due to its popularity and simplicity. KNN is a
 
 ## How did you reach your conclusions?
 
-What graphs we chose to solve our questions and why Our answers to our questions based on the graphs
+What graphs and techniques we chose to solve our questions and why the techniques/graphs were used.
 
 Q: What impact does a region have on price?
 
-Graphs used: Pie chart How these graphs helped us solve the problem: This graph helped solve the problem by giving a percentage of the cars that were sold in a region, by the mean price. It was easy to see which regions had the biggest impact on price thanks to this graph.
+A bar graph was used to show how the average price of a vehicle differed amount different regions in Belarus. However, inspection alone was not able to tell us whether region had a significant impact on the price. To test the impact of a region on price we used the One-Way Anova test. Anova was used was because the region attribute consists of several categories and we wished to see its impact on a single continuous variable.
 
 Q: What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
 
-Graphs used: Bar graph How these graphs helped us solve the problem: A bar graph for this question was helpful because each manufacturer had it's own bar, and the highest bar represents the highest asking price of a vehicle. We were able to answer our question thanks to this graph.
+Two bar graphs were used in solving this question. First a bar graph was used to plot the distribution of vehicles for each manufacturer. Then another bar graph was used as a means of quickly inspecting how average price ranged between different manufacturers. As useful as these graph were in understanding the relationship between price and manufacturer it proved to be insufficient in proving a result. In order to prove that there existed a significant relationship between manufacturer and asking price of a car One-Way Anova was utilized. Once again were were dealing with a categorical data with several categories which lends the problem nicely to this sort of test.
 
 Q: What is the relationship between odometer and price?
 
-Graphs used: Scatter plot How these graphs helped us solve the problem: This graph helped solve the problem by allowing us to graph a line of best fit to the data, and by doing so seeing the relationship between the data.
+A Scatter plot was used to quickly inspect for possible relationships between price and odometer. In order to get a definite response several more methods were employed. First, a correlation test was performed to check for any correlation between price and odometer. Although, correlation does not imply causation we were still able to use to information to understand that there was some relationship between the variables. Afterwords, it was natural to investigate how well of a predictor odometer was on the price of a vehicle. In order to do this a linear regression model was created to study the linear relationship and check the significance of the variable. We were later able to calculate the prediction error and come to vital conclusions from this information.
 
 Q: Does the number of photos a vehicle has impact the selling price?
 
