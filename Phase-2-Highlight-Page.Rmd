@@ -155,14 +155,14 @@ test.data <- cars_edited[-training.samples,]
 
 In an attempt to gain a robust knowledge of our dataset several visualizations were used. Visualization of our data was done in two sections. Initially each attribute was graphed in order to gain a general understanding of how the samples are distributed for each attribute. This was done with the help of Bar Graphs, Histograms, Boxplots, the count function, and pie graphs.
 
-```{r, fig.height = 12, fig.width = 8}
+```{r, ManDistrib, fig.height = 12, fig.width = 8}
 # 1)What is the distribution of manufacturers?
 ggplot(cars_edited, aes(y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name)) + geom_text(stat='count', aes(label=..count..), hjust=1)
 # We can see a large difference in the amount cars for each manufacturers. Volkswagen, Opel, BMW, Audio, AvtoVAZ, Ford, Renault, and Mercedes-Benz are the majot manufacturers.
 
 ```
 
-```{r , fig.height = 10, fig.width = 10}
+```{r TransmissionDistrib, fig.height = 10, fig.width = 10}
 # 2) A table to show unique car model names and quantity
 View(cars_edited %>% count(model_name))
 
@@ -176,27 +176,27 @@ legend("right", c("Automatic", "Mechanical"), cex = 0.8,
 # Mechanical is significantly more common than Automatic. This will definitely be an attribute to consider in our final model
 ```
 
-```{r , fig.height = 10, fig.width = 10}
+```{r Color/Odometer/Year Produced, fig.height = 10, fig.width = 10}
 # 4) Plotting cars by color and quantity
 ggplot(cars_edited, aes(x = color)) + geom_bar(stat = "count", aes(fill = color)) + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
 # There is a lot of diversity in the colors and once again although there are categories with more values there is still a decent amount of variation
 
 # 5) Histogram Odometer Value: Graph to see how the data is skewed
 ggplot(cars_edited, aes(odometer_value)) + geom_histogram()
-# The data is left-skewed with what appears to be outliers as around 1,000,000 miles. 
+# The data is left-skewed with what appears to be outliers as around 1,000,000 miles
 
 # 6) Histogram Year produced: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(aes(year_produced))
 # The graph seems to almost be normally distributed minus what appears to be some outliers on the the older end of the years
 ```
 
-```{r , fig.height = 10, fig.width = 10}
+```{r FuelDistrib, fig.height = 10, fig.width = 10}
 # 7) Graph to show what fuel distribution
 ggplot(cars_edited, aes(x = engine_fuel)) + geom_bar(stat = "count", aes(fill = engine_fuel)) + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
 # There are only 2 major engine fuels(gasoline and diesel)
 ```
 
-```{r , fig.height = 10, fig.width = 10}
+```{r EngineDistrib/Capacity/Body Type/Drivetrain/Price/ExchangebilityDistrib , fig.height = 10, fig.width = 10}
 # 8) Pie graph to show engine type Distribution (Electric, Diesel, Gasoline)
 TypeGrouped <- group_by(cars_edited, engine_type)
 TypeCounted <- count(TypeGrouped) 
@@ -238,7 +238,7 @@ legend("right", c("False", "True"), cex = 0.8,
 
 ```
 
-```{r , fig.height = 10, fig.width = 10}
+```{r RegionDistrib, fig.height = 10, fig.width = 10}
 # 14) Pie Graph Location region: Count the number of cars in a region
 regionPriceDF <- group_by(cars_edited, location_region)
 regionPriceDFCount <- count(regionPriceDF)
@@ -250,7 +250,7 @@ legend("right", c("Brest Region", "Gomel Region", "Grodno Region", "Minsk Region
 # The usefulness of the attribute may be less since Minsk is such a large portion of the data.
 ```
 
-```{r , fig.height = 10, fig.width = 10}
+```{r NumPhotos/Up Counter/Duration, fig.height = 10, fig.width = 10}
 # 15) Histogram Number of photos: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(mapping = aes(number_of_photos))
 # Graph is very left-skewed. I suspect photos may increase the value of a vehicle, but tests will need to be done on this
@@ -273,13 +273,13 @@ ggplot(cars_edited) + geom_histogram(aes(duration_listed))
 
 Once a general understanding of each attribute was gained we began to visualize various combinations of attributions. These visualizations were vital in seeing different relationships among our samples. The visualizations that were used were Balloon Plot, Scatterplot, frequency polygons, dplyr::summarize, and Boxplots.
 
-```{r , fig.height = 10, fig.width = 10}
+```{r ManufByRegion, fig.height = 10, fig.width = 10}
 # 1) Graph to show the amount of cars(by manufacturer name) in a region BALLOON PLOT
 ggplot(cars_edited, aes(location_region, manufacturer_name)) + geom_count()
 # Due to the quantity of categories a test will need to be done to gather significant data
 ```
 
-```{r , fig.height = 10, fig.width = 10}
+```{r CarsByYear/CarsByColor/PriceByYearAndType/BodyTypeAndPrice, fig.height = 10, fig.width = 10}
 # 2) Graph to show the price of a car according to its year produced SCATTER PLOT
 ggplot(cars_edited, aes(year_produced, price_usd)) + geom_point() + geom_smooth()
 # There exists a parabolic relationship between year_produced and price_usd
@@ -304,7 +304,7 @@ ggplot(cars_edited) + geom_boxplot(mapping = aes(x = reorder(body_type, price_us
                                                    price_usd))
 ```
 
-```{r , fig.height = 10, fig.width = 10}
+```{r BodyTypePriceAndEngineFuel/PriceByPhotos/ManufByMeanPrice, fig.height = 10, fig.width = 10}
 # 8) Graph to show the correlation between car body type, price, AND engine fuel
 ggplot(cars_edited) + geom_point(mapping = aes(x = body_type, y = price_usd, color = engine_fuel))
 
@@ -351,7 +351,7 @@ Looking at the graph we can predict that region may play a part in price. We der
 
 Prior to doing the One-Way Anova test we first performed some data transformation to gain a better understanding of the differences between the region prices.
 
-```{r}
+```{r SummarizeRegion}
 group_by(regionPriceDF, regionPriceDF$location_region) %>%
   summarise(
     count = n(),
@@ -370,7 +370,7 @@ H~a~ = At least one sample mean is not equal to the others
 
 Furthermore, we will use 0.05 as our significance level. The result of the anova test was the following:
 
-```{r}
+```{r AnovaRegion}
 # Compute the analysis of variance
 res.aov <- aov(regionPriceDF$price_usd ~ regionPriceDF$location_region,
                data = regionPriceDF)
@@ -382,7 +382,7 @@ Looking at the results of the one-way anova we can confirm our prediction. The p
 
 We continue our investigation of the problem at hand by using Tukey HSD to do multiple pairwise-comparisons between the means of our groups.
 
-```{r}
+```{r RegionTukeyTest}
 # Tukey Test
 TukeyHSD(res.aov)
 ```
@@ -426,7 +426,7 @@ H~a~ = At least one sample mean price is not equal to the others
 
 Furthermore, we will use 0.05 as our significance level. The result of the anova test was the following:
 
-```{r}
+```{r ManufSummaryAndAnova}
 manuSumm <- group_by(manuPriceDF, manuPriceDF$manufacturer_name) %>%
   summarise(
     count = n(),
@@ -445,7 +445,7 @@ Investigating the results of the one-way anova we can confirm our claim. The p-v
 
 We continue with the Tukey HSD to do multiple pairwise-comparisons between the means of our groups. This will allow us to see exactly which manufacturers significantly differ in asking price.
 
-```{r}
+```{r ManufTukey}
 # Tukey Test
 TukeyHSD(res.aovTwo)
 ```
@@ -464,8 +464,7 @@ With the results see that numerous manufacturers are statistically different and
 
 Initially a Scatter plot was used to quickly inspect for possible relationships between price and odometer.
 
-```{r}
-{r odometer, echo=FALSE}
+```{r OdometerPrice, echo=FALSE}
 ggplot (cars_edited, aes( x =odometer_value, y=price_usd)) + geom_point() + stat_smooth()
 ```
 
@@ -481,7 +480,7 @@ H~a~ = There does exist a correlation between Odometer Value and Vehicle Price
 
 Furthermore, we will use 0.05 as our significance level. The result of the correlation test was the following:
 
-```{r}
+```{r OdometerPriceCor}
 #Getting cor value
 cor.test(cars_edited$odometer_value, cars_edited$price_usd)
 ```
@@ -498,7 +497,7 @@ ggplot (cars_edited, aes(x=odometer_value, y=price_usd)) + geom_point() + stat_s
 
 Once the linear regression model is created and graphed we proceed to check the R2 to see the proportion of the prices that can be explained by the model, the variability of the beta coefficients, and the percentage error.
 
-```{r}
+```{r OdometerPriceAccuracy}
 summary(odometer_on_price)
 confint(odometer_on_price)
 #                       2.5 %        97.5 %
@@ -523,7 +522,7 @@ The R2 is 0.1765 which indicates that a low proportion of prices in the data can
 
 In order to gain an intuitive understanding of the question we sought to use a scatter plot to see the relationship between price and number of photos.
 
-```{r, fig.height = 10, fig.width = 10}}
+```{r NumPhotosPrice, fig.height = 10, fig.width = 10}}
 #Scatter plot: Number of photos and price
 ggplot(cars_edited, aes( x =number_of_photos, y=price_usd)) + geom_hex() + stat_smooth(color = "red") 
 ```
@@ -540,7 +539,7 @@ H~a~ = There does exist a correlation between Number of Photos and Vehicle Price
 
 We will use 0.05 as our significance level. The result of the correlation test was the following:
 
-```{r}
+```{r NumPhotosPriceCor}
 #getting the cor value
 cor.test(cars_edited$number_of_photos, cars_edited$price_usd)
 ```
@@ -549,7 +548,7 @@ Since the p-value is less than 0.05 we can conclude that Price and Number of Pho
 
 Next we aim to investigate how good of an indicator of price the number of vehicle photos is. We shall employ linear regression, check the percentage of accuracy of that line, and graph the linear regression line to provide us with a useful visual.
 
-```{r}
+```{r NumPhotosPriceLMandPlot}
 #Getting the formula for linear regression
 number_of_photos_on_price <- lm (price_usd ~ number_of_photos, data = cars_edited)
 
@@ -559,7 +558,7 @@ ggplot (cars_edited, aes(x=number_of_photos, y=price_usd)) + geom_point() + stat
 
 Although the linear regression model is created and graphed there remains information and insights to be gleaned. We proceed to check the R2 to see the proportion of the prices that can be explained by the model, the variability of the beta coefficients, and the percentage error.
 
-```{r}
+```{r NumPhotosPriceAccuracy}
 summary(number_of_photos_on_price)
 
 # R^2 is very low(0.09994) which tells us that number of photos is not a good indicator of price. 
@@ -589,7 +588,7 @@ Graphs used: Scatter plot How these graphs helped us solve the problem: Using a 
 
 To begin answering this questions it was natural to use scatterplot (using 2 continuous attributes) to gain an intuitive understanding of any possible relationship.
 
-```{r upCounter, echo=FALSE}
+```{r upCounterPlot, echo=FALSE}
 #Regression analysis
 ggplot(cars_edited, aes( x =up_counter, y=price_usd)) + geom_hex() + stat_smooth(color = "red")
 ```
@@ -615,7 +614,7 @@ However, although they are correlated we do see that the correlation coefficient
 
 Nevertheless,we will use linear regression to see how poor of an indicator number of up counts really is. We will check the percentage of accuracy of the linear regression line, and graph the linear regression line to provide useful insights.
 
-```{r}
+```{r UpCounterLM/Accuracy/Plot}
 # Create LM
 up_counter_on_price <- lm (price_usd ~ up_counter, data = cars_edited)
 #Finding how well this line fits the data
@@ -774,7 +773,7 @@ Answer the goal here: In an attempt to create the most accurate and significant 
 
 Firstly, we created a Multiple Linear Regression Model which utilized the attributes in our dataset that had continuous data. The code for this looks as follows:
 
-```{r Linear Regression Model}
+```{r LinearRegressionModel}
 LMCont <- lm(price_usd ~ odometer_value
              + year_produced
              + number_of_photos
@@ -787,7 +786,7 @@ step.LMConts <- LMCont %>% stepAIC(trace = FALSE)
 
 Now that the model is created it is vital to check the accuracy of the model. To do this we will employed our test.data to test how accurately the Linear Regression model can predict the price of a vehicle.
 
-```{r LM Testing}
+```{r LMTesting}
 # Predict using Multiple Linear Regression Model
 LMContPrediction <- predict(step.LMConts, test.data)
 
@@ -806,7 +805,7 @@ After doing the Linear Regression Model we attempted to use SVR in order to crea
 
 SVR is an extremely robust model which would be able to handle our categorical data and almost certainly achieve a better result that the Linear Regression Model. 3 SVR models were calculated were varying accuracies. The different methods used with SVR were linear, polynomial, and radial. Linear was the first SVR model to be run and the code was as follows:
 
-```{r eval=FALSE, include=TRUE}
+```{r SVRLinearModel, eval=FALSE, include=TRUE}
 # Create SVR Model using Linear Method
 modelSVRLinTrain <- train( price_usd ~ ., data = train.data, method = "svmLinear",
                            trControl = trainControl("cv", number =10),
@@ -835,7 +834,7 @@ R2(modelSVRLinTrainPrediction,test.data$price_usd)
 
 Afterwords, the polynomial method was used with the SVR model:
 
-```{r eval=FALSE, include=TRUE}
+```{r SVRPolyModel, eval=FALSE, include=TRUE}
 # Create SVR Model using Polynomial Method
 Method
 modelSVRPolyTrain <- train(price_usd ~ ., data = train.data, method = "svmPoly",
@@ -864,7 +863,7 @@ R2(modelSVRPolyTrainPrediction,test.data$price_usd)
 
 Lastly, the radial method was used with the SVR model:
 
-```{r eval=FALSE, include=TRUE}
+```{r SVRRadialModel, eval=FALSE, include=TRUE}
 # Create SVR Model using Radial Method
 modelSVRRadialTrain <- train(price_usd ~ ., data = train.data, method = "svmRadial",
                              trControl = trainControl("cv", number =10),
@@ -891,7 +890,7 @@ Even though the SVR model did much better than the Linear Regression Model it wa
 
 ### Decision Tree Regression Model
 
-```{r eval=FALSE, include=TRUE}
+```{r DecisionTreeModel, eval=FALSE, include=TRUE}
 model_DT_Train <- train(price_usd ~ ., data = train.data, method = "rpart",
                         trControl = trainControl("cv",number = 10),
                         preProcess = c("center","scale"),
@@ -900,7 +899,7 @@ model_DT_Train <- train(price_usd ~ ., data = train.data, method = "rpart",
 summary(model_DT_Train)
 ```
 
-```{r eval=FALSE, include=TRUE}
+```{r DTPlot eval=FALSE, include=TRUE}
 # Plot the final tree model
 par(xpd = NA) # Avoid clipping the text in some device
 plot(model_DT_Train$finalModel)
@@ -909,7 +908,7 @@ text(model_DT_Train$finalModel, digits = 3)
 
 ![](images/plot(model_DT_Train)_1920_1080.png)
 
-```{r eval=FALSE, include=TRUE}
+```{r DTAccuracy, eval=FALSE, include=TRUE}
 #Decision rules in the model model_DT_Train$finalModel
 
 # Make predictions on the test data prediction_DT_Train <- model_DT_Train %>% predict(test.data)
@@ -925,7 +924,7 @@ text(model_DT_Train$finalModel, digits = 3)
 
 ### Random Forest Tree Model
 
-```{r eval=FALSE, include=TRUE}
+```{r RFFModel, eval=FALSE, include=TRUE}
 random_forest_ranger <- train(price_usd ~ . ,
                               data = train.data,
                               method = "ranger",
@@ -958,7 +957,7 @@ R2(rf_predict_ranger,test.data$price_usd)
 
 ### KNN Model
 
-```{r eval=FALSE, include=TRUE}
+```{r KNNModel, eval=FALSE, include=TRUE}
 model_knn <- train(
   price_usd ~., data = train.data, method = "knn",
   trControl = trainControl("cv", number = 10),
@@ -969,28 +968,28 @@ model_knn <- train(
 summary(model_knn$finalModel)
 ```
 
-```{r eval=FALSE, include=TRUE}
+```{r KNNTune, eval=FALSE, include=TRUE}
 # Print the best tuning parameter k that maximizes model accuracy
 model_knn$bestTune
 #k
 #1 5
 ```
 
-```{r eval=FALSE, include=TRUE}
+```{r KNNPlot, eval=FALSE, include=TRUE}
 # Plot model accuracy vs different values of k
 plot(model_knn)
 ```
 
 ![](images/plot(model_knn)_1920_1080.png)
 
-```{r eval=FALSE, include=TRUE}
+```{r KNNPredictions, eval=FALSE, include=TRUE}
 # Make predictions on the test data
 knn_predictions <- model_knn %>% predict(test.data)
 head(knn_predictions)
 #[1] 9560.000 9000.000 4580.000 5648.494 8575.200 7720.000
 ```
 
-```{r eval=FALSE, include=TRUE}
+```{r KNNAccuracy, eval=FALSE, include=TRUE}
 # Compute the prediction error RMSE
 RMSE(knn_predictions,test.data$price_usd)
 #[1] 3693.127
