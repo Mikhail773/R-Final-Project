@@ -560,7 +560,7 @@ sigma(ManufyearPrice)*100/mean(cars_edited$price_usd)
 # We will see if we can predict exchangeability given all the other attributes
 #
 ###################################################################################################
-model_DT_Train_Exchangeable <- glm(is_exchangeable ~ ., data = train.data, family = binomial)
+model_LR_Exchangeable <- glm(is_exchangeable ~ ., data = train.data, family = binomial)
 
 predictions <- predict(model_DT_Train_Exchangeable, test.data)
 prediction.probabilities <- predictions$posterior[,2]
