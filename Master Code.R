@@ -306,6 +306,7 @@ cars_edited %>% group_by(manufacturer_name) %>% summarize(mean(price_usd)) %>% V
 # (Emma Doyle)
 #
 # 1) What impact does region have on price?
+# 
 # Region does impact price. However, the extent of this impact would have to be assessed in a model that includes more attributes.
 # The best indicator of the relationship will be seen in the total model.
 # Regions: Minsk, Gomel, Brest, Vitebsk, Mogilev, Grodno
@@ -338,7 +339,9 @@ summary(res.aov)
 # 
 # 2) Do manufacturers have a significant impact on the asking price of a vehicle?
 # Manufacturers does correlate to the asking price of a vehicle.
-# Our final models will shows us exactly how large this correlation is with regards to the other attributes.
+#
+# Our final models will show us exactly how large this correlation is with regards to the other attributes.
+#
 
 # 1)What is the distribution of manufacturers?
 ggplot(cars_edited, aes(y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name)) + geom_text(stat='count', aes(label=..count..), hjust=1)
@@ -365,6 +368,7 @@ summary(res.aovTwo)
 # (Reid Hoffmeier)
 #
 # 3) What is the relationship between odometer and price?
+# 
 # There is a low negative correlation between price and odometer. 
 # We can conclude that although there is an impact many more attributes effect the price of a vehicle.
 #
@@ -397,6 +401,7 @@ sigma(odometer_on_price)*100/mean(cars_edited$price_usd)
 #
 # 4) Scatter Plot, Simple Regression Analysis:
 # Does the number of photos a vehicle has impact the selling price?
+#
 # A low positive correlation between number of photos a vehicle has and the selling price.
 # However, on its own photo amount is not a good predictor of price and for that reason we must use several more attributes when predicting price.
 #
@@ -406,6 +411,7 @@ ggplot(cars_edited, aes( x =number_of_photos, y=price_usd)) + geom_point() + sta
 
 #getting the cor value
 cor.test(cars_edited$number_of_photos, cars_edited$price_usd)
+
 # Since the p-value is less than 0.05 we can conclude that Price and Number of photos have a low positive correlation
 # The correlation coefficient is 0.3168586 and p-value of < 2.2e-16.
 
@@ -418,10 +424,13 @@ ggplot (cars_edited, aes(x=number_of_photos, y=price_usd)) + geom_point() + stat
 
 #Finding how well this line fits the data
 summary(number_of_photos_on_price)
+
 # R^2 is very low which affirms that number of photos is not a good indicator of price. 
 # We can suspect that several more variables are in play.
+
 confint(number_of_photos_on_price)
 sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
+
 # Our prediction error rate is extremely high (91.82279%) which explains the low correlation
 
 ###################################################################################################
@@ -430,6 +439,7 @@ sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
 #
 # 5) Scatter Plot, Simple Regression Analysis:
 # Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
+#
 # The number of times a vehicle has been upped has a negligible impact on the selling price
 #
 
@@ -443,9 +453,12 @@ up_counter_on_price
 
 #Finding how well this line fits the data
 summary(up_counter_on_price)
+
 # R^2 is extremely low which affirms that number of photos is not a good indicator of price. 
+
 confint(up_counter_on_price)
 sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
+
 # Our prediction error rate is extremely high (96.65168%) which confirms to us that up_counter is a terrible predictor of price(as we can see by the correlation test)
 
 #Scatter plot: up counter and price with regression line
@@ -481,10 +494,11 @@ TukeyHSD(body_engine_type_on_price.aov3)
 #
 # 7) Dplyr count with group_by, One-Way Anova:
 # What is the most popular model?
-# Most popular is Passat
+# Most popular is Passat.
+# 
 # Can we conclude that the popularity of a model has a direct impact on the price of a vehicle?
 # The popularity of a vehicle does seem to have an impact on the average_price of a vehicle
-# More attributes would be needed to predict price
+# More attributes would be needed to predict price.
 #
 
 # Finding out model popularity
@@ -502,9 +516,12 @@ modelPrice <- lm (price_usd ~ model_name, data = cars_edited)
 
 #Making sure the linear regression line matches the model
 summary(modelPrice)
+
 # R^2(0.6162) is relatively good which affirms that model name is a good indicator of price. 
+
 confint(modelPrice)
 sigma(modelPrice)*100/mean(cars_edited$price_usd)
+
 # Our prediction error rate is lower than for other attributes (60.86683%) which confirms to us that model name is a better predictor of price
 # Nevertheless, a prediction error of 60.86683% tells us that for prediction we will need more attributes.
 
@@ -512,8 +529,10 @@ sigma(modelPrice)*100/mean(cars_edited$price_usd)
 #
 # (Mikhail Mikhaylov)
 # 8) Scatter plot, Two-Way ANOVA/ :
+# 
 # What is the average age of each vehicle manufacturer?
 # Does the manufacturer change how the production year impacts the selling price?
+#
 
 #Group cars by manufacturer name
 manufacturer_year <- group_by(cars_edited, manufacturer_name)
@@ -536,9 +555,12 @@ yearPrice <- lm (price_usd ~ year_produced, data = cars_edited)
 
 #Making sure the linear regression line matches the model
 summary(yearPrice)
+
 # R^2(0.4977) is relatively good which affirms that year produced is a good indicator of price. 
+
 confint(yearPrice)
 sigma(yearPrice)*100/mean(cars_edited$price_usd)
+
 # Our prediction error rate is lower than for other attributes (68.61004%) which confirms to us that year produced is a decent predictor of price(albeit not at good as model name)
 # A prediction error of 68.61004% tells us that for prediction we will need more attributes than just year produced.
 
@@ -644,8 +666,11 @@ R2(LogLMContsPrediction,test.data$price_usd)
 #[1] 0.4949189
 # Log transformation is less accurate
 ###################################################################################################
-## SVR Models
+# SVR Models
+# 
 # Create SVR Model using Linear Method
+#
+
 modelSVRLinTrain <- train( price_usd ~ ., data = train.data, method = "svmLinear",
                            trControl = trainControl("cv", number =10),
                            preProcess = c("center", "scale"),
@@ -716,7 +741,9 @@ R2(modelSVRRadialTrainPrediction,test.data$price_usd)
 #[1] 0.5937837
 
 ###################################################################################################
-## Decision Tree Regression Model
+#
+# Decision Tree Regression Model
+#
 
 model_DT_Train <- train(price_usd ~ ., data = train.data, method = "rpart",
                         trControl = trainControl("cv",number = 10),
@@ -753,7 +780,9 @@ R2(prediction_DT_Train,test.data$price_usd)
 #[1] 0.7529956			  
 
 ###################################################################################################
-## Random Forest Model
+#
+# Random Forest Model
+#
 
 random_forest_ranger <- train(price_usd ~ . ,
                               data = train.data,
@@ -783,7 +812,9 @@ RMSE(rf_predict_ranger,test.data$price_usd)
 R2(rf_predict_ranger,test.data$price_usd)
 
 ###################################################################################################
-## KNN Model
+#
+# KNN Model
+#
 
 model_knn <- train(
   price_usd ~., data = train.data, method = "knn",
