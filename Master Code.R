@@ -556,6 +556,20 @@ sigma(ManufyearPrice)*100/mean(cars_edited$price_usd)
 
 ###################################################################################################
 #
+# Sensitivty and Specificity Problem
+# We will see if we can predict exchangeability given all the other attributes
+###################################################################################################
+fit <- lda(is_exchangeable ~ ., data= train.data)
+
+predictions <- predict(fit, test.data)
+prediction.probabilities <- predictions$posterior[,2]
+prediction.classes <- prediction$class
+observed.classes <- test.data$is_exchangeable
+
+accuracy <- mean(observed.classes == predicted.classes)
+error <- mean(observed.classes != predicted.classes)
+###################################################################################################
+#
 # (Everyone) Goal:
 # Gain insights into which variables have the largest impact on selling price of a vehicle.
 # Create a predictive model based on these insights to create a predictive model.
