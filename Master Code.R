@@ -397,10 +397,9 @@ ggplot(cars_edited, aes(x=odometer_value, y=price_usd)) + geom_point() + stat_sm
 
 #Finding how well this line fits our data
 summary(odometer_on_price)
-# R^2 is very low which affirms that odometer is not a good indicator of price. We can suspect that several more variables are in play.
+
 confint(odometer_on_price)
 sigma(odometer_on_price)*100/mean(cars_edited$price_usd)
-# Our prediction error rate is extremely high (87.80444%) which explains the low correlation
 
 ###################################################################################################
 #
@@ -431,14 +430,8 @@ ggplot (cars_edited, aes(x=number_of_photos, y=price_usd)) + geom_point() + stat
 
 #Finding how well this line fits the data
 summary(number_of_photos_on_price)
-
-# R^2 is very low(0.09994) which tells us that number of photos is not a good indicator of price. 
-# We can suspect that several more variables are in play.
-
 confint(number_of_photos_on_price)
 sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
-
-# Our prediction error rate is extremely high (91.82279%) which explains the low correlation
 
 ###################################################################################################
 #
@@ -461,12 +454,8 @@ up_counter_on_price
 #Finding how well this line fits the data
 summary(up_counter_on_price)
 
-# R^2 is extremely low which affirms that number of photos is not a good indicator of price. 
-
 confint(up_counter_on_price)
 sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
-
-# Our prediction error rate is extremely high (96.65168%) which confirms to us that up_counter is a terrible predictor of price(as we can see by the correlation test)
 
 #Scatter plot: up counter and price with regression line
 ggplot (cars_edited, aes(x=up_counter, y=price_usd)) + geom_point() + stat_smooth(method=lm)
@@ -482,18 +471,22 @@ ggplot (cars_edited, aes(x=up_counter, y=price_usd)) + geom_point() + stat_smoot
 # What is the impact of Engine Type and Body Type on the selling price?
 # Limousine and pickup trucks appear to have the only impact.
 
-engine_body.data <- table(cars_edited$body_type, cars_edited$engine_type)
-chisq.test(engine_body.data)
 # Balloon Plot
 ggplot(cars_edited, aes(body_type, engine_type)) + geom_count()
 
-#Aov3
+#Chi-Square Test
+engine_body.data <- table(cars_edited$body_type, cars_edited$engine_type)
+chisq.test(engine_body.data)
+
+# Table
+prop.table(engine_body.data)*100
+
+#Aov2
 body_engine_type_on_price.aov <- aov(price_usd ~ engine_type * body_type, data = cars_edited)
 summary(body_engine_type_on_price.aov)
-model.tables(body_engine_type_on_price.aov, type="means", se = TRUE)
 
 #Tukey HSD
-TukeyHSD(body_engine_type_on_price.aov3)
+TukeyHSD(body_engine_type_on_price.aov)
 
 ###################################################################################################
 #
@@ -524,13 +517,8 @@ modelPrice <- lm (price_usd ~ model_name, data = cars_edited)
 #Making sure the linear regression line matches the model
 summary(modelPrice)
 
-# R^2(0.6162) is relatively good which affirms that model name is a good indicator of price. 
-
 confint(modelPrice)
 sigma(modelPrice)*100/mean(cars_edited$price_usd)
-
-# Our prediction error rate is lower than for other attributes (60.86683%) which confirms to us that model name is a better predictor of price
-# Nevertheless, a prediction error of 60.86683% tells us that for prediction we will need more attributes.
 
 ###################################################################################################
 #
@@ -541,6 +529,9 @@ sigma(modelPrice)*100/mean(cars_edited$price_usd)
 # Does the manufacturer change how the production year impacts the selling price?
 #
 
+#Scatter plot: Year produced by price and colored by manufacturer name
+ggplot(cars_edited, aes(x = year_produced, y = price_usd)) + geom_hex() + facet_wrap(~ manufacturer_name)
+
 #Group cars by manufacturer name
 manufacturer_year <- group_by(cars_edited, manufacturer_name)
 
@@ -549,27 +540,19 @@ manufacturer_year_averages <- summarise(manufacturer_year, average = mean(year_p
 # 1) Average age of each vehicle manufacturer
 View(manufacturer_year_averages)
 
-#Scatter plot: Year produced by price and colored by manufacturer name
-ggplot(cars_edited) + geom_point(aes(x = year_produced, y = price_usd, color = manufacturer_name))
-
 # Do an anova test to see if year produced significantly impacts price of a vehicle
 manufacturer_price <- aov(price_usd ~ manufacturer_name * year_produced, data = cars_edited)
 summary(manufacturer_price)
 # The manufacturer does change how the production year affects the selling price
 
 #Taking the linear regression
-yearPrice <- lm (price_usd ~ year_produced, data = cars_edited)
+ManufyearPrice <- lm (price_usd ~ manufacturer_name + year_produced, data = cars_edited)
 
 #Making sure the linear regression line matches the model
-summary(yearPrice)
+summary(ManufyearPrice)
 
-# R^2(0.4977) is relatively good which affirms that year produced is a good indicator of price. 
-
-confint(yearPrice)
-sigma(yearPrice)*100/mean(cars_edited$price_usd)
-
-# Our prediction error rate is lower than for other attributes (68.61004%) which confirms to us that year produced is a decent predictor of price(albeit not at good as model name)
-# A prediction error of 68.61004% tells us that for prediction we will need more attributes than just year produced.
+confint(ManufyearPrice)
+sigma(ManufyearPrice)*100/mean(cars_edited$price_usd)
 
 ###################################################################################################
 #
