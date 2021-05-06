@@ -556,12 +556,17 @@ sigma(ManufyearPrice)*100/mean(cars_edited$price_usd)
 
 ###################################################################################################
 #
-# Sensitivty and Specificity Problem
+# Sensitivity and Specificity Problem
 # We will see if we can predict exchangeability given all the other attributes
+#
 ###################################################################################################
-fit <- lda(is_exchangeable ~ ., data= train.data)
+model_DT_Train_Exchangeable <- train(is_exchangeable ~ ., data = train.data, method = "rpart",
+                        trControl = trainControl("cv",number = 10),
+                        preProcess = c("center","scale"),
+                        tuneLength = 10)
 
-predictions <- predict(fit, test.data)
+
+predictions <- predict(model_DT_Train_Exchangeable, test.data)
 prediction.probabilities <- predictions$posterior[,2]
 prediction.classes <- prediction$class
 observed.classes <- test.data$is_exchangeable
