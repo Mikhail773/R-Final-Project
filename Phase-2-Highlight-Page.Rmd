@@ -139,7 +139,7 @@ To determine what to do with the outliers we identified the outliers for each co
 
 ## Dataset Training and Testing
 
-For the purpose of effectively analyzing the real-world performance of the models that will be used to solve the question we split the dataset into a "Training" dataset and a "Testing dataset. The "Training" set comprised of a random selection of 80% of our dataset and the "Testing" was the rest of the samples not included in the "Training" dataset(20%). The reason for the split was the necessity to be able to access how accurately the models were able to predict the price of a vehicle given a seperate portion of samples in the dataset. By testing our models against data not in our training set we can effectively see how well the model holds up with the addition of new vehicles we wish to predict. This was done as following:
+For the purpose of effectively analyzing the real-world performance of the models that will be used to solve the question we split the dataset into a "Training" dataset and a "Testing dataset. The "Training" set comprised of a random selection of 80% of our dataset and the "Testing" was the rest of the samples not included in the "Training" dataset(20%). The reason for the split was the necessity to be able to access how accurately the models were able to predict the price of a vehicle given a separate portion of samples in the dataset. By testing our models against data not in our training set we can effectively see how well the model holds up with the addition of new vehicles we wish to predict. This was done as following:
 
 ```{r Training and Testing Dataset}
 set.seed(123)
@@ -326,45 +326,293 @@ Random Forest Regression: Albeit, Random Forest Regression is more complicated t
 
 KNN:K Nearest Neighbor was chosen due to its popularity and simplicity. KNN is able to handle our Categorical as well as Continuous attributes and for that reason it is a good model to be used to predict price. It will be vital to compare this model with the other models to investigate how useful of a model it is for our dataset.
 
-### PHASE 2 Portion: Describe the different ways you tried to answer the questions and goals
+# Final outcomes and Analysis
 
-## How did you reach your conclusions?
+## Questions and Answer Justifications
 
-What graphs and techniques we chose to solve our questions and why the techniques/graphs were used.
+**Q:** What impact does a region have on price?
 
-Q: What impact does a region have on price?
+**A**: Although the region does impact price the extent of this impact would have to be assessed in a model that includes more attributes. The reason for this is because correlation does not necessitate causation. In other words, more attributes may be at play and to get a better understanding of the impact of region on price it will be vital to access the role region has in the overall models.
+
+**Justification:**
 
 A bar graph was used to show how the average price of a vehicle differed amount different regions in Belarus. However, inspection alone was not able to tell us whether region had a significant impact on the price. To test the impact of a region on price we used the One-Way Anova test. Anova was used was because the region attribute consists of several categories and we wished to see its impact on a single continuous variable.
 
-Q: What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
+To answer this question we decided to use a pie chart so we can see the average prices per region in comparison with each other.
+
+```{r regionPrice, fig.height = 5, fig.width = 8, echo=FALSE}
+regionPriceDF <- group_by(cars_edited, location_region)
+regionPriceDF_averages <- summarise(regionPriceDF, average_price_usd = mean(price_usd))
+percentRegion <- paste0(round(100*regionPriceDF_averages$average_price_usd/sum(regionPriceDF_averages$average_price_usd), 2), "%")
+pie(regionPriceDF_averages$average_price_usd, labels = percentRegion, main = "Region Price Distribution", col = rainbow(length(regionPriceDF_averages$average_price_usd)))
+legend("topright", c("Brest Region", "Gomel Region", "Grodno Region", "Minsk Region", "Mogilev Region", "Vitebsk Region"), cex = 0.8,
+       fill = rainbow(length(regionPriceDF_averages$average_price_usd)))
+```
+
+Looking at the graph it seems like only one region has an impact on the price of vehicles, that being the Minsk Region. However, we can't conclude that with just this graph, we need to confirm this by using a one-way anova test.
+
+```{r}
+group_by(regionPriceDF, regionPriceDF$location_region) %>%
+  summarise(
+    count = n(),
+    mean = mean(price_usd, na.rm = TRUE),
+    sd = sd(price_usd, na.rm = TRUE)
+  )
+```
+
+Looking at the results of the one-way anova we can confirm our assumed conclusion. The prices between vehicles isn't significantly different, besides being in the Minsk Region. **Thus, with this data set region doesn't have an impact on vehicle price.**
+
+**Q:** What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
+
+**A**: We can confirm that there is a relationship between the manufacturer and asking price. The relationship seems to be one of the larger factor for asking price, but is not significant enough to predict price on its own.
+
+**Justification:**
 
 Two bar graphs were used in solving this question. First a bar graph was used to plot the distribution of vehicles for each manufacturer. Then another bar graph was used as a means of quickly inspecting how average price ranged between different manufacturers. As useful as these graph were in understanding the relationship between price and manufacturer it proved to be insufficient in proving a result. In order to prove that there existed a significant relationship between manufacturer and asking price of a car One-Way Anova was utilized. Once again were were dealing with a categorical data with several categories which lends the problem nicely to this sort of test.
 
-Q: What is the relationship between odometer and price?
+To Tackle the question to this problem we decided to use a bar graph, since we have categorical data and continuous data.
+
+```{r manufacturerVsPrice, fig.height = 9, fig.width = 12}
+manuPriceDF <- group_by(cars_edited, manufacturer_name)
+manuPriceDF_averages <- summarise(manuPriceDF, average_price_usd = mean(price_usd))
+View(manuPriceDF_averages)
+ggplot(manuPriceDF_averages, aes(x = average_price_usd, y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name),stat="identity") + geom_text(aes(label =  paste0("$",round(average_price_usd)), hjust = 1))
+```
+
+Looking at the bar graph we can make an assumption of the data, and that assumption seems is that the manufacturer of a vehicle has an impact on asking price. Again though we can't assume it's correct, we need to confirm this with a one-way anova test.
+
+```{r}
+manuSumm <- group_by(manuPriceDF, manuPriceDF$manufacturer_name) %>%
+  summarise(
+    count = n(),
+    mean = mean(price_usd, na.rm = TRUE),
+    sd = sd(price_usd, na.rm = TRUE)
+  )
+
+# Compute the analysis of variance
+res.aovTwo <- aov(manuPriceDF$price_usd ~ manuPriceDF$manufacturer_name,
+                  data = manuPriceDF)
+
+summary(res.aovTwo)
+```
+
+With the results **we can confirm that there is a relationship between the manufacturer and asking price.**
+
+**Q:** What is the relationship between odometer and price?
+
+**A**: There is a low negative correlation between price and odometer.
+
+**Justification:**
 
 A Scatter plot was used to quickly inspect for possible relationships between price and odometer. In order to get a definite response several more methods were employed. First, a correlation test was performed to check for any correlation between price and odometer. Although, correlation does not imply causation we were still able to use to information to understand that there was some relationship between the variables. Afterwords, it was natural to investigate how well of a predictor odometer was on the price of a vehicle. In order to do this a linear regression model was created to study the linear relationship and check the significance of the variable. We were later able to calculate the prediction error and come to vital conclusions from this information.
 
-Q: Does the number of photos a vehicle has impact the selling price?
+When we investigate this graph we initially notice that the line of best fit seems to be going down as the odometer value increases.
+
+```{r odometer, echo=FALSE}
+ggplot (cars_edited, aes( x =odometer_value, y=price_usd)) + geom_point() + stat_smooth()
+
+```
+
+However, this doesn't justify that the higher the odometer the lower the price is for the vehicle. In order to show this we will use linear regression, and check the percentage of accuracy of that line. Using this we will come up with an answer to our question.
+
+```{r odometerLm, echo=FALSE}
+odometer_on_price <- lm (price_usd ~ odometer_value, data = cars_edited)
+
+ggplot (cars_edited, aes(x=odometer_value, y=price_usd)) + geom_point() + stat_smooth(method=lm)
+
+```
+
+```{r}
+summary(odometer_on_price)
+confint(odometer_on_price)
+sigma(odometer_on_price)*100/mean(cars_edited$price_usd)
+```
+
+Once checking the accuracy of the linear regression, we see that it is 87.89% accurate. **Thus we can conclude that the higher the odometer the lower the price of the vehicle will be.**
+
+**Q:** Does the number of photos a vehicle has impact the selling price?
+
+**A**: A low positive correlation between number of photos a vehicle has and the selling price.
+
+**Justification:**
 
 Graphs used: Scatter plot How these graphs helped us solve the problem: This graph helped us solve the problem by allowing us to see the relationship between the two variables by doing a line of best fit.
 
-Q: Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
+With our scatter plot graph we added a line of best fit for the data.
+
+```{r photos, echo=FALSE}
+ggplot(cars_edited, aes( x =number_of_photos, y=price_usd)) + geom_point() + stat_smooth()
+
+```
+
+From the graph it seems like the more photos of a vehicle there are the higher the price will be. However, we can't make that assumption based on just this graph, we need to use linear regression to confirm this.
+
+```{r photosLm, echo=FALSE}
+number_of_photos_on_price <- lm (price_usd ~ number_of_photos, data = cars_edited)
+
+ggplot (cars_edited, aes(x=number_of_photos, y=price_usd)) + geom_point() + stat_smooth(method=lm)
+```
+
+Now that we have the the linear regression line we need to make sure that the line fits the data with a high accuracy.
+
+```{r}
+summary(number_of_photos_on_price)
+confint(number_of_photos_on_price)
+sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
+```
+
+With the accuracy of the linear regression being 91.88% **we can now conclude that the more photos a vehicle has, the higher the selling price.**
+
+**Q:** Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
+
+**A**: The number of times a vehicle has been upped has a negligible impact on the selling price.
+
+**Justification:**
 
 Graphs used: Scatter plot How these graphs helped us solve the problem: Using a scatter plot for this question again allowed us to see the relationship between the two variables. With that we can come up with a solution to the question.
 
-Q: Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
+With using a scatter plot and the use of a line of best fit it appears that the more a vehicle has been upped the higher the price will be.
 
-Graphs used: Mosaic How these graphs helped us solve the problem: This graph helped us solve the problem by giving us a colored graph that showed the amount of cars with a specific body type and engine. We were able to confirm the acuracy of the graph and come to a conclusion.
+```{r upCounter, echo=FALSE}
+ggplot (cars_edited, aes( x =up_counter, y=price_usd)) + geom_point() + stat_smooth()
+```
 
-Q: What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
+Again however, we can't assume this to be true without checking the linear regression and getting the accuracy of that line.
 
-Graphs used: Count, group by, and oneway anova How these graphs helped us solve the problem: We didn't need to have a graph for this question. It was very effective to group the data, count it and look at the view of the data.
+```{r upCounterLm, echo=FALSE}
+ggplot (cars_edited, aes(x=up_counter, y=price_usd)) + geom_point() + stat_smooth(method=lm)
+```
 
-Q: What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?
+```{r}
+up_counter_on_price <- lm (price_usd ~ up_counter, data = cars_edited)
+summary(up_counter_on_price)
+confint(up_counter_on_price)
+sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
+```
+
+Since the accuracy of the linear regression is 96.69% **we can conclude that the number of times a vehicle has been upped raises the selling price**
+
+**Q:** Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
+
+**A**: Sedan and Gasoline is the most common followed by Gasoline and Hatchback. Engine Type and Body Type do have an impact on the selling price, but the extend of this impact will need to be investigated in our overall model.
+
+Justification:
+
+Graphs used: Mosaic How these graphs helped us solve the problem: This graph helped us solve the problem by giving us a colored graph that showed the amount of cars with a specific body type and engine. We were able to confirm the accuracy of the graph and come to a conclusion.
+
+For this question we chose to use a mosaic plot because we are comparing more than 2 variables.
+
+```{r EngBodyImpact, fig.height = 9, fig.width = 12, echo=FALSE}
+mosaicplot(table(cars_edited$body_type, cars_edited$engine_type), shade=TRUE, las=2, main="Engine Type vs Body Type")
+```
+
+Based on this mosaic plot we can see that the body types Pickup, and Limousine are the only ones that have a significant impact on engine type. We can't assume this however, so again let's verify this with a few tests.
+
+```{r}
+#Aov3
+body_engine_type_on_price.aov3 <- aov(price_usd ~ engine_type * body_type, data = cars_edited)
+summary(body_engine_type_on_price.aov3)
+model.tables(body_engine_type_on_price.aov3, type="means", se = TRUE)
+```
+
+```{r eval=FALSE, include=TRUE}
+#Tukey HSD
+TukeyHSD(body_engine_type_on_price.aov3)
+```
+
+These tests confirm our original assumption. **Thus, Body types Pickup, and Limousine have an impact on engine type.**
+
+**Q:** What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
+
+**A**: The most popular is the Passat. Furthermore, The popularity of a vehicle does seem to have an impact on the average_price of a vehicle. However, more attributes would be needed to predict price
+
+**Justification:** With the nature of this question we can figure out the answer without a graph. We just need to look at the views of the variables we create.
+
+```{r}
+
+```
+
+Because of this analysis we can conclude that **the popularity of a vehicle does have an impact on the average_price of a vehicle.**
+
+**Q:** What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
+
+**Justification:**
+
+Graphs used: Count, group by, and one-way anova How these graphs helped us solve the problem: We didn't need to have a graph for this question. It was very effective to group the data, count it and look at the view of the data.
+
+With the nature of this question we need to organize some data before we can graph it.
+
+```{r}
+models_sorted <- group_by(cars_edited, model_name)
+#Find popularity of vehicles
+models_counted <- cars_edited %>% count(model_name) %>% arrange(desc(n))
+
+#Find average price for each model
+models_sorted_averages <- summarise(models_sorted, average_price_usd = mean(price_usd))
+
+#Get the count of each model
+models_sorted_avg_with_cnt <- models_sorted_averages %>% mutate(counts = count(cars_edited, model_name) %>% dplyr::select(2))
+models_sorted_avg_with_cnt$counts <- as.numeric(unlist(models_sorted_avg_with_cnt$counts))
+```
+
+Now that we have the data in a way where the models of each of the cars has a count, with a price we can graph it.
+
+```{r Popularity, echo=FALSE}
+ggplot(models_sorted_avg_with_cnt, aes(x=counts, y=average_price_usd)) + geom_point() + stat_smooth()
+```
+
+From this scatter plot that has a line of best fit, it is kind of hard to tell what the result will be. Now we can run linear regression on this to be sure of what relationship there is.
+
+```{r Popularitylm, echo=FALSE}
+modelPricePerCount <- lm (average_price_usd ~ counts, data = models_sorted_avg_with_cnt)
+ggplot (models_sorted_avg_with_cnt, aes(x=counts, y=average_price_usd)) + geom_point() + stat_smooth(method=lm)
+```
+
+Next we need to be sure of the accuracy of the linear regression line.
+
+```{r}
+modelPricePerCount <- lm (average_price_usd ~ counts, data = models_sorted_avg_with_cnt)
+summary(modelPricePerCount)
+confint(modelPricePerCount)
+sigma(modelPricePerCount)*100/mean(models_sorted_avg_with_cnt$average_price_usd)
+```
+
+Because of this analysis we can conclude that **the popularity of a vehicle does have an impact on the average_price of a vehicle.**
+
+**Q:** What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?
+
+**A**:
+
+```{r}
+#Group cars by manufacturer name
+manufacturer_year <- group_by(cars_edited, manufacturer_name)
+
+#Summarize the manufacturer years average
+manufacturer_year_averages <- summarise(manufacturer_year, average = mean(year_produced, na.rm = TRUE))
+# 1) Average age of each vehicle manufacturer
+manufacturer_year_averages
+```
+
+The manufacturer does change how the production year affects the selling price.
+
+**Justification:**
 
 Graphs used: Scatter plot How these graphs helped us solve the problem: The use of a scatter plot here is profound. It was VERY clear of an answer, just by a quick inspection of the graph there was a clear answer.
 
-# Final outcomes and Analysis
+With this question we decided to use a scatter plot and color all the points in the scatter plot with a color corresponding to a different manufacturer.
+
+```{r yearProducedPriceManu, fig.height = 9, fig.width = 12, echo=FALSE}
+ggplot(cars_edited) + geom_point(aes(x = year_produced, y = price_usd, color = manufacturer_name))
+```
+
+Again we can't look at just the graph and call it a day, we need to confirm the results using a different method.
+
+```{r}
+manufacturer_price <- aov(price_usd ~ manufacturer_name * year_produced, data = cars_edited)
+summary(manufacturer_price)
+```
+
+With these results we can confirm our original assumption. **The manufacturer does change how the production year affects the selling price.**
 
 Answer the goal here: In an attempt to create the most accurate and significant predictive model we created 6 different models which had a wide range of accuracy.
 
@@ -505,7 +753,7 @@ plot(model_DT_Train$finalModel)
 text(model_DT_Train$finalModel, digits = 3)
 ```
 
-![](plot(model_DT_Train$finalModel)_1920_1080.png){width="682" height="476"}
+![](images/plot(model_DT_Train)_1920_1080.png)
 
 ```{r eval=FALSE, include=TRUE}
 #Decision rules in the model model_DT_Train$finalModel
@@ -579,7 +827,7 @@ model_knn$bestTune
 plot(model_knn)
 ```
 
-![](model_knn_1920_1080.png)
+![](images/plot(model_knn)_1920_1080.png)
 
 ```{r eval=FALSE, include=TRUE}
 # Make predictions on the test data
@@ -603,277 +851,3 @@ R2(knn_predictions,test.data$price_usd)
 ## Compare results obtained using different ML methods
 
 Our choices: Linear Regression Decision Trees SVR (Linear and NonLinear) Random Forest Regression KNN
-
-## What are the answers for the proposed questions?
-
-Q: What impact does a region have on price?
-
-A: Although the region does impact price the extent of this impact would have to be assessed in a model that includes more attributes. The reason for this is because correlation does not necessitate causation. In other words, more attributes may be at play and to get a better understanding of the impact of region on price it will be vital to access the role region has in the overall models.
-
-Q: What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
-
-A: We can confirm that there is a relationship between the manufacturer and asking price. The relationship seems to be one of the larger factor for asking price, but is not significant enough to predict price on its own.
-
-Q: What is the relationship between odometer and price?
-
-A: There is a low negative correlation between price and odometer.
-
-Q: Does the number of photos a vehicle has impact the selling price?
-
-A: A low positive correlation between number of photos a vehicle has and the selling price.
-
-Q: Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
-
-A: The number of times a vehicle has been upped has a negligible impact on the selling price.
-
-Q: Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
-
-A: Sedan and Gasoline is the most common followed by Gasoline and Hatchback. Engine Type and Body Type do have an impact on the selling price, but the extend of this impact will need to be investigated in our overall model.
-
-Q: What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
-
-A: The most popular is the Passat. Furthermore, The popularity of a vehicle does seem to have an impact on the average_price of a vehicle. However, more attributes would be needed to predict price
-
-Q: What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?
-
-A:
-
-```{r}
-#Group cars by manufacturer name
-manufacturer_year <- group_by(cars_edited, manufacturer_name)
-
-#Summarize the manufacturer years average
-manufacturer_year_averages <- summarise(manufacturer_year, average = mean(year_produced, na.rm = TRUE))
-# 1) Average age of each vehicle manufacturer
-manufacturer_year_averages
-```
-
-The manufacturer does change how the production year affects the selling price.
-
-## What are the justifications for your answers?
-
-How the analysis of the graphs lead to the answer:
-
-**Q:** What impact does a region have on price?
-
-**Justification:** To answer this question we decided to use a pie chart so we can see the average prices per region in comparison with each other.
-
-```{r regionPrice, fig.height = 5, fig.width = 8, echo=FALSE}
-regionPriceDF <- group_by(cars_edited, location_region)
-regionPriceDF_averages <- summarise(regionPriceDF, average_price_usd = mean(price_usd))
-percentRegion <- paste0(round(100*regionPriceDF_averages$average_price_usd/sum(regionPriceDF_averages$average_price_usd), 2), "%")
-pie(regionPriceDF_averages$average_price_usd, labels = percentRegion, main = "Region Price Distribution", col = rainbow(length(regionPriceDF_averages$average_price_usd)))
-legend("topright", c("Brest Region", "Gomel Region", "Grodno Region", "Minsk Region", "Mogilev Region", "Vitebsk Region"), cex = 0.8,
-       fill = rainbow(length(regionPriceDF_averages$average_price_usd)))
-```
-
-Looking at the graph it seems like only one region has an impact on the price of vehicles, that being the Minsk Region. However, we can't conclude that with just this graph, we need to confirm this by using a one-way anova test.
-
-```{r}
-group_by(regionPriceDF, regionPriceDF$location_region) %>%
-  summarise(
-    count = n(),
-    mean = mean(price_usd, na.rm = TRUE),
-    sd = sd(price_usd, na.rm = TRUE)
-  )
-```
-
-Looking at the results of the one-way anova we can confirm our assumed conclusion. The prices between vehicles isn't significantly different, besides being in the Minsk Region. **Thus, with this data set region doesn't have an impact on vehicle price.**
-
-**Q:** What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
-
-**Justification:** To Tackle the question to this problem we decided to use a bar graph, since we have categorical data and continuous data.
-
-```{r manufacturerVsPrice, fig.height = 9, fig.width = 12}
-manuPriceDF <- group_by(cars_edited, manufacturer_name)
-manuPriceDF_averages <- summarise(manuPriceDF, average_price_usd = mean(price_usd))
-View(manuPriceDF_averages)
-ggplot(manuPriceDF_averages, aes(x = average_price_usd, y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name),stat="identity") + geom_text(aes(label =  paste0("$",round(average_price_usd)), hjust = 1))
-```
-
-Looking at the bar graph we can make an assumption of the data, and that assumption seems is that the manufacturer of a vehicle has an impact on asking price. Again though we can't assume it's correct, we need to confirm this with a one-way anova test.
-
-```{r}
-manuSumm <- group_by(manuPriceDF, manuPriceDF$manufacturer_name) %>%
-  summarise(
-    count = n(),
-    mean = mean(price_usd, na.rm = TRUE),
-    sd = sd(price_usd, na.rm = TRUE)
-  )
-
-# Compute the analysis of variance
-res.aovTwo <- aov(manuPriceDF$price_usd ~ manuPriceDF$manufacturer_name,
-                  data = manuPriceDF)
-
-summary(res.aovTwo)
-```
-
-With the results **we can confirm that there is a relationship between the manufacturer and asking price.**
-
-**Q:** What is the relationship between odometer and price?
-
-**Justification:** When we investigate this graph we initially notice that the line of best fit seems to be going down as the odometer value increases.
-
-```{r odometer, echo=FALSE}
-ggplot (cars_edited, aes( x =odometer_value, y=price_usd)) + geom_point() + stat_smooth()
-
-```
-
-However, this doesn't justify that the higher the odometer the lower the price is for the vehicle. In order to show this we will use linear regression, and check the percentage of accuracy of that line. Using this we will come up with an answer to our question.
-
-```{r odometerLm, echo=FALSE}
-odometer_on_price <- lm (price_usd ~ odometer_value, data = cars_edited)
-
-ggplot (cars_edited, aes(x=odometer_value, y=price_usd)) + geom_point() + stat_smooth(method=lm)
-
-```
-
-```{r}
-summary(odometer_on_price)
-confint(odometer_on_price)
-sigma(odometer_on_price)*100/mean(cars_edited$price_usd)
-```
-
-Once checking the accuracy of the linear regression, we see that it is 87.89% accurate. **Thus we can conclude that the higher the odometer the lower the price of the vehicle will be.**
-
-**Q:** Does the number of photos a vehicle has impact the selling price?
-
-**Justification:** With our scatter plot graph we added a line of best fit for the data.
-
-```{r photos, echo=FALSE}
-ggplot(cars_edited, aes( x =number_of_photos, y=price_usd)) + geom_point() + stat_smooth()
-
-```
-
-From the graph it seems like the more photos of a vehicle there are the higher the price will be. However, we can't make that assumption based on just this graph, we need to use linear regression to confirm this.
-
-```{r photosLm, echo=FALSE}
-number_of_photos_on_price <- lm (price_usd ~ number_of_photos, data = cars_edited)
-
-ggplot (cars_edited, aes(x=number_of_photos, y=price_usd)) + geom_point() + stat_smooth(method=lm)
-```
-
-Now that we have the the linear regression line we need to make sure that the line fits the data with a high accuracy.
-
-```{r}
-summary(number_of_photos_on_price)
-confint(number_of_photos_on_price)
-sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
-```
-
-With the accuracy of the linear regression being 91.88% **we can now conclude that the more photos a vehicle has, the higher the selling price.**
-
-**Q:** Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
-
-**Justification:** With using a scatter plot and the use of a line of best fit it appears that the more a vehicle has been upped the higher the price will be.
-
-```{r upCounter, echo=FALSE}
-ggplot (cars_edited, aes( x =up_counter, y=price_usd)) + geom_point() + stat_smooth()
-```
-
-Again however, we can't assume this to be true without checking the linear regression and getting the accuracy of that line.
-
-```{r upCounterLm, echo=FALSE}
-ggplot (cars_edited, aes(x=up_counter, y=price_usd)) + geom_point() + stat_smooth(method=lm)
-```
-
-```{r}
-up_counter_on_price <- lm (price_usd ~ up_counter, data = cars_edited)
-summary(up_counter_on_price)
-confint(up_counter_on_price)
-sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
-```
-
-Since the accuracy of the linear regression is 96.69% **we can conclude that the number of times a vehicle has been upped raises the selling price**
-
-**Q:** Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
-
-Justification: For this question we chose to use a mosaic plot because we are comparing more than 2 variables.
-
-```{r EngBodyImpact, fig.height = 9, fig.width = 12, echo=FALSE}
-mosaicplot(table(cars_edited$body_type, cars_edited$engine_type), shade=TRUE, las=2, main="Engine Type vs Body Type")
-```
-
-Based on this mosaic plot we can see that the body types Pickup, and Limousine are the only ones that have a significant impact on engine type. We can't assume this however, so again let's verify this with a few tests.
-
-```{r}
-#Aov3
-body_engine_type_on_price.aov3 <- aov(price_usd ~ engine_type * body_type, data = cars_edited)
-summary(body_engine_type_on_price.aov3)
-model.tables(body_engine_type_on_price.aov3, type="means", se = TRUE)
-```
-
-```{r eval=FALSE, include=TRUE}
-#Tukey HSD
-TukeyHSD(body_engine_type_on_price.aov3)
-```
-
-These tests confirm our original assumption. **Thus, Body types Pickup, and Limousine have an impact on engine type.**
-
-**Q:** What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
-
-**Justification:** With the nature of this question we can figure out the answer without a graph. We just need to look at the views of the variables we create.
-
-```{r}
-
-```
-
-Because of this analysis we can conclude that **the popularity of a vehicle does have an impact on the average_price of a vehicle.**
-
-**Q:** What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
-
-**Justification:** With the nature of this question we need to organize some data before we can graph it.
-
-```{r}
-models_sorted <- group_by(cars_edited, model_name)
-#Find popularity of vehicles
-models_counted <- cars_edited %>% count(model_name) %>% arrange(desc(n))
-
-#Find average price for each model
-models_sorted_averages <- summarise(models_sorted, average_price_usd = mean(price_usd))
-
-#Get the count of each model
-models_sorted_avg_with_cnt <- models_sorted_averages %>% mutate(counts = count(cars_edited, model_name) %>% dplyr::select(2))
-models_sorted_avg_with_cnt$counts <- as.numeric(unlist(models_sorted_avg_with_cnt$counts))
-```
-
-Now that we have the data in a way where the models of each of the cars has a count, with a price we can graph it.
-
-```{r Popularity, echo=FALSE}
-ggplot(models_sorted_avg_with_cnt, aes(x=counts, y=average_price_usd)) + geom_point() + stat_smooth()
-```
-
-From this scatter plot that has a line of best fit, it is kind of hard to tell what the result will be. Now we can run linear regression on this to be sure of what relationship there is.
-
-```{r Popularitylm, echo=FALSE}
-modelPricePerCount <- lm (average_price_usd ~ counts, data = models_sorted_avg_with_cnt)
-ggplot (models_sorted_avg_with_cnt, aes(x=counts, y=average_price_usd)) + geom_point() + stat_smooth(method=lm)
-```
-
-Next we need to be sure of the accuracy of the linear regression line.
-
-```{r}
-modelPricePerCount <- lm (average_price_usd ~ counts, data = models_sorted_avg_with_cnt)
-summary(modelPricePerCount)
-confint(modelPricePerCount)
-sigma(modelPricePerCount)*100/mean(models_sorted_avg_with_cnt$average_price_usd)
-```
-
-Because of this analysis we can conclude that **the popularity of a vehicle does have an impact on the average_price of a vehicle.**
-
-**Q:** What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?
-
-**Justification:** With this question we decided to use a scatter plot and color all the points in the scatter plot with a color corresponding to a different manufacturer.
-
-```{r yearProducedPriceManu, fig.height = 9, fig.width = 12, echo=FALSE}
-ggplot(cars_edited) + geom_point(aes(x = year_produced, y = price_usd, color = manufacturer_name))
-```
-
-Again we can't look at just the graph and call it a day, we need to confirm the results using a different method.
-
-```{r}
-manufacturer_price <- aov(price_usd ~ manufacturer_name * year_produced, data = cars_edited)
-summary(manufacturer_price)
-```
-
-With these results we can confirm our original assumption. **The manufacturer does change how the production year affects the selling price.**
