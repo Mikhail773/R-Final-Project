@@ -445,7 +445,8 @@ Investigating the results of the one-way anova we can confirm our claim. The p-v
 
 We continue with the Tukey HSD to do multiple pairwise-comparisons between the means of our groups. This will allow us to see exactly which manufacturers significantly differ in asking price.
 
-```{r ManufTukey}
+```{r ManufTukey, eval=FALSE, include=TRUE}
+# Result ommitted for brevity sake}
 # Tukey Test
 TukeyHSD(res.aovTwo)
 ```
@@ -696,9 +697,17 @@ Since the p-value is less than 0.05 for all three cases we can confirm that ther
 
 To conclude our investigation we will run the Tukey Honest Significant Differences in order to perform the multiple pairwise-comparisons between the means of groups to determine which groups are different and how they differ.
 
-```{r EngineBodyTukey}
+```{r EngineBodyTukey, eval=FALSE, include=TRUE}
+# Result ommitted for brevity sake}
 #Tukey HSD
 TukeyHSD(body_engine_type_on_price.aov)
+## Fit: aov(formula = price_usd ~ engine_type * body_type, data = cars_edited)
+## 
+## $engine_type
+##                         diff        lwr       upr p adj
+## electric-diesel    10052.532   5867.612 14237.452 1e-07
+## gasoline-diesel    -1175.359  -1318.298 -1032.420 0e+00
+## gasoline-electric -11227.891 -15412.002 -7043.779 0e+00
 ```
 
 The Tukey Test results can be evaluated to gain more detailed information on the relationship between price and Engine/Body Type.
@@ -1099,30 +1108,69 @@ random_forest_ranger <- train(price_usd ~ . ,
 )
 
 summary(random_forest_ranger)
-random_forest_ranger$bestTune
+#                          Length Class         Mode     
+#predictions               30815  -none-        numeric  
+#num.trees                     1  -none-        numeric  
+#num.independent.variables     1  -none-        numeric  
+#mtry                          1  -none-        numeric  
+#min.node.size                 1  -none-        numeric  
+#prediction.error              1  -none-        numeric  
+#forest                        7  ranger.forest list     
+#splitrule                     1  -none-        character
+#num.random.splits             1  -none-        numeric  
+#treetype                      1  -none-        character
+#r.squared                     1  -none-        numeric  
+#call                          9  -none-        call     
+#importance.mode               1  -none-        character
+#num.samples                   1  -none-        numeric  
+#replace                       1  -none-        logical  
+#xNames                     1215  -none-        character
+#problemType                   1  -none-        character
+#tuneValue                     3  data.frame    list     
+#obsLevels                     1  -none-        logical  
+#param                         0  -none-        list 
+
 plot(random_forest_ranger)
+#print(random_forest_ranger) #I didn't see this line....
+random_forest_ranger$finalModel
+#Ranger result
+#
+#Call:
+#  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = min(param$mtry, ncol(x)), min.node.size = param$min.node.size,      splitrule = as.character(param$splitrule), write.forest = TRUE,      probability = classProbs, ...) 
+#
+#Type:                             Regression 
+#Number of trees:                  500 
+#Sample size:                      30815 
+#Number of independent variables:  1215 
+#Mtry:                             1215 
+#Target node size:                 5 
+#Variable importance mode:         none 
+#Splitrule:                        extratrees 
+#Number of random splits:          1 
+#OOB prediction error (MSE):       3137444 
+#R squared (OOB):                  0.9233405 
 ```
 
-```{r RFFModelPlot, eval=FALSE, include=TRUE}
-# Plot the final tree model
-par(xpd = NA) # Avoid clipping the text in some device
-plot(random_forest_ranger$finalModel)
-text(random_forest_ranger$finalModel, digits = 3)
-```
+**Below is the plot for the random forest Tree. This plot shows the values for the model accuracy vs different values of the complexity parameter.**
+
+![](images/plot(random_forest_ranger)_568_395.png)
+
+Once the Random Forest Tree is made we wish to gauge the accuracy of the model. To accomplish this we use the predict function to predict values of our vehicle prices. Afterwords, we will compare these values to the actual prices of the test dataset to find the accuracy of the model.
 
 ```{r RFFModelPredict, eval=FALSE, include=TRUE}
 # Make predictions on the test data
-rf_predict_ranger <- predict(random_forest_ranger, test.data , type='response')
+rf_predict_ranger <- predict(random_forest_ranger, test.data)
 
 # Prediction error, rmse
 RMSE(rf_predict_ranger,test.data$price_usd)
-
+#[1] 1879.884
 
 # Compute R-square
 R2(rf_predict_ranger,test.data$price_usd)
+#[1] 0.9184761
 ```
 
-![](images/plot(random_forest_ranger)_568_395.png)
+**The RMSE is 1879.884 we calculated our error rate as 1879.884/mean(test.data\$price_usd) \*100 = 28.19878.** This is the best error rate so far. Not surprisingly we have a great **R2 at 0.9184761**. The R2 tells us that around 91.8% of our prices can be explained by our model. These results are the best we have so far, but improvement may still be possible. We continue with KNN in order to achieve a better result(if possible).
 
 ### KNN Model
 
@@ -1196,7 +1244,7 @@ R2(knn_predictions,test.data$price_usd)
 +-------------------------------+--------------+--------------+---------------+
 | Decision Tree Regression      | **3245.413** | **48.68209** | **0.7529956** |
 +-------------------------------+--------------+--------------+---------------+
-| Random Forest Tree Regression |              |              |               |
+| Random Forest Tree Regression | **1879.884** | **28.19878** | **0.9184761** |
 +-------------------------------+--------------+--------------+---------------+
 | KNN(K Nearest Neighbor)       | **3693.127** | **55.39793** | **0.6802895** |
 +-------------------------------+--------------+--------------+---------------+

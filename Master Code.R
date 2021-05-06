@@ -805,9 +805,7 @@ summary(random_forest_ranger)
 #tuneValue                     3  data.frame    list     
 #obsLevels                     1  -none-        logical  
 #param                         0  -none-        list 
-random_forest_ranger$bestTune
-#   mtry  splitrule min.node.size
-#20 1215 extratrees             5
+
 plot(random_forest_ranger)
 #print(random_forest_ranger) #I didn't see this line....
 random_forest_ranger$finalModel
