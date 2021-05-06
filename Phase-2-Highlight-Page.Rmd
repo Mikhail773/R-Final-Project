@@ -397,7 +397,7 @@ TukeyHSD(res.aov)
 
 **Justification:**
 
-Two bar graphs were used in solving this question. First a bar graph was used to plot the distribution of vehicles for each manufacturer. Then another bar graph was used as a means of quickly inspecting how average price ranged between different manufacturers. As useful as these graphs were in understanding the relationship between price and manufacturer it proved to be insufficient in proving a result. In order to prove that there existed a significant relationship between manufacturer and asking price of a car One-Way Anova was utilized. Once again we are dealing with a categorical data with several categories which lends the problem nicely to this sort of test.
+Two bar graphs were used in solving this question. First a bar graph was used to plot the distribution of vehicles for each manufacturer. Then another bar graph was used as a means of quickly inspecting how average price ranged between different manufacturers. As useful as these graph were in understanding the relationship between price and manufacturer it proved to be insufficient in proving a result. In order to prove that there existed a significant relationship between manufacturer and asking price of a car One-Way Anova was utilized. Once again were were dealing with a categorical data with several categories which lends the problem nicely to this sort of test.
 
 First a bar graph was used to effectively plot the distribution of vehicles for each manufacturer.
 
@@ -859,7 +859,7 @@ LMCont <- lm(price_usd ~ odometer_value
 step.LMConts <- LMCont %>% stepAIC(trace = FALSE)
 ```
 
-Now that the model is created it is vital to check the accuracy of the model. To do this we will employ our test.data to test how accurately the Linear Regression model can predict the price of a vehicle.
+Now that the model is created it is vital to check the accuracy of the model. To do this we will employed our test.data to test how accurately the Linear Regression model can predict the price of a vehicle.
 
 ```{r LMTesting}
 # Predict using Multiple Linear Regression Model
@@ -1079,5 +1079,3 @@ R2(knn_predictions,test.data$price_usd)
 ## Compare results obtained using different ML methods
 
 Our choices: Linear Regression Decision Trees SVR (Linear and NonLinear) Random Forest Regression KNN
-
-
