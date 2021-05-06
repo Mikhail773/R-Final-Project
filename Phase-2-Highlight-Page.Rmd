@@ -1095,6 +1095,8 @@ R2(rf_predict_ranger,test.data$price_usd)
 
 ```
 
+![](images/plot(random_forest_ranger)_568_395.png)
+
 ### KNN Model
 
 ```{r KNNModel, eval=FALSE, include=TRUE}
