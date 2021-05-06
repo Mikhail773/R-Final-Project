@@ -92,6 +92,8 @@ which(duplicated(cars_edited))
 cars_edited <- cars_edited %>% distinct()
 
 # View the changes the mutate made
+cars_edited$is_exchangeable <- as.factor(cars_edited$is_exchangeable)
+str(cars_edited)
 View(cars_edited)
 
 ###################################################################################################
@@ -561,10 +563,22 @@ sigma(ManufyearPrice)*100/mean(cars_edited$price_usd)
 #
 ###################################################################################################
 model_LR_Exchangeable <- glm(is_exchangeable ~ ., data = train.data, family = binomial)
+predictionsLR <- predict(model_LR_Exchangeable, test.data)
+predictionLR.probabilities <- predictionsLR$posterior[,2]
+predictionLR.classes <- predictionLR$class
+observed.classes <- test.data$is_exchangeable
 
-predictions <- predict(model_DT_Train_Exchangeable, test.data)
-prediction.probabilities <- predictions$posterior[,2]
-prediction.classes <- prediction$class
+accuracy <- mean(observed.classes == predicted.classes)
+error <- mean(observed.classes != predicted.classes)
+
+model_DT_Exchangeable <-  train(is_exchangeable ~ ., data = train.data, method = "rpart",
+                                                 trControl = trainControl("cv",number = 10),
+                                                 preProcess = c("center","scale"),
+                                                 tuneLength = 10)
+
+predictionsDT <- predict(model_DT_Train_Exchangeable, test.data)
+predictionDT.probabilities <- predictionsDT$posterior[,2]
+predictionDT.classes <- predictionDT$class
 observed.classes <- test.data$is_exchangeable
 
 accuracy <- mean(observed.classes == predicted.classes)

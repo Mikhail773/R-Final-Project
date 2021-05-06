@@ -860,6 +860,34 @@ sigma(ManufyearPrice)*100/mean(cars_edited$price_usd)
 
 Our prediction error rate is lower than for other attributes (60.12396%) which confirms to us that year produced and Manufacturer are decent predictors of price. A prediction error of 60.12396% tells us that for prediction we will need more attributes than just year produced and Manufacturer. **We conclude that Manufacturer and Year Produced do impact price and that the manufacturer does change how the production year affects the selling price.**
 
+##Sensitivity and Specificity Problem
+
+We will see if we can predict exchangeability given all the other attributes.
+
+```{r}
+model_LR_Exchangeable <- glm(is_exchangeable ~ ., data = train.data, family = binomial)
+predictionsLR <- predict(model_LR_Exchangeable, test.data)
+predictionLR.probabilities <- predictionsLR$posterior[,2]
+predictionLR.classes <- predictionLR$class
+observed.classes <- test.data$is_exchangeable
+
+accuracy <- mean(observed.classes == predicted.classes)
+error <- mean(observed.classes != predicted.classes)
+
+model_DT_Exchangeable <-  train(is_exchangeable ~ ., data = train.data, method = "rpart",
+                                                 trControl = trainControl("cv",number = 10),
+                                                 preProcess = c("center","scale"),
+                                                 tuneLength = 10)
+
+predictionsDT <- predict(model_DT_Train_Exchangeable, test.data)
+predictionDT.probabilities <- predictionsDT$posterior[,2]
+predictionDT.classes <- predictionDT$class
+observed.classes <- test.data$is_exchangeable
+
+accuracy <- mean(observed.classes == predicted.classes)
+error <- mean(observed.classes != predicted.classes)
+```
+
 ## Model Results and Comparisons
 
 In an attempt to create the most accurate and significant predictive model we created 6 different models which had a wide range of accuracy.
