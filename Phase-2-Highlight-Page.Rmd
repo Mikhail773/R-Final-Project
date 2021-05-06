@@ -475,9 +475,9 @@ Since we are investigating the relationship between 2 continuous variables we be
 
 The hypotheses for the test are as follows:
 
-H~0~ =There does not exist a significant correlation between Odometer Value and Vehicle Price
+H~0~ =There does not exist a correlation between Odometer Value and Vehicle Price
 
-H~a~ = There does exist a significant correlation between Odometer Value and Vehicle Price
+H~a~ = There does exist a correlation between Odometer Value and Vehicle Price
 
 Furthermore, we will use 0.05 as our significance level. The result of the correlation test was the following:
 
@@ -534,9 +534,9 @@ Since we are investigating the relationship between 2 continuous variables we wi
 
 The hypotheses are as follows:
 
-H~0~ =There does not exist a significant correlation between Number of Photos and Vehicle Price
+H~0~ =There does not exist a correlation between Number of Photos and Vehicle Price
 
-H~a~ = There does exist a significant correlation between Number of Photos and Vehicle Price
+H~a~ = There does exist a correlation between Number of Photos and Vehicle Price
 
 We will use 0.05 as our significance level. The result of the correlation test was the following:
 
@@ -587,26 +587,54 @@ The R2 is 0.09994 which indicates that a low proportion of prices in the data ca
 
 Graphs used: Scatter plot How these graphs helped us solve the problem: Using a scatter plot for this question again allowed us to see the relationship between the two variables. With that we can come up with a solution to the question.
 
-With using a scatter plot and the use of a line of best fit it appears that the more a vehicle has been upped the higher the price will be.
+To begin answering this questions it was natural to use scatterplot (using 2 continuous attributes) to gain an intuitive understanding of any possible relationship.
 
 ```{r upCounter, echo=FALSE}
-ggplot (cars_edited, aes( x =up_counter, y=price_usd)) + geom_point() + stat_smooth()
+#Regression analysis
+ggplot(cars_edited, aes( x =up_counter, y=price_usd)) + geom_hex() + stat_smooth(color = "red")
 ```
 
-Again however, we can't assume this to be true without checking the linear regression and getting the accuracy of that line.
+Looking at the Scatterplot we see a possible positive correlation although the variability of the data makes it hard for us to affirm this prediction. To continue we will use the correlation test(since we are dealing with continuous attributes) to check for a correlation between number of up counts and price of a vehicle.
 
-```{r upCounterLm, echo=FALSE}
+The hypotheses for the correlation test are the following:
+
+H~0~ =There does not exist a correlation between number of up counts and vehicle price
+
+H~a~ = There does exist a correlation between number of up counts and vehicle price
+
+We will use 0.05 as our significance level. The results are the following:
+
+```{r upCountCor}
+#Correlation
+cor.test(cars_edited$up_counter, cars_edited$price_usd)
+```
+
+Since the p-value is less than 0.05 we can conclude that Price and number of up counts are correlated with a correlation coefficient of 0.05777007 and p-value of \< 2.2e-16.
+
+However, although they are correlated we do see that the correlation coefficient is very close to 0. Meaning that the correlation is almost entirely negligible. If one were to attempt to use this as a predictor of price the results would be poor.
+
+Nevertheless,we will use linear regression to see how poor of an indicator number of up counts really is. We will check the percentage of accuracy of the linear regression line, and graph the linear regression line to provide useful insights.
+
+```{r}
+# Create LM
+up_counter_on_price <- lm (price_usd ~ up_counter, data = cars_edited)
+#Finding how well this line fits the data
+summary(up_counter_on_price)
+
+# R^2 is extremely low which affirms that number of photos is not a good indicator of price. 
+
+confint(up_counter_on_price)
+sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
+
+# Our prediction error rate is extremely high (96.65168%) which confirms to us that up_counter is a terrible predictor of price(as we can see by the correlation test)
+
+#Scatter plot: up counter and price with regression line
 ggplot (cars_edited, aes(x=up_counter, y=price_usd)) + geom_point() + stat_smooth(method=lm)
 ```
 
-```{r}
-up_counter_on_price <- lm (price_usd ~ up_counter, data = cars_edited)
-summary(up_counter_on_price)
-confint(up_counter_on_price)
-sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
-```
+The R2 is 0.003311 which indicates that a low proportion of prices in the data can be explained by the model. In other words, number of up counts is a very poor indicator of price(we need more attributes in the model). Also, the percentage error is 96.69137 which is ludicrously high. This confirms how poor a model would be if it solely used number of up counts to predict price.
 
-Since the accuracy of the linear regression is 96.69% **we can conclude that the number of times a vehicle has been upped raises the selling price**
+**We can conclude there is a negligible positive correlation between price and number of up counts.**
 
 ------------------------------------------------------------------------
 
