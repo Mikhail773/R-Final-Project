@@ -1027,7 +1027,17 @@ model_DT_Train <- train(price_usd ~ ., data = train.data, method = "rpart",
                         tuneLength = 10)
 
 summary(model_DT_Train)
+#See summary(model_DT_Train)(2nd Run).txt
+#For results
+model_DT_Train$bestTune
+#          cp
+#1 0.01032955
+plot(model_DT_Train)
 ```
+
+**Our value for bestTune was 0.01032955** which tells us what the best tuning parameter C that maximizes our accuracy is 0.01032955.
+
+We then used our model to predict prices of vehicles and compared those prices to the actual testing prices in order to assess the accuracy of the model.
 
 ```{r DTPlot, eval=FALSE, include=TRUE}
 # Plot the final tree model
