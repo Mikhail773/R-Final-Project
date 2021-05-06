@@ -846,7 +846,7 @@ In an attempt to create the most accurate and significant predictive model we cr
 
 ### Linear Regression Model
 
-Firstly, we created a Multiple Linear Regression Model which utilized the attributes in our dataset that had continuous data. The code for this looks as follows:
+Firstly, we created a Multiple Linear Regression Model which utilized the attributes in our dataset that had continuous data and optimized the model. The code for this looks as follows:
 
 ```{r LinearRegressionModel}
 LMCont <- lm(price_usd ~ odometer_value
@@ -856,29 +856,64 @@ LMCont <- lm(price_usd ~ odometer_value
              + up_counter
              , data = train.data)
 
+vif(LMCont)
+#  odometer_value    year_produced number_of_photos 
+#1.311552         1.375432         1.088560 
+#duration_listed       up_counter 
+#1.985559         1.995992 
+
 step.LMConts <- LMCont %>% stepAIC(trace = FALSE)
 ```
 
-Now that the model is created it is vital to check the accuracy of the model. To do this we will employed our test.data to test how accurately the Linear Regression model can predict the price of a vehicle.
+```{r LMContInformation}
+vif(step.LMConts)
+#odometer_value    year_produced number_of_photos 
+#1.311552         1.375432         1.088560 
+#duration_listed       up_counter 
+#1.985559         1.995992 
+## Changes nothing
+summary(step.LMConts)
+
+coef(step.LMConts)
+#(Intercept)   odometer_value    year_produced 
+#-9.916423e+05    -4.419525e-03     4.981272e+02 
+#number_of_photos  duration_listed       up_counter 
+#1.481601e+02     2.241819e+00     2.252599e+00 
+confint(step.LMConts)
+#                2.5 %        97.5 %
+#(Intercept)      -1.005960e+06 -9.773249e+05
+#odometer_value   -4.833614e-03 -4.005436e-03
+#year_produced     4.909951e+02  5.052594e+02
+#number_of_photos  1.398282e+02  1.564919e+02
+#duration_listed   1.625863e+00  2.857775e+00
+#up_counter        6.685618e-01  3.836636e+00
+```
+
+Using vif we notice that Step-Wise regression doesn't eliminate any of our variables. Furthermore, we are able to find the coefficients(to be used in calculations we may want to do), and the confidence intervals for each coefficient(gives us some indication of accuracy).
+
+Now that the model is created and optimized it is vital to check the accuracy of the model. To do this we will employed our test.data to test how accurately the Linear Regression model can predict the price of a vehicle.
 
 ```{r LMTesting}
 # Predict using Multiple Linear Regression Model
 LMContPrediction <- predict(step.LMConts, test.data)
 
 # Prediction error, rmse
-RMSE(LMContPrediction,test.data$price_usd) # RMSE is 4573.511
-
+RMSE(LMContPrediction,test.data$price_usd)
+#[1] 4573.511
 # Compute R-square
 R2(LMContPrediction,test.data$price_usd) ## R^2 for test/train is 50.95891%
+#[1] 0.5095891
 ```
 
-From the code above we see that our rmse is 4573.511 which represents an error rate of 4573.511/mean(test.data\$price_usd) = 68.60393 which is not good at all. Meanwhile, the R2 is 0.5095891, meaning that the observed and predicted outcome values are not very correlated, which is not good. These results are not surprising whatsoever and merely inform us that the price of a vehicle in Belarus is dependent on more attributes than simply our continuous attributes. We shall proceed with more robust models in order to achieve a better result.
+From the code above we see that our **rmse is 4573.511 which represents an error rate of 4573.511/mean(test.data\$price_usd) = 68.60393** which is not good at all. Meanwhile, the **R2 is 0.5095891**, meaning that the observed and predicted outcome values are not very correlated, which is not good. These results are not surprising and inform us that the price of a vehicle in Belarus is dependent on more attributes than simply our continuous attributes. We shall proceed with more robust models in order to achieve a better result.
 
-After doing the Linear Regression Model we attempted to use SVR in order to create a more robust predictive model.
+note: A logarithmic transformation was done on the price and achieved an even worse result. Given the poor quality of this model we continued with SVR in an attempt to get a more robust and accurate predictive model.
 
 ### SVR Model
 
-SVR is an extremely robust model which would be able to handle our categorical data and almost certainly achieve a better result that the Linear Regression Model. 3 SVR models were calculated were varying accuracies. The different methods used with SVR were linear, polynomial, and radial. Linear was the first SVR model to be run and the code was as follows:
+SVR is an extremely robust model which would be able to handle our categorical data. These models would almost certainly achieve a better result that the Linear Regression Model. 3 SVR models were calculated with varying accuracies. The different methods used with SVR were linear, polynomial, and radial.
+
+Linear was the first SVR model to be run and the code was as follows:
 
 ```{r SVRLinearModel, eval=FALSE, include=TRUE}
 # Create SVR Model using Linear Method
@@ -894,7 +929,11 @@ summary(modelSVRLinTrain)
 modelSVRLinTrain$bestTune
 #C
 #1 1
+```
 
+We were able to find that the **bestTune was 1** which informs us what the best tuning parameter C that maximizes our accuracy. We proceed with using the model to predict our prices and comparing them to the actual testing prices to gauge accuracy of the model.
+
+```{r SVRLinearModelAccuracy, eval=FALSE, include=TRUE}
 # Predict using SVR Model with Linear Method
 modelSVRLinTrainPrediction <- predict(modelSVRLinTrain, test.data)
 
@@ -907,7 +946,9 @@ R2(modelSVRLinTrainPrediction,test.data$price_usd)
 #[1] 0.7772176
 ```
 
-Afterwords, the polynomial method was used with the SVR model:
+Observing RMSE we are able to see how concentrated the data is around our model. **Calculating our error rate we see 3257.887/mean(test.data\$price_usd) \*100 = 48.86921** is not great, but significantly better than our Linear Regression Model. Also, a **R2 of 0.7772176** is a significant increase in accuracy as well. We know that around 77.7% of our prices can be explained by our model. Nevertheless, we continue to find better models:
+
+The next model to be computed is the SVR model using the polynomial method:
 
 ```{r SVRPolyModel, eval=FALSE, include=TRUE}
 # Create SVR Model using Polynomial Method
@@ -918,13 +959,13 @@ modelSVRPolyTrain <- train(price_usd ~ ., data = train.data, method = "svmPoly",
                            tuneLength = 10
 )
 
-summary(modelSVRRadialTrain)
-#Length  Class   Mode
-#1   ksvm     S4					 
-modelSVRRadialTrain$bestTune
-#sigma   C
-#10 0.001556481 128	
+summary(modelSVRPolyTrain)
+modelSVRPolyTrain$bestTune
+```
 
+**We were able to find that the bestTune was 1 which informs us what the best tuning parameter C that maximizes our accuracy. We proceed with using the model to predict our prices and comparing them to the actual testing prices to gauge accuracy of the model.**
+
+```{r SVRPolyModelAccuracy, eval=FALSE, include=TRUE}
 # Predict using SVR Model with Linear Method
 modelSVRPolyTrainPrediction <- predict(modelSVRPolyTrain, test.data)
 
@@ -933,8 +974,9 @@ RMSE(modelSVRPolyTrainPrediction,test.data$price_usd)
 
 # Compute R-square
 R2(modelSVRPolyTrainPrediction,test.data$price_usd)
-
 ```
+
+**Observing RMSE we are able to see how concentrated the data is around our model. Calculating our error rate we see 3257.887/mean(test.data\$price_usd) \*100 = 48.86921 is not great, but significantly better than our Linear Regression Model. Also, a R2 of 0.7772176 is a significant increase in accuracy as well. We know that around 77.7% of our prices can be explained by our model. Nevertheless, we continue to find better models:**
 
 Lastly, the radial method was used with the SVR model:
 
@@ -947,8 +989,16 @@ modelSVRRadialTrain <- train(price_usd ~ ., data = train.data, method = "svmRadi
 )
 
 summary(modelSVRRadialTrain)
+#Length  Class   Mode
+#1   ksvm     S4					 
 modelSVRRadialTrain$bestTune
+#sigma   C
+#10 0.001556481 128	
+```
 
+**BestTune was 128** which tells us what the best tuning parameter C that maximizes our accuracy is 128. We then used our model to predict prices of vehicles and compared those prices to the actual testing prices in order to assess the accuracy of the model.
+
+```{r SVRRadialModelAccuracy, eval=FALSE, include=TRUE}
 # Predict using SVR Model with Radial Method
 modelSVRRadialTrainPrediction <- predict(modelSVRRadialTrain, test.data)
 
@@ -959,11 +1009,16 @@ RMSE(modelSVRRadialTrainPrediction,test.data$price_usd)
 # Compute R-square
 R2(modelSVRRadialTrainPrediction,test.data$price_usd)
 #[1] 0.5937837
+
 ```
 
-Even though the SVR model did much better than the Linear Regression Model it was vital to investigate more models in an attempt to create an even more accurate model. The Decision Tree was a price candidate since it is incredibly robust and relies on very few assumptions. Its simpler nature also makes it a model that would be preferred over other models(such as Random Forest Regression or KNN).
+**From the RMSE(4752.231) we calculated our error rate as 4752.231/mean(test.data\$price_usd) \*100 = 71.28478.** This is even worse than the results we had from the Linear Regression Model. Not surprisingly our R2 was also quite poor. **The R2 was 0.5937837** which again is not a good value. We know that around 59.4% of our prices can be explained by our model. These results convince us that radial basis functions are not the optimal function to be used with SVR for our model.
+
+Even though the SVR model did much better as a whole than the Linear Regression Model it was vital to investigate more models in an attempt to create an even more accurate model. The Decision Tree was a perfect candidate since it is incredibly robust and relies on very few assumptions. Its simpler nature also makes it a model that would be preferred over other models (such as Random Forest Regression).
 
 ### Decision Tree Regression Model
+
+We began our Decision Tree model by running train with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate) as with our SVR model. These settings pruned our tree and ensured an optimal decision tree.
 
 ```{r DecisionTreeModel, eval=FALSE, include=TRUE}
 model_DT_Train <- train(price_usd ~ ., data = train.data, method = "rpart",
@@ -972,7 +1027,17 @@ model_DT_Train <- train(price_usd ~ ., data = train.data, method = "rpart",
                         tuneLength = 10)
 
 summary(model_DT_Train)
+#See summary(model_DT_Train)(2nd Run).txt
+#For results
+model_DT_Train$bestTune
+#          cp
+#1 0.01032955
+plot(model_DT_Train)
 ```
+
+**Our value for bestTune was 0.01032955** which tells us what the best tuning parameter C that maximizes our accuracy is 0.01032955.
+
+We then used our model to predict prices of vehicles and compared those prices to the actual testing prices in order to assess the accuracy of the model.
 
 ```{r DTPlot, eval=FALSE, include=TRUE}
 # Plot the final tree model

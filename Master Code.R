@@ -783,18 +783,61 @@ random_forest_ranger <- train(price_usd ~ . ,
 )
 
 summary(random_forest_ranger)
+#
+#                          Length Class         Mode     
+#predictions               30815  -none-        numeric  
+#num.trees                     1  -none-        numeric  
+#num.independent.variables     1  -none-        numeric  
+#mtry                          1  -none-        numeric  
+#min.node.size                 1  -none-        numeric  
+#prediction.error              1  -none-        numeric  
+#forest                        7  ranger.forest list     
+#splitrule                     1  -none-        character
+#num.random.splits             1  -none-        numeric  
+#treetype                      1  -none-        character
+#r.squared                     1  -none-        numeric  
+#call                          9  -none-        call     
+#importance.mode               1  -none-        character
+#num.samples                   1  -none-        numeric  
+#replace                       1  -none-        logical  
+#xNames                     1215  -none-        character
+#problemType                   1  -none-        character
+#tuneValue                     3  data.frame    list     
+#obsLevels                     1  -none-        logical  
+#param                         0  -none-        list 
 random_forest_ranger$bestTune
+#   mtry  splitrule min.node.size
+#20 1215 extratrees             5
 plot(random_forest_ranger)
-print(random_forest_ranger)
+#print(random_forest_ranger) #I didn't see this line....
+random_forest_ranger$finalModel
+#Ranger result
+#
+#Call:
+#  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = min(param$mtry, ncol(x)), min.node.size = param$min.node.size,      splitrule = as.character(param$splitrule), write.forest = TRUE,      probability = classProbs, ...) 
+#
+#Type:                             Regression 
+#Number of trees:                  500 
+#Sample size:                      30815 
+#Number of independent variables:  1215 
+#Mtry:                             1215 
+#Target node size:                 5 
+#Variable importance mode:         none 
+#Splitrule:                        extratrees 
+#Number of random splits:          1 
+#OOB prediction error (MSE):       3137444 
+#R squared (OOB):                  0.9233405 
 
 # Make predictions on the test data
 rf_predict_ranger <- predict(random_forest_ranger, test.data)
 
 # Prediction error, rmse
 RMSE(rf_predict_ranger,test.data$price_usd)
+#[1] 1879.884
 
 # Compute R-square
 R2(rf_predict_ranger,test.data$price_usd)
+#[1] 0.9184761
 
 ###################################################################################################
 #
