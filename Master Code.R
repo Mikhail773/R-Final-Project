@@ -451,7 +451,7 @@ sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
 #
 
 #Regression analysis
-ggplot(cars_edited, aes( x =up_counter, y=price_usd)) + geom_point() + stat_smooth()
+ggplot(cars_edited, aes( x =up_counter, y=price_usd)) + geom_hex() + stat_smooth(color = "red")
 
 #Correlation
 cor.test(cars_edited$up_counter, cars_edited$price_usd)
@@ -802,15 +802,10 @@ random_forest_ranger <- train(price_usd ~ . ,
 summary(random_forest_ranger)
 random_forest_ranger$bestTune
 plot(random_forest_ranger)
-
-
-# Plot the final tree model
-par(xpd = NA) # Avoid clipping the text in some device
-plot(random_forest_ranger$finalModel)
-text(random_forest_ranger$finalModel, digits = 3)
+print(random_forest_ranger)
 
 # Make predictions on the test data
-rf_predict_ranger <- predict(random_forest_ranger, test.data , type='response')
+rf_predict_ranger <- predict(random_forest_ranger, test.data)
 
 # Prediction error, rmse
 RMSE(rf_predict_ranger,test.data$price_usd)

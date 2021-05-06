@@ -250,7 +250,7 @@ legend("right", c("Brest Region", "Gomel Region", "Grodno Region", "Minsk Region
 # The usefulness of the attribute may be less since Minsk is such a large portion of the data.
 ```
 
-```{r NumPhotos/Up Counter/Duration, fig.height = 10, fig.width = 10}
+```{r NumPhotos/UpCounter/Duration, fig.height = 10, fig.width = 10}
 # 15) Histogram Number of photos: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(mapping = aes(number_of_photos))
 # Graph is very left-skewed. I suspect photos may increase the value of a vehicle, but tests will need to be done on this
@@ -522,7 +522,7 @@ The R2 is 0.1765 which indicates that a low proportion of prices in the data can
 
 In order to gain an intuitive understanding of the question we sought to use a scatter plot to see the relationship between price and number of photos.
 
-```{r NumPhotosPrice, fig.height = 10, fig.width = 10}}
+```{r NumPhotosPrice, fig.height = 10, fig.width = 10}
 #Scatter plot: Number of photos and price
 ggplot(cars_edited, aes( x =number_of_photos, y=price_usd)) + geom_hex() + stat_smooth(color = "red") 
 ```
@@ -548,7 +548,7 @@ Since the p-value is less than 0.05 we can conclude that Price and Number of Pho
 
 Next we aim to investigate how good of an indicator of price the number of vehicle photos is. We shall employ linear regression, check the percentage of accuracy of that line, and graph the linear regression line to provide us with a useful visual.
 
-```{r NumPhotosPriceLMandPlot}
+```{r NumPhotosPriceLMandPlot, fig.height = 10, fig.width = 10}
 #Getting the formula for linear regression
 number_of_photos_on_price <- lm (price_usd ~ number_of_photos, data = cars_edited)
 
@@ -588,7 +588,7 @@ Graphs used: Scatter plot How these graphs helped us solve the problem: Using a 
 
 To begin answering this questions it was natural to use scatterplot (using 2 continuous attributes) to gain an intuitive understanding of any possible relationship.
 
-```{r upCounterPlot, echo=FALSE}
+```{r upCounterPlot, fig.height = 10, fig.width = 10}
 #Regression analysis
 ggplot(cars_edited, aes( x =up_counter, y=price_usd)) + geom_hex() + stat_smooth(color = "red")
 ```
@@ -614,7 +614,7 @@ However, although they are correlated we do see that the correlation coefficient
 
 Nevertheless,we will use linear regression to see how poor of an indicator number of up counts really is. We will check the percentage of accuracy of the linear regression line, and graph the linear regression line to provide useful insights.
 
-```{r UpCounterLM/Accuracy/Plot}
+```{r UpCounterLM/Accuracy/Plot, fig.height = 10, fig.width = 10}
 # Create LM
 up_counter_on_price <- lm (price_usd ~ up_counter, data = cars_edited)
 #Finding how well this line fits the data
@@ -643,11 +643,9 @@ The R2 is 0.003311 which indicates that a low proportion of prices in the data c
 
 **Justification**:
 
-Graphs used: Mosaic How these graphs helped us solve the problem: This graph helped us solve the problem by giving us a colored graph that showed the amount of cars with a specific body type and engine. We were able to confirm the accuracy of the graph and come to a conclusion.
-
 For this question we chose to use a mosaic plot because we are comparing more than 2 variables.
 
-```{r EngBodyImpact, fig.height = 9, fig.width = 12, echo=FALSE}
+```{r EngBodyImpact, fig.height = 9, fig.width = 12}
 mosaicplot(table(cars_edited$body_type, cars_edited$engine_type), shade=TRUE, las=2, main="Engine Type vs Body Type")
 ```
 
@@ -664,6 +662,8 @@ model.tables(body_engine_type_on_price.aov3, type="means", se = TRUE)
 #Tukey HSD
 TukeyHSD(body_engine_type_on_price.aov3)
 ```
+
+Graphs used: Mosaic How these graphs helped us solve the problem: This graph helped us solve the problem by giving us a colored graph that showed the amount of cars with a specific body type and engine. We were able to confirm the accuracy of the graph and come to a conclusion.
 
 These tests confirm our original assumption. **Thus, Body types Pickup, and Limousine have an impact on engine type.**
 
@@ -899,7 +899,7 @@ model_DT_Train <- train(price_usd ~ ., data = train.data, method = "rpart",
 summary(model_DT_Train)
 ```
 
-```{r DTPlot eval=FALSE, include=TRUE}
+```{r DTPlot, eval=FALSE, include=TRUE}
 # Plot the final tree model
 par(xpd = NA) # Avoid clipping the text in some device
 plot(model_DT_Train$finalModel)
