@@ -8,6 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(hexbin)
 library(e1071) #SVM
 library(car) #predict
 library(caret) #partiiton
@@ -332,24 +333,23 @@ KNN:K Nearest Neighbor was chosen due to its popularity and simplicity. KNN is a
 
 **Q:** What impact does a region have on price?
 
-**A**: Although the region does impact price the extent of this impact would have to be assessed in a model that includes more attributes. The reason for this is because correlation does not necessitate causation. In other words, more attributes may be at play and to get a better understanding of the impact of region on price it will be vital to access the role region has in the overall models.
+**A:** Although the region does impact price the extent of this impact would have to be assessed in a model that includes more attributes. The reason for this is because correlation does not necessitate causation. In other words, more attributes may be at play and to get a better understanding of the impact of region on price it will be vital to access the role region has in the overall models.
 
 **Justification:**
 
-A bar graph was used to show how the average price of a vehicle differed amount different regions in Belarus. However, inspection alone was not able to tell us whether region had a significant impact on the price. To test the impact of a region on price we used the One-Way Anova test. Anova was used was because the region attribute consists of several categories and we wished to see its impact on a single continuous variable.
+To answer this question we decided to use a bar chart in order to see the average prices per region in comparison with each other.
 
-To answer this question we decided to use a pie chart so we can see the average prices per region in comparison with each other.
-
-```{r regionPrice, fig.height = 5, fig.width = 8, echo=FALSE}
+```{r regionPrice, fig.height = 8, fig.width = 10, echo=FALSE}
+#Aggregating the data of price to region to get the mean of prices
+#per region
 regionPriceDF <- group_by(cars_edited, location_region)
 regionPriceDF_averages <- summarise(regionPriceDF, average_price_usd = mean(price_usd))
-percentRegion <- paste0(round(100*regionPriceDF_averages$average_price_usd/sum(regionPriceDF_averages$average_price_usd), 2), "%")
-pie(regionPriceDF_averages$average_price_usd, labels = percentRegion, main = "Region Price Distribution", col = rainbow(length(regionPriceDF_averages$average_price_usd)))
-legend("topright", c("Brest Region", "Gomel Region", "Grodno Region", "Minsk Region", "Mogilev Region", "Vitebsk Region"), cex = 0.8,
-       fill = rainbow(length(regionPriceDF_averages$average_price_usd)))
+ggplot(regionPriceDF_averages,aes(x= location_region, y = average_price_usd)) + geom_bar(stat = "identity") 
 ```
 
-Looking at the graph it seems like only one region has an impact on the price of vehicles, that being the Minsk Region. However, we can't conclude that with just this graph, we need to confirm this by using a one-way anova test.
+Looking at the graph we can predict that region may play a part in price. We derive this prediction from the observation that although most regions have similar vehicle price averages Minsk has a significantly higher average. However, we can't conclude that with just this graph, we need to confirm this by an appropriate test. The test used to see if region did in fact have a significant impact of price was the One-Way Anova Test. Anova was used because the region attribute consists of several categories and we wished to see its impact on a single continuous variable.
+
+Prior to doing the One-Way Anova test we first performed some data transformation to gain a better understanding of the differences between the region prices.
 
 ```{r}
 group_by(regionPriceDF, regionPriceDF$location_region) %>%
@@ -360,26 +360,71 @@ group_by(regionPriceDF, regionPriceDF$location_region) %>%
   )
 ```
 
-Looking at the results of the one-way anova we can confirm our assumed conclusion. The prices between vehicles isn't significantly different, besides being in the Minsk Region. **Thus, with this data set region doesn't have an impact on vehicle price.**
+Once again quick inspection tells us that Minsk has a significantly different price and a much larger count. To affirm our suspicions from the graph and summarize we now perform the Anova test.
+
+The hypotheses for the test are as follows:
+
+H~0~ = The means of the different groups are the same
+
+H~a~ = At least one sample mean is not equal to the others
+
+Furthermore, we will use 0.05 as our significance level. The result of the anova test was the following:
+
+```{r}
+# Compute the analysis of variance
+res.aov <- aov(regionPriceDF$price_usd ~ regionPriceDF$location_region,
+               data = regionPriceDF)
+# Summary of the analysis
+summary(res.aov)
+```
+
+Looking at the results of the one-way anova we can confirm our prediction. The p-value was less than 0.05(\<2e-16) and so we conclude that there are significant differences between the regions.
+
+We continue our investigation of the problem at hand by using Tukey HSD to do multiple pairwise-comparisons between the means of our groups.
+
+```{r}
+# Tukey Test
+TukeyHSD(res.aov)
+```
+
+**Analyzing the results we can conclude that the differences in average price between Minsk and every other region is statistically significant. The data set region does have an impact on vehicle price.**
+
+------------------------------------------------------------------------
 
 **Q:** What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
 
-**A**: We can confirm that there is a relationship between the manufacturer and asking price. The relationship seems to be one of the larger factor for asking price, but is not significant enough to predict price on its own.
+**A:** We can confirm that there is a relationship between the manufacturer and asking price. The relationship seems to be one of the larger factor for asking price, but is not significant enough to predict price on its own.
 
 **Justification:**
 
 Two bar graphs were used in solving this question. First a bar graph was used to plot the distribution of vehicles for each manufacturer. Then another bar graph was used as a means of quickly inspecting how average price ranged between different manufacturers. As useful as these graph were in understanding the relationship between price and manufacturer it proved to be insufficient in proving a result. In order to prove that there existed a significant relationship between manufacturer and asking price of a car One-Way Anova was utilized. Once again were were dealing with a categorical data with several categories which lends the problem nicely to this sort of test.
 
-To Tackle the question to this problem we decided to use a bar graph, since we have categorical data and continuous data.
+First a bar graph was used to effectively plot the distribution of vehicles for each manufacturer.
+
+```{r manufacturerVsCount, fig.height = 9, fig.width = 12}
+# 1)What is the distribution of manufacturers?
+ggplot(cars_edited, aes(y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name)) + geom_text(stat='count', aes(label=..count..), hjust=1)
+```
+
+Once the distribution of the Manufacturers was plotted we turned our attention onto the second part of the question: Whether manufacturers have a significant impact on the asking price of a vehicle?
+
+Another bar graph was used as a means of quickly inspecting how average price ranged between different manufacturers.
 
 ```{r manufacturerVsPrice, fig.height = 9, fig.width = 12}
 manuPriceDF <- group_by(cars_edited, manufacturer_name)
 manuPriceDF_averages <- summarise(manuPriceDF, average_price_usd = mean(price_usd))
-View(manuPriceDF_averages)
 ggplot(manuPriceDF_averages, aes(x = average_price_usd, y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name),stat="identity") + geom_text(aes(label =  paste0("$",round(average_price_usd)), hjust = 1))
 ```
 
-Looking at the bar graph we can make an assumption of the data, and that assumption seems is that the manufacturer of a vehicle has an impact on asking price. Again though we can't assume it's correct, we need to confirm this with a one-way anova test.
+Looking at the bar graph we can predict that the manufacturer of a vehicle has an impact on asking price. Nevertheless, observation is not sufficient evidence and so we proceed by testing this claim. Once again we are dealing with categorical data and we wish to compare the means of the prices for the Manufacturers. Naturally we chose the One-Way Anova test to test our claim.
+
+The hypotheses for the test are as follows:
+
+H~0~ = The mean prices of the different groups are the same
+
+H~a~ = At least one sample mean price is not equal to the others
+
+Furthermore, we will use 0.05 as our significance level. The result of the anova test was the following:
 
 ```{r}
 manuSumm <- group_by(manuPriceDF, manuPriceDF$manufacturer_name) %>%
@@ -396,76 +441,147 @@ res.aovTwo <- aov(manuPriceDF$price_usd ~ manuPriceDF$manufacturer_name,
 summary(res.aovTwo)
 ```
 
-With the results **we can confirm that there is a relationship between the manufacturer and asking price.**
+Investigating the results of the one-way anova we can confirm our claim. The p-value was less than 0.05(\<2e-16) and so we conclude that there are significant differences between the manufacturers.
+
+We continue with the Tukey HSD to do multiple pairwise-comparisons between the means of our groups. This will allow us to see exactly which manufacturers significantly differ in asking price.
+
+```{r}
+# Tukey Test
+TukeyHSD(res.aovTwo)
+```
+
+With the results see that numerous manufacturers are statistically different and we can use this data to list every statistically different manufacturer.
+
+**We can confirm that there is a relationship between the manufacturer and asking price.**
+
+------------------------------------------------------------------------
 
 **Q:** What is the relationship between odometer and price?
 
-**A**: There is a low negative correlation between price and odometer.
+**A:** There is a low negative correlation between price and odometer.
 
 **Justification:**
 
-A Scatter plot was used to quickly inspect for possible relationships between price and odometer. In order to get a definite response several more methods were employed. First, a correlation test was performed to check for any correlation between price and odometer. Although, correlation does not imply causation we were still able to use to information to understand that there was some relationship between the variables. Afterwords, it was natural to investigate how well of a predictor odometer was on the price of a vehicle. In order to do this a linear regression model was created to study the linear relationship and check the significance of the variable. We were later able to calculate the prediction error and come to vital conclusions from this information.
+Initially a Scatter plot was used to quickly inspect for possible relationships between price and odometer.
 
-When we investigate this graph we initially notice that the line of best fit seems to be going down as the odometer value increases.
-
-```{r odometer, echo=FALSE}
+```{r}
+{r odometer, echo=FALSE}
 ggplot (cars_edited, aes( x =odometer_value, y=price_usd)) + geom_point() + stat_smooth()
-
 ```
 
-However, this doesn't justify that the higher the odometer the lower the price is for the vehicle. In order to show this we will use linear regression, and check the percentage of accuracy of that line. Using this we will come up with an answer to our question.
+When we investigate this graph we initially notice that the line of best fit seems to be going down as the odometer value increases. Nevertheless, the data had a significant amount of variation and further testing would need to be done to confirm our results.
+
+Since we are investigating the relationship between 2 continuous variables we begin by using a correlation test.
+
+The hypotheses for the test are as follows:
+
+H~0~ =There does not exist a significant correlation between Odometer Value and Vehicle Price
+
+H~a~ = There does exist a significant correlation between Odometer Value and Vehicle Price
+
+Furthermore, we will use 0.05 as our significance level. The result of the correlation test was the following:
+
+```{r}
+#Getting cor value
+cor.test(cars_edited$odometer_value, cars_edited$price_usd)
+```
+
+Since the p-value is less than 0.05 we can conclude that Price and Odometer are significantly correlated with a correlation coefficient of -0.4201039 and p-value of \< 2.2e-16
+
+We continue with our question by investigating how good of an indicator of price odometer is. To do this we will use linear regression, and check the percentage of accuracy of that line. Afterwords, we will graph the linear regression line to provide us with a useful visual.
 
 ```{r odometerLm, echo=FALSE}
 odometer_on_price <- lm (price_usd ~ odometer_value, data = cars_edited)
 
 ggplot (cars_edited, aes(x=odometer_value, y=price_usd)) + geom_point() + stat_smooth(method=lm)
-
 ```
+
+Once the linear regression model is created and graphed we proceed to check the R2 to see the proportion of the prices that can be explained by the model, the variability of the beta coefficients, and the percentage error.
 
 ```{r}
 summary(odometer_on_price)
 confint(odometer_on_price)
+#                       2.5 %        97.5 %
+#(Intercept)     1.145654e+04  1.169971e+04
+#odometer_value -2.028451e-02 -1.942748e-02
+
 sigma(odometer_on_price)*100/mean(cars_edited$price_usd)
+#[1] 87.89188
 ```
 
-Once checking the accuracy of the linear regression, we see that it is 87.89% accurate. **Thus we can conclude that the higher the odometer the lower the price of the vehicle will be.**
+The R2 is 0.1765 which indicates that a low proportion of prices in the data can be explained by the model. Furthermore, the percentage error is 87.89188 which confirms how poor a model would be if it solely used odometer to predict price.
+
+**We can conclude that the higher the odometer the lower the price of the vehicle will be.** Nevertheless, our linear regression model informs us that in order to create an accurate model we will need to consider more attributes.
+
+------------------------------------------------------------------------
 
 **Q:** Does the number of photos a vehicle has impact the selling price?
 
-**A**: A low positive correlation between number of photos a vehicle has and the selling price.
+**A:** There exists a low positive correlation between number of photos a vehicle has and the selling price.
 
 **Justification:**
 
-Graphs used: Scatter plot How these graphs helped us solve the problem: This graph helped us solve the problem by allowing us to see the relationship between the two variables by doing a line of best fit.
+In order to gain an intuitive understanding of the question we sought to use a scatter plot to see the relationship between price and number of photos.
 
-With our scatter plot graph we added a line of best fit for the data.
-
-```{r photos, echo=FALSE}
-ggplot(cars_edited, aes( x =number_of_photos, y=price_usd)) + geom_point() + stat_smooth()
-
+```{r, fig.height = 10, fig.width = 10}}
+#Scatter plot: Number of photos and price
+ggplot(cars_edited, aes( x =number_of_photos, y=price_usd)) + geom_hex() + stat_smooth(color = "red") 
 ```
 
-From the graph it seems like the more photos of a vehicle there are the higher the price will be. However, we can't make that assumption based on just this graph, we need to use linear regression to confirm this.
+When we look at this graph we can see that although there exists a line. Nevertheless, the data had a significant amount of variation and further testing would need to be done to get a result. It does seem that there will be a very little(if any) correlation between price and number of photos.
 
-```{r photosLm, echo=FALSE}
+Since we are investigating the relationship between 2 continuous variables we will be using the correlation test.
+
+The hypotheses are as follows:
+
+H~0~ =There does not exist a significant correlation between Number of Photos and Vehicle Price
+
+H~a~ = There does exist a significant correlation between Number of Photos and Vehicle Price
+
+We will use 0.05 as our significance level. The result of the correlation test was the following:
+
+```{r}
+#getting the cor value
+cor.test(cars_edited$number_of_photos, cars_edited$price_usd)
+```
+
+Since the p-value is less than 0.05 we can conclude that Price and Number of Photos are significantly correlated with a correlation coefficient of 0.3161726 and p-value of \< 2.2e-16
+
+Next we aim to investigate how good of an indicator of price the number of vehicle photos is. We shall employ linear regression, check the percentage of accuracy of that line, and graph the linear regression line to provide us with a useful visual.
+
+```{r}
+#Getting the formula for linear regression
 number_of_photos_on_price <- lm (price_usd ~ number_of_photos, data = cars_edited)
 
+#Scatter plot: Number of photos and price with linear regression line
 ggplot (cars_edited, aes(x=number_of_photos, y=price_usd)) + geom_point() + stat_smooth(method=lm)
 ```
 
-Now that we have the the linear regression line we need to make sure that the line fits the data with a high accuracy.
+Although the linear regression model is created and graphed there remains information and insights to be gleaned. We proceed to check the R2 to see the proportion of the prices that can be explained by the model, the variability of the beta coefficients, and the percentage error.
 
 ```{r}
 summary(number_of_photos_on_price)
+
+# R^2 is very low(0.09994) which tells us that number of photos is not a good indicator of price. 
+# We can suspect that several more variables are in play.
+
 confint(number_of_photos_on_price)
+#                    2.5 %    97.5 %
+#(Intercept)      3304.283 3532.2680
+#number_of_photos  323.305  343.2882
 sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
+# Our prediction error rate is extremely high (91.82279%) which explains the low correlation
 ```
 
-With the accuracy of the linear regression being 91.88% **we can now conclude that the more photos a vehicle has, the higher the selling price.**
+The R2 is 0.09994 which indicates that a low proportion of prices in the data can be explained by the model. In other words, number of photos is not a good indicator of price(more attributes are needed in a model). Also, the percentage error is 91.88472 which is very high. This confirms how poor a model would be if it solely used number of photos to predict price.
+
+**We can conclude there is a low negative correlation between price and odometer.** Our linear regression model tells us that to create an accurate model we will need to consider more attributes.
+
+------------------------------------------------------------------------
 
 **Q:** Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
 
-**A**: The number of times a vehicle has been upped has a negligible impact on the selling price.
+**A:** The number of times a vehicle has been upped has a negligible impact on the selling price.
 
 **Justification:**
 
@@ -492,11 +608,13 @@ sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
 
 Since the accuracy of the linear regression is 96.69% **we can conclude that the number of times a vehicle has been upped raises the selling price**
 
+------------------------------------------------------------------------
+
 **Q:** Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
 
-**A**: Sedan and Gasoline is the most common followed by Gasoline and Hatchback. Engine Type and Body Type do have an impact on the selling price, but the extend of this impact will need to be investigated in our overall model.
+**A:** Sedan and Gasoline is the most common followed by Gasoline and Hatchback. Engine Type and Body Type do have an impact on the selling price, but the extend of this impact will need to be investigated in our overall model.
 
-Justification:
+**Justification**:
 
 Graphs used: Mosaic How these graphs helped us solve the problem: This graph helped us solve the problem by giving us a colored graph that showed the amount of cars with a specific body type and engine. We were able to confirm the accuracy of the graph and come to a conclusion.
 
@@ -522,6 +640,8 @@ TukeyHSD(body_engine_type_on_price.aov3)
 
 These tests confirm our original assumption. **Thus, Body types Pickup, and Limousine have an impact on engine type.**
 
+------------------------------------------------------------------------
+
 **Q:** What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
 
 **A**: The most popular is the Passat. Furthermore, The popularity of a vehicle does seem to have an impact on the average_price of a vehicle. However, more attributes would be needed to predict price
@@ -533,6 +653,8 @@ These tests confirm our original assumption. **Thus, Body types Pickup, and Limo
 ```
 
 Because of this analysis we can conclude that **the popularity of a vehicle does have an impact on the average_price of a vehicle.**
+
+------------------------------------------------------------------------
 
 **Q:** What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
 
@@ -579,9 +701,11 @@ sigma(modelPricePerCount)*100/mean(models_sorted_avg_with_cnt$average_price_usd)
 
 Because of this analysis we can conclude that **the popularity of a vehicle does have an impact on the average_price of a vehicle.**
 
+------------------------------------------------------------------------
+
 **Q:** What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?
 
-**A**:
+**A:**
 
 ```{r}
 #Group cars by manufacturer name
@@ -616,7 +740,9 @@ With these results we can confirm our original assumption. **The manufacturer do
 
 Answer the goal here: In an attempt to create the most accurate and significant predictive model we created 6 different models which had a wide range of accuracy.
 
-## Linear Regression Model
+## Model Results and Comparisons
+
+### Linear Regression Model
 
 Firstly, we created a Multiple Linear Regression Model which utilized the attributes in our dataset that had continuous data. The code for this looks as follows:
 
@@ -648,7 +774,7 @@ From the code above we see that our rmse is 4573.511 which represents an error r
 
 After doing the Linear Regression Model we attempted to use SVR in order to create a more robust predictive model.
 
-## SVR Model
+### SVR Model
 
 SVR is an extremely robust model which would be able to handle our categorical data and almost certainly achieve a better result that the Linear Regression Model. 3 SVR models were calculated were varying accuracies. The different methods used with SVR were linear, polynomial, and radial. Linear was the first SVR model to be run and the code was as follows:
 
@@ -735,7 +861,7 @@ R2(modelSVRRadialTrainPrediction,test.data$price_usd)
 
 Even though the SVR model did much better than the Linear Regression Model it was vital to investigate more models in an attempt to create an even more accurate model. The Decision Tree was a price candidate since it is incredibly robust and relies on very few assumptions. Its simpler nature also makes it a model that would be preferred over other models(such as Random Forest Regression or KNN).
 
-## Decision Tree Regression Model
+### Decision Tree Regression Model
 
 ```{r eval=FALSE, include=TRUE}
 model_DT_Train <- train(price_usd ~ ., data = train.data, method = "rpart",
@@ -769,7 +895,7 @@ text(model_DT_Train$finalModel, digits = 3)
 #[1] 0.7529956
 ```
 
-## Random Forest Tree Model
+### Random Forest Tree Model
 
 ```{r eval=FALSE, include=TRUE}
 random_forest_ranger <- train(price_usd ~ . ,
@@ -802,7 +928,7 @@ R2(rf_predict_ranger,test.data$price_usd)
 
 ```
 
-# KNN Model
+### KNN Model
 
 ```{r eval=FALSE, include=TRUE}
 model_knn <- train(

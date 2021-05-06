@@ -5,6 +5,7 @@
 
 #Import all the library's we are using
 library(tidyverse)
+library(hexbin)
 library(e1071) #SVM
 library(car) #predict
 library(caret) #partiiton
@@ -314,11 +315,11 @@ cars_edited %>% group_by(manufacturer_name) %>% summarize(mean(price_usd)) %>% V
 
 #Aggregating the data of price to region to get the mean of prices
 #per region
+#Aggregating the data of price to region to get the mean of prices
+#per region
 regionPriceDF <- group_by(cars_edited, location_region)
 regionPriceDF_averages <- summarise(regionPriceDF, average_price_usd = mean(price_usd))
-View(regionPriceDF_averages)
-Average_price_usd <- regionPriceDF_averages$average_price_usd
-ggplot(regionPriceDF_averages,aes(x= location_region, y = Average_price_usd)) + geom_bar(stat = "identity") 
+ggplot(regionPriceDF_averages,aes(x= location_region, y = average_price_usd)) + geom_bar(stat = "identity") 
 
 #one-way anova
 group_by(regionPriceDF, regionPriceDF$location_region) %>%
@@ -332,6 +333,9 @@ res.aov <- aov(regionPriceDF$price_usd ~ regionPriceDF$location_region,
                data = regionPriceDF)
 # Summary of the analysis
 summary(res.aov)
+
+# Tukey Test
+TukeyHSD(res.aov)
 
 ###################################################################################################
 #
@@ -362,6 +366,9 @@ manuSumm <- group_by(manuPriceDF, manuPriceDF$manufacturer_name) %>%
 res.aovTwo <- aov(manuPriceDF$price_usd ~ manuPriceDF$manufacturer_name,
                   data = manuPriceDF)
 summary(res.aovTwo)
+
+# Tukey Test
+TukeyHSD(res.aovTwo)
 
 ###################################################################################################
 #
@@ -407,7 +414,7 @@ sigma(odometer_on_price)*100/mean(cars_edited$price_usd)
 #
 
 #Scatter plot: Number of photos and price
-ggplot(cars_edited, aes( x =number_of_photos, y=price_usd)) + geom_point() + stat_smooth()
+ggplot(cars_edited, aes( x =number_of_photos, y=price_usd)) + geom_hex() + stat_smooth(color = "red") 
 
 #getting the cor value
 cor.test(cars_edited$number_of_photos, cars_edited$price_usd)
@@ -425,7 +432,7 @@ ggplot (cars_edited, aes(x=number_of_photos, y=price_usd)) + geom_point() + stat
 #Finding how well this line fits the data
 summary(number_of_photos_on_price)
 
-# R^2 is very low which affirms that number of photos is not a good indicator of price. 
+# R^2 is very low(0.09994) which tells us that number of photos is not a good indicator of price. 
 # We can suspect that several more variables are in play.
 
 confint(number_of_photos_on_price)
