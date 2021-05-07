@@ -91,11 +91,6 @@ cars_edited <- cars_edited %>% mutate(engine_capacity = coalesce(engine_capacity
 which(duplicated(cars_edited))
 cars_edited <- cars_edited %>% distinct()
 
-# View the changes the mutate made
-cars_edited$is_exchangeable <- cars_edited %>% mutate(is_exchangeable = as.numeric(as.character(is_exchangeable)))
-str(cars_edited)
-View(cars_edited)
-
 ###################################################################################################
 #
 # Split Dataset into Training and Testing for our Models
@@ -562,13 +557,17 @@ sigma(ManufyearPrice)*100/mean(cars_edited$price_usd)
 # We will see if we can predict exchangeability given all the other attributes
 #
 ###################################################################################################
+set.seed(123)
+training.samples <- cars_edited$manufacturer_name %>% createDataPartition(p = 0.7, list = FALSE)
+train7030.data <- cars_edited[training.samples,]
+test.data7030 <- cars_edited[-training.samples,]
 
-model_LR_Exchangeable <- glm(is_exchangeable ~ manufacturer_name + model_name + transmission + color + odometer_value + year_produced + engine_fuel + engine_type + engine_capacity + body_type + drivetrain + price_usd + location_region + number_of_photos + up_counter , data = train.data, family = binomial)
+model_LR_Exchangeable <- glm(is_exchangeable ~ . , data = train7030.data, family = binomial)
 
 predictionsLR <- predict(model_LR_Exchangeable, test.data)
 predictionLR.probabilities <- predictionsLR$posterior[,2]
 predictionLR.classes <- predictionLR$class
-observed.classes <- test.data$is_exchangeable
+observed.classes <- test.data7030$is_exchangeable
 
 accuracy <- mean(observed.classes == predicted.classes)
 accuracy
