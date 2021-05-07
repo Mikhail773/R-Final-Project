@@ -92,7 +92,7 @@ which(duplicated(cars_edited))
 cars_edited <- cars_edited %>% distinct()
 
 # View the changes the mutate made
-cars_edited$is_exchangeable <- as.factor(cars_edited$is_exchangeable)
+cars_edited$is_exchangeable <- cars_edited %>% mutate(is_exchangeable = as.numeric(as.character(is_exchangeable)))
 str(cars_edited)
 View(cars_edited)
 
@@ -562,7 +562,9 @@ sigma(ManufyearPrice)*100/mean(cars_edited$price_usd)
 # We will see if we can predict exchangeability given all the other attributes
 #
 ###################################################################################################
-model_LR_Exchangeable <- glm(is_exchangeable ~ ., data = train.data, family = binomial)
+
+model_LR_Exchangeable <- glm(is_exchangeable ~ manufacturer_name + model_name + transmission + color + odometer_value + year_produced + engine_fuel + engine_type + engine_capacity + body_type + drivetrain + price_usd + location_region + number_of_photos + up_counter , data = train.data, family = binomial)
+
 predictionsLR <- predict(model_LR_Exchangeable, test.data)
 predictionLR.probabilities <- predictionsLR$posterior[,2]
 predictionLR.classes <- predictionLR$class
@@ -573,12 +575,12 @@ accuracy
 error <- mean(observed.classes != predicted.classes)
 error
 
-model_DT_Exchangeable <-  train(is_exchangeable ~ ., data = train.data, method = "rpart",
+model_DT_Exchangeable <-  train(is_exchangeable ~ is_exchangeable ~ manufacturer_name + model_name + transmission + color + odometer_value + year_produced + engine_fuel + engine_type + engine_capacity + body_type + drivetrain + price_usd + location_region + number_of_photos + up_counter, data = train.data, method = "rpart",
                                                  trControl = trainControl("cv",number = 10),
                                                  preProcess = c("center","scale"),
                                                  tuneLength = 10)
 
-predictionsDT <- predict(model_DT_Train_Exchangeable, test.data)
+predictionsDT <- predict(model_DT_Exchangeable, test.data)
 predictionDT.probabilities <- predictionsDT$posterior[,2]
 predictionDT.classes <- predictionDT$class
 observed.classes <- test.data$is_exchangeable
