@@ -569,7 +569,9 @@ predictionLR.classes <- predictionLR$class
 observed.classes <- test.data$is_exchangeable
 
 accuracy <- mean(observed.classes == predicted.classes)
+accuracy
 error <- mean(observed.classes != predicted.classes)
+error
 
 model_DT_Exchangeable <-  train(is_exchangeable ~ ., data = train.data, method = "rpart",
                                                  trControl = trainControl("cv",number = 10),
@@ -582,7 +584,9 @@ predictionDT.classes <- predictionDT$class
 observed.classes <- test.data$is_exchangeable
 
 accuracy <- mean(observed.classes == predicted.classes)
+accuracy
 error <- mean(observed.classes != predicted.classes)
+error
 ###################################################################################################
 #
 # (Everyone) Goal:
