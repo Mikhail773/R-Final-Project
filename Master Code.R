@@ -836,7 +836,43 @@ summary(random_forest_ranger)
 #param                         0  -none-        list 
 
 plot(random_forest_ranger)
-#print(random_forest_ranger) #I didn't see this line....
+print(random_forest_ranger)
+#Random Forest 
+#
+#30815 samples
+#16 predictor
+#
+#Pre-processing: centered (1176), scaled (1176) 
+#Resampling: Cross-Validated (10 fold) 
+#Summary of sample sizes: 27733, 27733, 27732, 27735, 27734, 27734, ... 
+#Resampling results across tuning parameters:
+#  
+#  mtry  splitrule   RMSE      Rsquared   MAE     
+#2  variance    5796.395  0.6833211  4060.727
+#2  extratrees  5929.265  0.5779019  4191.958
+#4  variance    4993.217  0.6910534  3380.338
+#4  extratrees  5264.557  0.5893240  3653.191
+#8  variance    4281.951  0.7276363  2797.724
+#8  extratrees  4649.024  0.6271083  3153.437
+#16  variance    3598.959  0.7801678  2264.988
+#16  extratrees  4098.441  0.6806259  2700.753
+#34  variance    2862.853  0.8442325  1731.513
+#34  extratrees  3414.402  0.7657837  2157.714
+#69  variance    2296.147  0.8888291  1345.853
+#69  extratrees  2765.699  0.8390356  1665.808
+#140  variance    1969.847  0.9115935  1134.639
+#140  extratrees  2254.877  0.8878216  1300.747
+#285  variance    1840.388  0.9193532  1052.805
+#285  extratrees  1952.594  0.9122632  1095.061
+#579  variance    1811.345  0.9204740  1033.302
+#579  extratrees  1808.614  0.9221763  1010.627
+#1175  variance    1860.773  0.9155560  1048.325
+#1175  extratrees  1787.308  0.9226437  1001.803
+#
+#Tuning parameter 'min.node.size' was held constant at a value of 5
+#RMSE was used to select the optimal model using the smallest value.
+#The final values used for the model were mtry = 1175, splitrule
+#= extratrees and min.node.size = 5.
 random_forest_ranger$finalModel
 #Ranger result
 #
