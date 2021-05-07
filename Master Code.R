@@ -87,6 +87,9 @@ colSums(is.na(cars))
 # Lets arbitrarily pick -1 to denote NA. (Engine-Capacity is categorical so this can be done)
 cars_edited <- cars_edited %>% mutate(engine_capacity = coalesce(engine_capacity, -1))
 
+# Factor
+cars_edited$is_exchangeable <- as.factor(cars_edited$is_exchangeable)
+
 # Check for Duplicates and remove them
 which(duplicated(cars_edited))
 cars_edited <- cars_edited %>% distinct()
@@ -562,17 +565,22 @@ training.samples <- cars_edited$manufacturer_name %>% createDataPartition(p = 0.
 train7030.data <- cars_edited[training.samples,]
 test.data7030 <- cars_edited[-training.samples,]
 
-model_LR_Exchangeable <- glm(is_exchangeable ~ . , data = train7030.data, family = binomial)
+model_LR_Exchangeable <- glm(is_exchangeable ~ manufacturer_name + transmission + color + odometer_value + year_produced + engine_fuel + engine_type + engine_capacity + body_type + drivetrain + price_usd + location_region + number_of_photos + up_counter , data = train.data, family = binomial)
 
-predictionsLR <- predict(model_LR_Exchangeable, test.data)
-predictionLR.probabilities <- predictionsLR$posterior[,2]
-predictionLR.classes <- predictionLR$class
-observed.classes <- test.data7030$is_exchangeable
+predictionLR <- predict(model_LR_Exchangeable, test.data, type="response")
+predictionLR.classes <- ifelse(predictionLR > 0.5, "TRUE", "FALSE")
 
-accuracy <- mean(observed.classes == predicted.classes)
+predictionLR.classes <- as.factor(predictionLR.classes)
+accuracy <- mean(test.data$is_exchangeable == predictionLR.classes)
 accuracy
-error <- mean(observed.classes != predicted.classes)
+error <- mean(test.data$is_exchangeable != predictionLR.classes)
 error
+
+confusionMatrix(test.data$is_exchangeable, predictionLR.classes)
+
+model_LR_Exchangeable_with_modelname <- glm(is_exchangeable ~ manufacturer_name + model_name + transmission + color + odometer_value + year_produced + engine_fuel + engine_type + engine_capacity + body_type + drivetrain + price_usd + location_region + number_of_photos + up_counter , data = train.data, family = binomial)
+
+
 
 model_DT_Exchangeable <-  train(is_exchangeable ~ is_exchangeable ~ manufacturer_name + model_name + transmission + color + odometer_value + year_produced + engine_fuel + engine_type + engine_capacity + body_type + drivetrain + price_usd + location_region + number_of_photos + up_counter, data = train.data, method = "rpart",
                                                  trControl = trainControl("cv",number = 10),
