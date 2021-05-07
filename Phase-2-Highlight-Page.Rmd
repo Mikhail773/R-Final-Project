@@ -21,7 +21,9 @@ library(ranger) # RFT more than 53 factors
 
 # Abstract: Description of the project and the findings
 
-The dataset in question is of used cars in a popular catalog from the country of Belarus. This dataset will be cleaned and analyzed, to answer several questions about the effect that certain variables have on the price point at which cars are sold at. Ultimately, Multiple Linear Regression Models, SVR, Decision Tree Regression, Random Forest Regression, and KNN will all be used to predict the market price of a used car in Belarus given the attributes found in the dataset. The accuracy of these models were analyzed and performance tested for real-world application with the help of a training and testing dataset. Afterwords, the models were compared to find the most effective model for predicting the price of a used car in Belarus. **STATE OUR FINDINGS**
+The dataset in question is of used cars in a popular catalog from the country of Belarus. This dataset will be cleaned and analyzed, to answer several questions about the effect that certain variables have on the price point at which cars are sold at. Ultimately, Multiple Linear Regression Models, SVR, Decision Tree Regression, Random Forest Regression, and KNN will all be used to predict the market price of a used car in Belarus given the attributes found in the dataset. The accuracy of these models were analyzed and performance tested for real-world application with the help of a training and testing dataset. Afterwords, the models were compared to find the most effective model for predicting the price of a used car in Belarus. Also, a Decision Tree and a Logistic Regression Model will be used to create an exploratory and predictive model for the exchangeability of a vehicle in the Belarus.
+
+**STATE OUR FINDINGS**
 
 # Introduction: Overview of the problems/goals and how they will be solved
 
@@ -29,7 +31,7 @@ We went through many datasets to find the one we were all interested in. We chos
 
 # Initial Questions
 
-The main goal is to create a predictive model based on insights gained from analyzing the impact of variables on the selling price of a vehicle. The goal was chosen for its applicability and general interest of which attributes impact price of a used car. In addition, there will be several questions that will be answered concerning the dataset. These questions aid in solving the main goal and are important insights to be gleaned from the dataset. The questions that will be answered about the dataset are as follows:
+The main goal is to create a predictive model based on insights gained from analyzing the impact of variables on the selling price of a vehicle. The goal was chosen for its applicability and general interest of which attributes impact price of a used car. Secondly, a model to predict whether a vehicle would be exchangeable or not will be created using a Decision Tree and Logistic Regression . We will optimize and analyze the effectiveness of such a model. In addition, there will be several questions that will be answered concerning the dataset. These questions aid in solving the main goal and are important insights to be gleaned from the dataset. The questions that will be answered about the dataset are as follows:
 
 -   What impact does a region have on price?
 -   What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
@@ -39,7 +41,6 @@ The main goal is to create a predictive model based on insights gained from anal
 -   Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
 -   What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
 -   What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?
--   
 
 # Dataset: Source, Description, Cleaning, and other things related to the dataset
 
@@ -316,7 +317,13 @@ ggplot(cars_edited) + geom_point(mapping = aes(x = number_of_photos, y = price_u
 cars_edited %>% group_by(manufacturer_name) %>% summarize(mean(price_usd))
 ```
 
-Several machine learning techniques were used in an attempt to create the most accurate prediction model. The models used in the project were as follows:
+**To find an optimal model to predict whether a vehicle is exchangeable we utilized both a Decision Tree and Logistic Regression.**
+
+Logistic Regression: This is a very popular and powerful classification technique. Since we are dealing with a binary response variable the logistic regression is an optimal model to use.
+
+Decision Tree: Although the logistic regression model is extremely powerful we will still run the Decision Tree in an attempt to create a more accurate model. Due to the robust and simple nature of the decision tree it was important to use this model to predict exchangeability. This model should be able to handle any outliers in our data and provide an effective predictive model.
+
+**Several machine learning techniques were used in an attempt to create the most accurate prediction model for our main goal. The models used in the project were as follows:**
 
 Multiple Linear Regression: This was used for the sake of gauging the impact of the continuous attributes on the price of the vehicle. This model is simple to understand and involves less computing power than more advance models which led to our decision to utilize this ML method as our first model.
 
@@ -860,11 +867,11 @@ sigma(ManufyearPrice)*100/mean(cars_edited$price_usd)
 
 Our prediction error rate is lower than for other attributes (60.12396%) which confirms to us that year produced and Manufacturer are decent predictors of price. A prediction error of 60.12396% tells us that for prediction we will need more attributes than just year produced and Manufacturer. **We conclude that Manufacturer and Year Produced do impact price and that the manufacturer does change how the production year affects the selling price.**
 
-##Sensitivity and Specificity Problem
+#### Sensitivity and Specificity Problem(Exchangeability Model)
 
 We will see if we can predict exchangeability given all the other attributes.
 
-```{r}
+```{r, eval=FALSE, include=TRUE}
 model_LR_Exchangeable <- glm(is_exchangeable ~ ., data = train.data, family = binomial)
 predictionsLR <- predict(model_LR_Exchangeable, test.data)
 predictionLR.probabilities <- predictionsLR$posterior[,2]
