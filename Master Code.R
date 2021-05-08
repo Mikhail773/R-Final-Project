@@ -568,7 +568,6 @@ predictionLR <- predict(model_LR_Exchangeable, test.data, type="response")
 predictionLR.classes <- ifelse(predictionLR > 0.5, "TRUE", "FALSE")
 predictionLR.classes <- as.factor(predictionLR.classes)
 
-
 # Check accuracy, error, and confusion matrix
 accuracy <- mean(test.data$is_exchangeable == predictionLR.classes)
 accuracy
@@ -596,15 +595,20 @@ plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 ### Logistic Regression with Model Names
 model_LR_Exchangeable_with_modelname <- glm(is_exchangeable ~ manufacturer_name + model_name + transmission + color + odometer_value + year_produced + engine_fuel + engine_type + engine_capacity + body_type + drivetrain + price_usd + location_region + number_of_photos + up_counter , data = train.data, family = binomial)
 
-
-
-model_DT_Exchangeable <-  train(is_exchangeable ~ is_exchangeable ~ manufacturer_name + model_name + transmission + color + odometer_value + year_produced + engine_fuel + engine_type + engine_capacity + body_type + drivetrain + price_usd + location_region + number_of_photos + up_counter, data = train.data, method = "rpart",
+model_DT_Exchangeable <-  train(is_exchangeable ~ . , data = train.data, method = "rpart",
                                                  trControl = trainControl("cv",number = 10),
                                                  preProcess = c("center","scale"),
                                                  tuneLength = 10)
 
 predictionsDT <- predict(model_DT_Exchangeable, test.data)
-predictionDT.probabilities <- predictionsDT$posterior[,2]
+
+# Prediction error, rmse
+RMSE(predictionsDT,test.data$price_usd)
+
+# Compute R-square
+R2(predictionsDT,test.data$price_usd)
+
+
 predictionDT.classes <- predictionDT$class
 observed.classes <- test.data$is_exchangeable
 
