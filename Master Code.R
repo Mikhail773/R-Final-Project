@@ -613,7 +613,7 @@ res.roc <- roc(test.data$is_exchangeable ~ predictionLRModel)
 plot.roc(res.roc, print.auc = TRUE)
 as.numeric(res.roc$auc)
 
-# Get the probability threshold for specfificity = 0.6
+# Get the probability threshold for specificity = 0.6
 library(vctrs)
 rocModel.data <- data_frame(
   thresholds = res.roc$thresholds,
@@ -633,20 +633,33 @@ model_DT_Exchangeable <-  train(is_exchangeable ~ . , data = train.data, method 
 
 predictionsDT <- predict(model_DT_Exchangeable, test.data)
 
-# Prediction error, rmse
-RMSE(predictionsDT,test.data$price_usd)
+# Predict and convert to my factors
+predictionsDTModel <- predict(predictionsDT, test.data, type="response")
+predictionDTModel.classes <- ifelse(predictionsDTModel > 0.5, "TRUE", "FALSE")
+predictionLRModel.classes <- as.factor(predictionDTModel.classes)
 
-# Compute R-square
-R2(predictionsDT,test.data$price_usd)
-
-
-predictionDT.classes <- predictionDT$class
-observed.classes <- test.data$is_exchangeable
-
-accuracy <- mean(observed.classes == predicted.classes)
+# Check accuracy, error, and confusion matrix
+accuracy <- mean(test.data$is_exchangeable == predictionDTModel.classes)
 accuracy
-error <- mean(observed.classes != predicted.classes)
+error <- mean(test.data$is_exchangeable != predictionDTModel.classes)
 error
+confusionMatrix(test.data$is_exchangeable, predictionDTModel.classes)
+
+#Compute roc
+library(pROC)
+res.roc <- roc(test.data$is_exchangeable ~ predictionsDTModel)
+plot.roc(res.roc, print.auc = TRUE)
+as.numeric(res.roc$auc)
+
+# Get the probability threshold for specificity = 0.6
+library(vctrs)
+rocModelDT.data <- data_frame(
+  thresholds = res.roc$thresholds,
+  sensitivity = res.roc$sensitivities,
+  specificity = res.roc$specificities
+)
+rocModelDT.data %>% filter(specificity >= 0.6)
+plotModelDT.roc(res.roc, print.auc = TRUE, print.thres = "best")
 ###################################################################################################
 #
 # (Everyone) Goal:
