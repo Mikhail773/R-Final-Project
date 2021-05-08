@@ -594,6 +594,9 @@ plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
 ### Logistic Regression with Model Names
 model_LR_Exchangeable_with_modelname <- glm(is_exchangeable ~ manufacturer_name + model_name + transmission + color + odometer_value + year_produced + engine_fuel + engine_type + engine_capacity + body_type + drivetrain + price_usd + location_region + number_of_photos + up_counter , data = train.data, family = binomial)
+mod2 <- glm(is_exchangeable ~ ., data=train.data, family="binomial")
+mod2$xlevels[["model_name"]] <- union(mod2$xlevels[["model_name"]], levels(train.data$model_name))
+
 
 # Predict and convert to my factors
 predictionLRModel <- predict(model_LR_Exchangeable_with_modelname, test.data, type="response")
