@@ -595,6 +595,37 @@ plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 ### Logistic Regression with Model Names
 model_LR_Exchangeable_with_modelname <- glm(is_exchangeable ~ manufacturer_name + model_name + transmission + color + odometer_value + year_produced + engine_fuel + engine_type + engine_capacity + body_type + drivetrain + price_usd + location_region + number_of_photos + up_counter , data = train.data, family = binomial)
 
+# Predict and convert to my factors
+predictionLRModel <- predict(model_LR_Exchangeable_with_modelname, test.data, type="response")
+predictionLRModel.classes <- ifelse(predictionLRModel > 0.5, "TRUE", "FALSE")
+predictionLRModel.classes <- as.factor(predictionLRModel.classes)
+
+# Check accuracy, error, and confusion matrix
+accuracy <- mean(test.data$is_exchangeable == predictionLRModel.classes)
+accuracy
+error <- mean(test.data$is_exchangeable != predictionLRModel.classes)
+error
+confusionMatrix(test.data$is_exchangeable, predictionLRModel.classes)
+
+#Compute roc
+library(pROC)
+res.roc <- roc(test.data$is_exchangeable ~ predictionLRModel)
+plot.roc(res.roc, print.auc = TRUE)
+as.numeric(res.roc$auc)
+
+# Get the probability threshold for specfificity = 0.6
+library(vctrs)
+rocModel.data <- data_frame(
+  thresholds = res.roc$thresholds,
+  sensitivity = res.roc$sensitivities,
+  specificity = res.roc$specificities
+)
+rocModel.data %>% filter(specificity >= 0.6)
+plotModel.roc(res.roc, print.auc = TRUE, print.thres = "best")
+
+############################################################################################
+
+
 model_DT_Exchangeable <-  train(is_exchangeable ~ . , data = train.data, method = "rpart",
                                                  trControl = trainControl("cv",number = 10),
                                                  preProcess = c("center","scale"),
