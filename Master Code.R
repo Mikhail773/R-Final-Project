@@ -560,24 +560,40 @@ sigma(ManufyearPrice)*100/mean(cars_edited$price_usd)
 # We will see if we can predict exchangeability given all the other attributes
 #
 ###################################################################################################
-set.seed(123)
-training.samples <- cars_edited$manufacturer_name %>% createDataPartition(p = 0.7, list = FALSE)
-train7030.data <- cars_edited[training.samples,]
-test.data7030 <- cars_edited[-training.samples,]
-
+### Logistic Regression without Model Names
 model_LR_Exchangeable <- glm(is_exchangeable ~ manufacturer_name + transmission + color + odometer_value + year_produced + engine_fuel + engine_type + engine_capacity + body_type + drivetrain + price_usd + location_region + number_of_photos + up_counter , data = train.data, family = binomial)
 
+# Predict and convert to my factors
 predictionLR <- predict(model_LR_Exchangeable, test.data, type="response")
 predictionLR.classes <- ifelse(predictionLR > 0.5, "TRUE", "FALSE")
-
 predictionLR.classes <- as.factor(predictionLR.classes)
+
+
+# Check accuracy, error, and confusion matrix
 accuracy <- mean(test.data$is_exchangeable == predictionLR.classes)
 accuracy
 error <- mean(test.data$is_exchangeable != predictionLR.classes)
 error
-
 confusionMatrix(test.data$is_exchangeable, predictionLR.classes)
 
+#Compute roc
+library(pROC)
+res.roc <- roc(test.data$is_exchangeable ~ predictionLR)
+plot.roc(res.roc, print.auc = TRUE)
+as.numeric(res.roc$auc)
+
+# Get the probability threshold for specfificity = 0.6
+library(vctrs)
+roc.data <- data_frame(
+  thresholds = res.roc$thresholds,
+  sensitivity = res.roc$sensitivities,
+  specificity = res.roc$specificities
+)
+roc.data %>% filter(specificity >= 0.6)
+plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
+
+
+### Logistic Regression with Model Names
 model_LR_Exchangeable_with_modelname <- glm(is_exchangeable ~ manufacturer_name + model_name + transmission + color + odometer_value + year_produced + engine_fuel + engine_type + engine_capacity + body_type + drivetrain + price_usd + location_region + number_of_photos + up_counter , data = train.data, family = binomial)
 
 
