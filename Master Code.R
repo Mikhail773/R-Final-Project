@@ -594,7 +594,7 @@ plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
 ### Logistic Regression with Model Names
 union(levels(test.data$model_name), levels(train.data$model_name))
-model_LR_Exchangeable_with_modelname <- qda(is_exchangeable ~ ., data = train.data)
+model_LR_Exchangeable_with_modelname <- glm(is_exchangeable ~ ., data = train.data, family = "binomial")
 
 # Predict and convert to my factors
 predictionLRModel <- predict(model_LR_Exchangeable_with_modelname, test.data, type="response")
