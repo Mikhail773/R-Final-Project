@@ -17,21 +17,22 @@ library(kernlab) #SVM
 library(rpart) # Decision Tree Regression
 library(randomForest) #  Random Forest Tree Regression
 library(ranger) # RFT more than 53 factors
+library(pROC) # Calculate roc
 ```
 
 # Abstract: Description of the project and the findings
 
-The dataset in question is of used cars in a popular catalog from the country of Belarus. This dataset will be cleaned and analyzed, to answer several questions about the effect that certain variables have on the price point at which cars are sold at. Ultimately, Multiple Linear Regression Models, SVR, Decision Tree Regression, Random Forest Regression, and KNN will all be used to predict the market price of a used car in Belarus given the attributes found in the dataset. The accuracy of these models were analyzed and performance tested for real-world application with the help of a training and testing dataset. Afterwords, the models were compared to find the most effective model for predicting the price of a used car in Belarus. Also, a Decision Tree and a Logistic Regression Model will be used to create an exploratory and predictive model for the exchangeability of a vehicle in the Belarus.
+The dataset in question is of used cars in a popular catalog from the country of Belarus. This dataset will be cleaned and analyzed to answer several questions about the effect that certain variables have on the price point at which cars are sold at. Ultimately, Multiple Linear Regression Models, SVR, Decision Tree Regression, Random Forest Regression, and KNN will all be used to predict the market price of a used car in Belarus given the attributes found in the dataset. The accuracy of these models were analyzed and performance tested for real-world application with the help of a training and testing dataset. Afterwords, the models were compared to find the most effective model for predicting the price of a used car in Belarus. Also, a Decision Tree and a Logistic Regression Model will be used to create an exploratory and predictive model for the exchangeability of a vehicle in the Belarus.
 
 **STATE OUR FINDINGS**
 
 # Introduction: Overview of the problems/goals and how they will be solved
 
-We went through many datasets to find the one we were all interested in. We chose this dataset because it had a significant amount of samples, and there was a mixture of continuous and categorical variables. Since cars are such a big investment we all wondered what affected the price on cars. This is what sparked our initial questions and goals. Solving our proposed questions and goal we hope to gain insights in what affects car prices which would leave us with more knowledge we can use later in life. To solve our questions and answer our goal we are going to use R to make graphs to answer our questions. We will make sure to use different statistical analyses to make sure our graphs are confirmed to be accurate.
+There are several objectives that will be the focal point of the research done on the used cars dataset. First and foremost, we will be attempted to create a predictive model for the price of a used car given the attributes in the dataset. **Since cars are such a big investment we all wondered what affected the price on cars. This is what sparked our initial questions and goals. Solving our proposed questions and goal we hope to gain insights in what affects car prices which would leave us with more knowledge we can use later in life. To solve our questions and answer our goal we are going to use R to make graphs to answer our questions. We will make sure to use different statistical analyses to make sure our graphs are confirmed to be accurate.**
 
 # Initial Questions
 
-The main goal is to create a predictive model based on insights gained from analyzing the impact of variables on the selling price of a vehicle. The goal was chosen for its applicability and general interest of which attributes impact price of a used car. Secondly, a model to predict whether a vehicle would be exchangeable or not will be created using a Decision Tree and Logistic Regression . We will optimize and analyze the effectiveness of such a model. In addition, there will be several questions that will be answered concerning the dataset. These questions aid in solving the main goal and are important insights to be gleaned from the dataset. The questions that will be answered about the dataset are as follows:
+The main goal is to create a predictive model based on insights gained from analyzing the impact of variables on the selling price of a vehicle. The goal was chosen for its applicability and general interest of which attributes impact price of a used car. Secondly, a model to predict whether a vehicle would be exchangeable or not will be created using a Decision Tree. In addition, there will be several questions that will be answered concerning the dataset. These questions aid in solving the main goal and are important insights to be gleaned from the dataset. The questions that will be answered about the dataset are as follows:
 
 -   What impact does a region have on price?
 -   What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
@@ -867,33 +868,47 @@ sigma(ManufyearPrice)*100/mean(cars_edited$price_usd)
 
 Our prediction error rate is lower than for other attributes (60.12396%) which confirms to us that year produced and Manufacturer are decent predictors of price. A prediction error of 60.12396% tells us that for prediction we will need more attributes than just year produced and Manufacturer. **We conclude that Manufacturer and Year Produced do impact price and that the manufacturer does change how the production year affects the selling price.**
 
-#### Sensitivity and Specificity Problem(Exchangeability Model)
+#### Predicting Exchangeability using a Decision Tree
 
 We will see if we can predict exchangeability given all the other attributes.
 
-```{r, eval=FALSE, include=TRUE}
-model_LR_Exchangeable <- glm(is_exchangeable ~ ., data = train.data, family = binomial)
-predictionsLR <- predict(model_LR_Exchangeable, test.data)
-predictionLR.probabilities <- predictionsLR$posterior[,2]
-predictionLR.classes <- predictionLR$class
-observed.classes <- test.data$is_exchangeable
+```{r DTRegressionExchangeability, eval=FALSE, include=TRUE}
+### DT Regression
+model_DT_Train <- train(is_exchangeable ~ ., data = train.data, method = "rpart",
+                        trControl = trainControl("cv",number = 10),
+                        preProcess = c("center","scale"),
+                        tuneLength = 10)
 
-accuracy <- mean(observed.classes == predicted.classes)
-error <- mean(observed.classes != predicted.classes)
+predictionDT <- predict(model_DT_Train, test.data)
 
-model_DT_Exchangeable <-  train(is_exchangeable ~ ., data = train.data, method = "rpart",
-                                                 trControl = trainControl("cv",number = 10),
-                                                 preProcess = c("center","scale"),
-                                                 tuneLength = 10)
-
-predictionsDT <- predict(model_DT_Train_Exchangeable, test.data)
-predictionDT.probabilities <- predictionsDT$posterior[,2]
-predictionDT.classes <- predictionDT$class
-observed.classes <- test.data$is_exchangeable
-
-accuracy <- mean(observed.classes == predicted.classes)
-error <- mean(observed.classes != predicted.classes)
+# Check accuracy, error, and confusion matrix
+accuracy <- mean(test.data$is_exchangeable == predictionDT)
+accuracy
+# [1] 0.6871661
+error <- mean(test.data$is_exchangeable != predictionDT)
+error
+# [1] 0.3128339
+confusionMatrix(test.data$is_exchangeable, predictionDT)
 ```
+
+![](images/DTExchangeability%20CMpng.PNG)
+
+Sensitivity is \~0.70, that is the proportion of individuals who were correctly identified to being willing to take part in an exchangement for their vehicle.
+
+The specificity of the model is around 61% which is the proportion of individuals who were correctly identified to not being willing to take part in an exchangement for their vehicle.
+
+The model precision or proportion of positive predicted value is \~ 90%
+
+```{r DTRegressionExchangeability, eval=FALSE, include=TRUE}
+#Compute roc
+predictionsDTProb <- predict(model_DT_Exchangeable, test.data, type = "prob")
+res.roc <- roc(test.data$is_exchangeable ~ predictionsDTProb[,2])
+plot.roc(res.roc, print.auc = TRUE)
+as.numeric(res.roc$auc)
+#[1] 0.6525616
+```
+
+![](images/DTExchangeableRocCurve.png)
 
 ## Model Results and Comparisons
 

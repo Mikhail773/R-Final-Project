@@ -14,6 +14,7 @@ library(kernlab) #SVM
 library(rpart) # Decision Tree Regression
 library(randomForest) #  Random Forest Tree Regression
 library(ranger) # RFT more than 53 factors
+library(pROC) # Calculate roc
 ###################################################################################################
 #
 # Evaluate the data
@@ -556,76 +557,11 @@ sigma(ManufyearPrice)*100/mean(cars_edited$price_usd)
 
 ###################################################################################################
 #
-# Sensitivity and Specificity Problem
+# Predicting Exchangeability 
 # We will see if we can predict exchangeability given all the other attributes
 #
 ###################################################################################################
-### Logistic Regression without Model Names
-model_LR_Exchangeable <- glm(is_exchangeable ~ manufacturer_name + transmission + color + odometer_value + year_produced + engine_fuel + engine_type + engine_capacity + body_type + drivetrain + price_usd + location_region + number_of_photos + up_counter , data = train.data, family = binomial)
-
-# Predict and convert to my factors
-predictionLR <- predict(model_LR_Exchangeable, test.data, type="response")
-predictionLR.classes <- ifelse(predictionLR > 0.5, "TRUE", "FALSE")
-predictionLR.classes <- as.factor(predictionLR.classes)
-
-# Check accuracy, error, and confusion matrix
-accuracy <- mean(test.data$is_exchangeable == predictionLR.classes)
-accuracy
-error <- mean(test.data$is_exchangeable != predictionLR.classes)
-error
-confusionMatrix(test.data$is_exchangeable, predictionLR.classes)
-
-#Compute roc
-library(pROC)
-res.roc <- roc(test.data$is_exchangeable ~ predictionLR)
-plot.roc(res.roc, print.auc = TRUE)
-as.numeric(res.roc$auc)
-
-# Get the probability threshold for specfificity = 0.6
-library(vctrs)
-roc.data <- data_frame(
-  thresholds = res.roc$thresholds,
-  sensitivity = res.roc$sensitivities,
-  specificity = res.roc$specificities
-)
-roc.data %>% filter(specificity >= 0.6)
-plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
-
-
-### Logistic Regression with Model Names
-union(levels(test.data$model_name), levels(train.data$model_name))
-model_LR_Exchangeable_with_modelname <- qda(is_exchangeable ~ ., data = train.data)
-
-# Predict and convert to my factors
-predictionLRModel <- predict(model_LR_Exchangeable_with_modelname, test.data, type="response")
-predictionLRModel.classes <- ifelse(predictionLRModel > 0.5, "TRUE", "FALSE")
-predictionLRModel.classes <- as.factor(predictionLRModel.classes)
-
-# Check accuracy, error, and confusion matrix
-accuracy <- mean(test.data$is_exchangeable == predictionLRModel.classes)
-accuracy
-error <- mean(test.data$is_exchangeable != predictionLRModel.classes)
-error
-confusionMatrix(test.data$is_exchangeable, predictionLRModel.classes)
-
-#Compute roc
-library(pROC)
-res.roc <- roc(test.data$is_exchangeable ~ predictionLRModel)
-plot.roc(res.roc, print.auc = TRUE)
-as.numeric(res.roc$auc)
-
-# Get the probability threshold for specificity = 0.6
-library(vctrs)
-rocModel.data <- data_frame(
-  thresholds = res.roc$thresholds,
-  sensitivity = res.roc$sensitivities,
-  specificity = res.roc$specificities
-)
-rocModel.data %>% filter(specificity >= 0.6)
-plotModel.roc(res.roc, print.auc = TRUE, print.thres = "best")
-
-############################################################################################
-
+## Using Decision Tree to predict exchangeability
 model_DT_Exchangeable <-  train(is_exchangeable ~ . , data = train.data, method = "rpart",
                                                  trControl = trainControl("cv",number = 10),
                                                  preProcess = c("center","scale"),
@@ -633,23 +569,21 @@ model_DT_Exchangeable <-  train(is_exchangeable ~ . , data = train.data, method 
 
 predictionsDT <- predict(model_DT_Exchangeable, test.data)
 
-# Predict and convert to my factors
-predictionsDTModel <- predict(predictionsDT, test.data, type="response")
-predictionDTModel.classes <- ifelse(predictionsDTModel > 0.5, "TRUE", "FALSE")
-predictionLRModel.classes <- as.factor(predictionDTModel.classes)
-
 # Check accuracy, error, and confusion matrix
-accuracy <- mean(test.data$is_exchangeable == predictionDTModel.classes)
+accuracy <- mean(test.data$is_exchangeable == predictionsDT)
 accuracy
-error <- mean(test.data$is_exchangeable != predictionDTModel.classes)
+# [1] 0.6871661
+error <- mean(test.data$is_exchangeable != predictionsDT)
 error
-confusionMatrix(test.data$is_exchangeable, predictionDTModel.classes)
+# [1] 0.3128339
+confusionMatrix(test.data$is_exchangeable, predictionsDT)
 
 #Compute roc
-library(pROC)
-res.roc <- roc(test.data$is_exchangeable ~ predictionsDTModel)
+predictionsDTProb <- predict(model_DT_Exchangeable, test.data, type = "prob")
+res.roc <- roc(test.data$is_exchangeable ~ predictionsDTProb[,2])
 plot.roc(res.roc, print.auc = TRUE)
 as.numeric(res.roc$auc)
+# [1] 0.6525616
 
 # Get the probability threshold for specificity = 0.6
 library(vctrs)
@@ -660,6 +594,45 @@ rocModelDT.data <- data_frame(
 )
 rocModelDT.data %>% filter(specificity >= 0.6)
 plotModelDT.roc(res.roc, print.auc = TRUE, print.thres = "best")
+
+## Using Logistic Regression to predict exchangeability
+model_LR_Exchangeable <-  train( is_exchangeable ~ ., data = train.data, method = "glm",
+                                                     trControl = trainControl("cv", number =10),
+                                                     preProcess = c("center", "scale"),
+                                                     tuneLength = 10
+)
+
+model_LR_Exchangeable$xlevels[["model_name"]] <- union(model_LR_Exchangeable$xlevels[["model_name"]], levels(test.data$model_name))
+predictionsLR <- predict(model_LR_Exchangeable, test.data, se.fit=FALSE, type= "response")
+predictionsLR.classes <- ifelse(predictionsLR > 0.5, "TRUE", "FALSE")
+predictionsLR.classes
+# Check accuracy, error, and confusion matrix
+accuracy <- mean(test.data$is_exchangeable == predictionsLR.classes)
+accuracy
+# [1] 0.6871661
+error <- mean(test.data$is_exchangeable != predictionsLR.classes)
+error
+# [1] 0.3128339
+confusionMatrix(test.data$is_exchangeable, predictionsLR.classes)
+
+#Compute roc
+predictionsDTProb <- predict(model_DT_Exchangeable, test.data, type = "prob")
+res.roc <- roc(test.data$is_exchangeable ~ predictionsDTProb[,2])
+plot.roc(res.roc, print.auc = TRUE)
+as.numeric(res.roc$auc)
+# [1] 0.6525616
+
+# Get the probability threshold for specificity = 0.6
+library(vctrs)
+rocModelDT.data <- data_frame(
+  thresholds = res.roc$thresholds,
+  sensitivity = res.roc$sensitivities,
+  specificity = res.roc$specificities
+)
+rocModelDT.data %>% filter(specificity >= 0.6)
+plotModelDT.roc(res.roc, print.auc = TRUE, print.thres = "best")
+
+
 ###################################################################################################
 #
 # (Everyone) Goal:
