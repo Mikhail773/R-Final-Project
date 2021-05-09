@@ -585,7 +585,7 @@ plot.roc(res.roc, print.auc = TRUE)
 as.numeric(res.roc$auc)
 # [1] 0.6525616
 
-# Get the probability threshold for specificity = 0.6
+# Get the probability threshold for specificity = 0.5
 library(vctrs)
 rocModelDT.data <- data_frame(
   thresholds = res.roc$thresholds,
