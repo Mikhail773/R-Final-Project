@@ -18,6 +18,7 @@ library(rpart) # Decision Tree Regression
 library(randomForest) #  Random Forest Tree Regression
 library(ranger) # RFT more than 53 factors
 library(pROC) # Calculate roc
+library(vctrs)
 ```
 
 # Abstract: Description of the project and the findings
@@ -868,6 +869,8 @@ sigma(ManufyearPrice)*100/mean(cars_edited$price_usd)
 
 Our prediction error rate is lower than for other attributes (60.12396%) which confirms to us that year produced and Manufacturer are decent predictors of price. A prediction error of 60.12396% tells us that for prediction we will need more attributes than just year produced and Manufacturer. **We conclude that Manufacturer and Year Produced do impact price and that the manufacturer does change how the production year affects the selling price.**
 
+## Predicting Exchangeability
+
 #### Predicting Exchangeability using a Decision Tree
 
 We will see if we can predict exchangeability given all the other attributes.
@@ -910,6 +913,25 @@ as.numeric(res.roc$auc)
 
 ![](images/DTExchangeableRocCurve.png)
 
+Explain
+
+```{r LRRegressionExchangeabilityBestRoc, eval=FALSE, include=TRUE}
+# Get the probability threshold for specificity = 0.5
+rocModelDT.data <- data_frame(
+  thresholds = res.roc$thresholds,
+  sensitivity = res.roc$sensitivities,
+  specificity = res.roc$specificities
+)
+rocModelDT.data %>% filter(specificity >= 0.5)
+plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
+```
+
+![](images/DTExchangeabilityBestROC.png)
+
+Explain
+
+#### Predicting Exchangeability using Logistic Regression
+
 ```{r LRRegressionExchangeability, eval=FALSE, include=TRUE}
 ## Using Logistic Regression to predict exchangeability
 model_LR_Exchangeable <-  train( is_exchangeable ~ ., data = train.data, method = "glm", family = "binomial",
@@ -931,6 +953,8 @@ confusionMatrix(test.data$is_exchangeable, predictionsLR)
 
 ![](images/LRExchangeabilityCM.png)
 
+Explain
+
 ```{r LRRegressionExchangeabilityRoc, eval=FALSE, include=TRUE}
 #Compute roc
 predictionsLRProb <- predict(model_LR_Exchangeable, test.data, type = "prob")
@@ -940,11 +964,10 @@ as.numeric(res.rocLR$auc)
 # [1] 0.6443938
 ```
 
-![](images/LRExchangeabilityRoc.png)
+![](images/LRExchangeabilityRoc.png) Explain
 
 ```{r LRRegressionExchangeabilityBestRoc, eval=FALSE, include=TRUE}
 # Get the probability threshold for specificity = 0.5
-library(vctrs)
 rocModelLR.data <- data_frame(
   thresholds = res.rocLR$thresholds,
   sensitivity = res.rocLR$sensitivities,
@@ -955,6 +978,8 @@ plot.roc(res.rocLR, print.auc = TRUE, print.thres = "best")
 ```
 
 ![](images/LRExchangeabilityBestRoc.png)
+
+Explain
 
 ## Model Results and Comparisons
 
