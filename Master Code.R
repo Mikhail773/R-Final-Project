@@ -596,10 +596,10 @@ rocModelDT.data %>% filter(specificity >= 0.6)
 plotModelDT.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
 ## Using Logistic Regression to predict exchangeability
-model_LR_Exchangeable <-  train( is_exchangeable ~ ., data = train.data, method = "glm",
-                                                     trControl = trainControl("cv", number =10),
-                                                     preProcess = c("center", "scale"),
-                                                     tuneLength = 10
+model_LR_Exchangeable <-  train( is_exchangeable ~ ., data = train.data, method = "glm", family = "binomial",
+                                 trControl = trainControl("cv", number =10),
+                                 preProcess = c("center", "scale"),
+                                 tuneLength = 10
 )
 
 model_LR_Exchangeable$xlevels[["model_name"]] <- union(model_LR_Exchangeable$xlevels[["model_name"]], levels(test.data$model_name))
