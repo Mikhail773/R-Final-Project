@@ -881,7 +881,6 @@ summary(random_forest_ranger)
 #obsLevels                     1  -none-        logical  
 #param                         0  -none-        list 
 
-plot(random_forest_ranger)
 print(random_forest_ranger)
 #Random Forest 
 #
