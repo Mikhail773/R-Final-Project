@@ -873,7 +873,7 @@ Our prediction error rate is lower than for other attributes (60.12396%) which c
 
 #### Predicting Exchangeability using a Decision Tree
 
-We will see if we can predict exchangeability given all the other attributes.
+In an attempt to predict exchangeability we will deploy a Decsiion tree. The model will be running the train function with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate)l. These settings should prune our tree and ensured an optimal decision tree to predict exchangeability.
 
 ```{r DTRegressionExchangeability, eval=FALSE, include=TRUE}
 ### DT Regression
@@ -894,9 +894,11 @@ error
 confusionMatrix(test.data$is_exchangeable, predictionDT)
 ```
 
+The accuracy above tells us that the Decision Tree correctly predicted \~69% of the individuals who agreed to exchangeing their vehicles. This is better than random guessing. The missclassification error rate is \~31%.
+
 ![](images/DTExchangeability%20CMpng.PNG)
 
-Sensitivity is \~0.70, that is the proportion of individuals who were correctly identified to being willing to take part in an exchangement for their vehicle.
+Sensitivity is \~70%, that is the proportion of individuals who were correctly identified to being willing to take part in an exchangement for their vehicle.
 
 The specificity of the model is around 61% which is the proportion of individuals who were correctly identified to not being willing to take part in an exchangement for their vehicle.
 
@@ -913,7 +915,7 @@ as.numeric(res.roc$auc)
 
 ![](images/DTExchangeableRocCurve.png)
 
-Explain
+In this graph the AUC is 0.653, which i relatively good. Remember that a classifier that performs no better than chance is expected to have an AUC of 0.5 when evaluated on an independent test set not used to train the model. Meaning, that this model does in fact predict exchangeability with some success.
 
 ```{r LRRegressionExchangeabilityBestRoc, eval=FALSE, include=TRUE}
 # Get the probability threshold for specificity = 0.5
@@ -927,8 +929,6 @@ plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 ```
 
 ![](images/DTExchangeabilityBestROC.png)
-
-Explain
 
 #### Predicting Exchangeability using Logistic Regression
 
@@ -951,9 +951,15 @@ error
 confusionMatrix(test.data$is_exchangeable, predictionsLR)
 ```
 
-![](images/LRExchangeabilityCM.png)
+The accuracy above tells us that the Logistic Regression Model correctly predicted \~66.5% of the individuals who agreed to exchangeing their vehicles. This is better than random guessing. The missclassification error rate is \~33.5%. This is not as good as the Decision Tree model.
 
-Explain
+![](images/LRExchangeabilityCM2.png)
+
+Sensitivity is \~68.5% , that is the proportion of individuals who were correctly identified to being willing to take part in an exchangement for their vehicle.
+
+The specificity of the model is around 54.5% which is the proportion of individuals who were correctly identified to not being willing to take part in an exchangement for their vehicle.
+
+The model precision or proportion of positive predicted value is \~ 90%
 
 ```{r LRRegressionExchangeabilityRoc, eval=FALSE, include=TRUE}
 #Compute roc
@@ -964,7 +970,7 @@ as.numeric(res.rocLR$auc)
 # [1] 0.6443938
 ```
 
-![](images/LRExchangeabilityRoc.png) Explain
+![](images/LRExchangeabilityRoc.png) In this graph the AUC is 0.644, which i relatively good. That is, this model does in fact predict exchangeability with some success.
 
 ```{r LRRegressionExchangeabilityBestRoc, eval=FALSE, include=TRUE}
 # Get the probability threshold for specificity = 0.5
@@ -979,7 +985,7 @@ plot.roc(res.rocLR, print.auc = TRUE, print.thres = "best")
 
 ![](images/LRExchangeabilityBestRoc.png)
 
-Explain
+Upon comparing the models Decision Tree and Logistic Regression we can see that the Decision Tree has a better AUC, Specificity, and Sensitivity, but a slightly worse model precision. Nevertheless, overall the Decision Tree is a better model in predicting exchangeability.
 
 ## Model Results and Comparisons
 
