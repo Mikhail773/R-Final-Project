@@ -899,7 +899,7 @@ The specificity of the model is around 61% which is the proportion of individual
 
 The model precision or proportion of positive predicted value is \~ 90%
 
-```{r DTRegressionExchangeability, eval=FALSE, include=TRUE}
+```{r DTRegressionExchangeabilityRoc, eval=FALSE, include=TRUE}
 #Compute roc
 predictionsDTProb <- predict(model_DT_Exchangeable, test.data, type = "prob")
 res.roc <- roc(test.data$is_exchangeable ~ predictionsDTProb[,2])
@@ -909,6 +909,52 @@ as.numeric(res.roc$auc)
 ```
 
 ![](images/DTExchangeableRocCurve.png)
+
+```{r LRRegressionExchangeability, eval=FALSE, include=TRUE}
+## Using Logistic Regression to predict exchangeability
+model_LR_Exchangeable <-  train( is_exchangeable ~ ., data = train.data, method = "glm", family = "binomial",
+                                 trControl = trainControl("cv", number =10),
+                                 preProcess = c("center", "scale"),
+                                 tuneLength = 10
+)
+
+predictionsLR <- predict(model_LR_Exchangeable, test.data)
+# Check accuracy, error, and confusion matrix
+accuracy <- mean(test.data$is_exchangeable == predictionsLR)
+accuracy
+# [1] 0.6647557
+error <- mean(test.data$is_exchangeable != predictionsLR)
+error
+# [1] 0.3352443
+confusionMatrix(test.data$is_exchangeable, predictionsLR)
+```
+
+![](images/LRExchangeabilityCM.png)
+
+```{r LRRegressionExchangeabilityRoc, eval=FALSE, include=TRUE}
+#Compute roc
+predictionsLRProb <- predict(model_LR_Exchangeable, test.data, type = "prob")
+res.rocLR <- roc(test.data$is_exchangeable ~ predictionsLRProb[,2])
+plot.roc(res.rocLR, print.auc = TRUE)
+as.numeric(res.rocLR$auc)
+# [1] 0.6443938
+```
+
+![](images/LRExchangeabilityRoc.png)
+
+```{r LRRegressionExchangeabilityBestRoc, eval=FALSE, include=TRUE}
+# Get the probability threshold for specificity = 0.5
+library(vctrs)
+rocModelLR.data <- data_frame(
+  thresholds = res.rocLR$thresholds,
+  sensitivity = res.rocLR$sensitivities,
+  specificity = res.rocLR$specificities
+)
+rocModelLR.data %>% filter(specificity >= 0.5)
+plot.roc(res.rocLR, print.auc = TRUE, print.thres = "best")
+```
+
+![](images/LRExchangeabilityBestRoc.png)
 
 ## Model Results and Comparisons
 

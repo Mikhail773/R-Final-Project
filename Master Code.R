@@ -602,36 +602,32 @@ model_LR_Exchangeable <-  train( is_exchangeable ~ ., data = train.data, method 
                                  tuneLength = 10
 )
 
-model_LR_Exchangeable$xlevels[["model_name"]] <- union(model_LR_Exchangeable$xlevels[["model_name"]], levels(test.data$model_name))
-predictionsLR <- predict(model_LR_Exchangeable, test.data, se.fit=FALSE, type= "response")
-predictionsLR.classes <- ifelse(predictionsLR > 0.5, "TRUE", "FALSE")
-predictionsLR.classes
+predictionsLR <- predict(model_LR_Exchangeable, test.data)
 # Check accuracy, error, and confusion matrix
-accuracy <- mean(test.data$is_exchangeable == predictionsLR.classes)
+accuracy <- mean(test.data$is_exchangeable == predictionsLR)
 accuracy
-# [1] 0.6871661
-error <- mean(test.data$is_exchangeable != predictionsLR.classes)
+# [1] 0.6647557
+error <- mean(test.data$is_exchangeable != predictionsLR)
 error
-# [1] 0.3128339
-confusionMatrix(test.data$is_exchangeable, predictionsLR.classes)
+# [1] 0.3352443
+confusionMatrix(test.data$is_exchangeable, predictionsLR)
 
 #Compute roc
-predictionsDTProb <- predict(model_DT_Exchangeable, test.data, type = "prob")
-res.roc <- roc(test.data$is_exchangeable ~ predictionsDTProb[,2])
-plot.roc(res.roc, print.auc = TRUE)
-as.numeric(res.roc$auc)
-# [1] 0.6525616
+predictionsLRProb <- predict(model_LR_Exchangeable, test.data, type = "prob")
+res.rocLR <- roc(test.data$is_exchangeable ~ predictionsLRProb[,2])
+plot.roc(res.rocLR, print.auc = TRUE)
+as.numeric(res.rocLR$auc)
+# [1] 0.6443938
 
-# Get the probability threshold for specificity = 0.6
+# Get the probability threshold for specificity = 0.5
 library(vctrs)
-rocModelDT.data <- data_frame(
-  thresholds = res.roc$thresholds,
-  sensitivity = res.roc$sensitivities,
-  specificity = res.roc$specificities
+rocModelLR.data <- data_frame(
+  thresholds = res.rocLR$thresholds,
+  sensitivity = res.rocLR$sensitivities,
+  specificity = res.rocLR$specificities
 )
-rocModelDT.data %>% filter(specificity >= 0.6)
-plotModelDT.roc(res.roc, print.auc = TRUE, print.thres = "best")
-
+rocModelLR.data %>% filter(specificity >= 0.5)
+plot.roc(res.rocLR, print.auc = TRUE, print.thres = "best")
 
 ###################################################################################################
 #
