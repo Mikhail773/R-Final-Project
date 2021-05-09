@@ -585,15 +585,15 @@ plot.roc(res.roc, print.auc = TRUE)
 as.numeric(res.roc$auc)
 # [1] 0.6525616
 
-# Get the probability threshold for specificity = 0.6
+# Get the probability threshold for specificity = 0.5
 library(vctrs)
 rocModelDT.data <- data_frame(
   thresholds = res.roc$thresholds,
   sensitivity = res.roc$sensitivities,
   specificity = res.roc$specificities
 )
-rocModelDT.data %>% filter(specificity >= 0.6)
-plotModelDT.roc(res.roc, print.auc = TRUE, print.thres = "best")
+rocModelDT.data %>% filter(specificity >= 0.5)
+plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
 ## Using Logistic Regression to predict exchangeability
 model_LR_Exchangeable <-  train( is_exchangeable ~ ., data = train.data, method = "glm", family = "binomial",
