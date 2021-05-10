@@ -456,7 +456,7 @@ Investigating the results of the one-way anova we can confirm our claim. The p-v
 We continue with the Tukey HSD to do multiple pairwise-comparisons between the means of our groups. This will allow us to see exactly which manufacturers significantly differ in asking price.
 
 ```{r ManufTukey, eval=FALSE, include=TRUE}
-# Result ommitted for brevity sake}
+# Result ommitted for brevity sake
 # Tukey Test
 TukeyHSD(res.aovTwo)
 ```
@@ -500,7 +500,7 @@ Since the p-value is less than 0.05 we can conclude that Price and Odometer are 
 
 We continue with our question by investigating how good of an indicator of price odometer is. To do this we will use linear regression, and check the percentage of accuracy of that line. Afterwords, we will graph the linear regression line to provide us with a useful visual.
 
-```{r odometerLm, echo=FALSE}
+```{r odometerLm}
 odometer_on_price <- lm (price_usd ~ odometer_value, data = cars_edited)
 
 ggplot (cars_edited, aes(x=odometer_value, y=price_usd)) + geom_point() + stat_smooth(method=lm)
@@ -1357,22 +1357,13 @@ Given the RMSE being 3693.127 we calculated our error rate as 3693.127/mean(test
 
 ## Results obtained using different ML methods
 
-+-------------------------------+--------------+--------------+---------------+
-| Machine-Learning Methods      | RMSE         | Error Rate   | R-Square      |
-+:==============================+:============:+:============:+==============:+
+| Machine-Learning Methods      |     RMSE     |  Error Rate  |      R-Square |
+|:------------------------------|:------------:|:------------:|--------------:|
 | Multiple Linear Regression    | **4573.511** | **68.60393** | **0.5095891** |
-+-------------------------------+--------------+--------------+---------------+
 | SVR Linear                    | **3257.887** | **48.86921** | **0.7772176** |
-+-------------------------------+--------------+--------------+---------------+
-| SVR Polynomial                |              |              |               |
-+-------------------------------+--------------+--------------+---------------+
 | SVR Radial                    | **4752.231** | **71.28478** | **0.5937837** |
-+-------------------------------+--------------+--------------+---------------+
 | Decision Tree Regression      | **3245.413** | **48.68209** | **0.7529956** |
-+-------------------------------+--------------+--------------+---------------+
 | Random Forest Tree Regression | **1879.884** | **28.19878** | **0.9184761** |
-+-------------------------------+--------------+--------------+---------------+
 | KNN(K Nearest Neighbor)       | **3693.127** | **55.39793** | **0.6802895** |
-+-------------------------------+--------------+--------------+---------------+
 
 Note: Some vehicles do not occur often due to a limit in the data collected and for that reason prediction made on vehicles(specifically models) that are not common ought to be taken with the limitations of the models in mind.
