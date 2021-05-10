@@ -25,7 +25,30 @@ library(vctrs)
 
 The dataset in question is of used cars in a popular catalog from the country of Belarus. This dataset will be cleaned and analyzed to answer several questions about the effect that certain variables have on the price point at which cars are sold at. Ultimately, Multiple Linear Regression Models, SVR, Decision Tree Regression, Random Forest Regression, and KNN will all be used to predict the market price of a used car in Belarus given the attributes found in the dataset. The accuracy of these models were analyzed and performance tested for real-world application with the help of a training and testing dataset. Afterwords, the models were compared to find the most effective model for predicting the price of a used car in Belarus. Also, a Decision Tree and a Logistic Regression Model will be used to create an exploratory and predictive model for the exchangeability of a vehicle in the Belarus.
 
-**STATE OUR FINDINGS**
+**OUR FINDINGS:**
+What we have found is that the Random forest tree had the best R2 value and error rate, meaning it had the best predictions. The two worst prediction models were the Multiple Linear Regression, and SVR Radial. Here is the list of of all of our results from each of our models. The lower the error rate the better, and the higher the R2 value the better the corrolation the model has with the data.
+
++-------------------------------+--------------+--------------+---------------+
+| Machine-Learning Methods      | RMSE         | Error Rate   | R-Square      |
++:==============================+:============:+:============:+==============:+
+| Multiple Linear Regression    | **4573.511** | **68.60393** | **0.5095891** |
++-------------------------------+--------------+--------------+---------------+
+| SVR Linear                    | **3257.887** | **48.86921** | **0.7772176** |
++-------------------------------+--------------+--------------+---------------+
+| SVR Polynomial                |              |              |               |
++-------------------------------+--------------+--------------+---------------+
+| SVR Radial                    | **4752.231** | **71.28478** | **0.5937837** |
++-------------------------------+--------------+--------------+---------------+
+| Decision Tree Regression      | **3245.413** | **48.68209** | **0.7529956** |
++-------------------------------+--------------+--------------+---------------+
+| Random Forest Tree Regression | **1879.884** | **28.19878** | **0.9184761** |
++-------------------------------+--------------+--------------+---------------+
+| KNN(K Nearest Neighbor)       | **3693.127** | **55.39793** | **0.6802895** |
++-------------------------------+--------------+--------------+---------------+
+
+
+Lastly we have
+
 
 # Introduction: Overview of the problems/goals and how they will be solved
 
