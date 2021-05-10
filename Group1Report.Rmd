@@ -49,6 +49,22 @@ What we have found is that the Random forest tree had the best R2 value and erro
 
 Lastly we have the results from the exchangeability predictive models. We had two different models to test the vehicle exchangeability, these two models are the decision tree and logistic regression. Both of these trees were very similar, however the decision tree was slightly better in predicting exchangeability. 
 
+The reason for this being the case is because of these values.
+
+Decision tree:
+AUC: 0.653
+Accuracy: 0.6872
+Sensitivity: 0.7039
+Specificity: 0.6062
+
+Logistic regression:
+AUC: 0.644
+Accuracy: 0.6648
+Sensitivity: 0.6846
+Specificity: 0.6445
+
+The AUC, accuracy, sensitivity, and specificity are higher in the decision tree. All of these values provide a better prediction when higher. Thus the decision tree is a better prediction.
+
 
 # Introduction: Overview of the problems/goals and how they will be solved
 
