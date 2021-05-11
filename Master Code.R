@@ -15,6 +15,7 @@ library(rpart) # Decision Tree Regression
 library(randomForest) #  Random Forest Tree Regression
 library(ranger) # RFT more than 53 factors
 library(pROC) # Calculate roc
+library(vctrs)
 ###################################################################################################
 #
 # Evaluate the data
@@ -603,7 +604,6 @@ as.numeric(res.roc$auc)
 # [1] 0.6525616
 
 # Get the probability threshold for specificity = 0.5
-library(vctrs)
 rocModelDT.data <- data_frame(
   thresholds = res.roc$thresholds,
   sensitivity = res.roc$sensitivities,
@@ -654,7 +654,6 @@ as.numeric(res.rocLR$auc)
 # [1] 0.6443938
 
 # Get the probability threshold for specificity = 0.5
-library(vctrs)
 rocModelLR.data <- data_frame(
   thresholds = res.rocLR$thresholds,
   sensitivity = res.rocLR$sensitivities,
