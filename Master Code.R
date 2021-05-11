@@ -638,12 +638,31 @@ plot.roc(res.rocLR, print.auc = TRUE, print.thres = "best")
 ###################################################################################################
 
 ## Multiple Linear Regression Models
-
 # R^2 for test/train dataset
+<<<<<<< HEAD
 LM <- lm(price_usd ~ ., data = train.data)
 
 step.LM <- LM %>% stepAIC(trace = FALSE)
 vif(step.LM)
+=======
+LM <- lm(price_usd ~ . -model_name, data = train.data)
+
+step.LM <- LM %>% stepAIC(trace = FALSE)
+vif(step.LM)
+# GVIF Df GVIF^(1/(2*Df))
+# manufacturer_name 15.288862 54        1.025573
+# transmission       1.840427  1        1.356623
+# color              1.545952 11        1.019999
+# odometer_value     1.627875  1        1.275882
+# year_produced      2.136749  1        1.461762
+# engine_fuel        1.691724  5        1.053981
+# engine_capacity    2.224866  1        1.491598
+# body_type          8.701242 11        1.103337
+# drivetrain         6.095660  2        1.571286
+# location_region    1.099706  5        1.009550
+# number_of_photos   1.113954  1        1.055440
+# duration_listed    1.023732  1        1.011797
+>>>>>>> parent of 40043cfd (Revert "Fix LM, comparison chart and talk about VIF")
 summary(step.LM)
 coef(step.LM)
 confint(step.LM)
@@ -651,6 +670,7 @@ LMPrediction <- predict(step.LM, test.data)
 
 # Prediction error, rmse
 RMSE(LMPrediction,test.data$price_usd)
+<<<<<<< HEAD
 
 # Compute R-square
 R2(LMPrediction,test.data$price_usd) ## R^2 for test/train is 50.95891%
@@ -667,16 +687,42 @@ summary(step.logConts)
 coef(step.logConts)
 
 confint(step.logConts)
+=======
+#[1] 3542.066
+
+# Compute R-square
+R2(LMPrediction,test.data$price_usd)
+# [1] 0.7058649
+
+# Log transformation
+LogLM <- lm(log(price_usd) ~ . -model_name, data = train.data)
+
+step.LogLM <- LogLM %>% stepAIC(trace = FALSE)
+vif(step.LogLM)
+
+summary(step.LogLM)
+
+coef(step.LogLM)
+
+confint(step.LogLM)
+>>>>>>> parent of 40043cfd (Revert "Fix LM, comparison chart and talk about VIF")
 
 
 # Predict using Multiple Linear Regression Model
-LogLMContsPrediction <- step.logConts %>% predict(test.data)
+LogLMPrediction <- step.LogLM %>% predict(test.data)
 
 # Prediction error, rmse
+<<<<<<< HEAD
 RMSE(LogLMContsPrediction,test.data$price_usd)
 
 # Compute R-square
 R2(LogLMContsPrediction,test.data$price_usd)
+=======
+RMSE(LogLMPrediction,test.data$price_usd)
+
+# Compute R-square
+R2(LogLMPrediction,test.data$price_usd)
+>>>>>>> parent of 40043cfd (Revert "Fix LM, comparison chart and talk about VIF")
 
 # Log transformation is less accurate
 ###################################################################################################
@@ -1006,6 +1052,10 @@ summary(Cars_continuous)
 
 #Summary of Attributes_without Outliers
 summary(cars_edited_without_outliers)
+<<<<<<< HEAD
+=======
+
+>>>>>>> parent of 40043cfd (Revert "Fix LM, comparison chart and talk about VIF")
 ##############################################################################################################
 #
 # Clean up
