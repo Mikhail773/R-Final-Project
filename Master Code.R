@@ -27,7 +27,7 @@ View(cars) #view the data
 
 ###################################################################################################
 #
-# Edit(modify) the data: Recoding was done to the file and the CSV file was saved that way. 
+# Edit(modify) the data: Recoding was done to the file and the CSV file was saved that way.
 # This prevented issues arising from locale settings and made working on the code easier as a group.
 #
 
@@ -162,7 +162,7 @@ ggplot(cars_edited, aes(x = color)) + geom_bar(stat = "count", aes(fill = color)
 
 # 5) Histogram Odometer Value: Graph to see how the data is skewed
 ggplot(cars_edited, aes(odometer_value)) + geom_histogram()
-# The data is left-skewed with what appears to be outliers as around 1,000,000 miles. 
+# The data is left-skewed with what appears to be outliers as around 1,000,000 miles.
 
 # 6) Histogram Year produced: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(aes(year_produced))
@@ -174,7 +174,7 @@ ggplot(cars_edited, aes(x = engine_fuel)) + geom_bar(stat = "count", aes(fill = 
 
 # 8) Pie graph to show engine type Distribution (Electric, Diesel, Gasoline)
 TypeGrouped <- group_by(cars_edited, engine_type)
-TypeCounted <- count(TypeGrouped) 
+TypeCounted <- count(TypeGrouped)
 percentType <- paste0(round(100*TypeCounted$n/sum(TypeCounted$n), 2), "%")
 pie(TypeCounted$n, labels = percentType, main = "Engine Type Distribution", col = rainbow(nrow(TypeCounted)))
 legend("right", c("diesel", "electric", "gasoline"), cex = 0.8,
@@ -191,12 +191,12 @@ ggplot(cars_edited, aes(x = body_type), stat = "count") + geom_bar() + geom_text
 
 # 11) Graph Drivetrain distribution:
 drivetrainGrouped <- group_by(cars_edited, drivetrain)
-drivetrainCounted <- count(drivetrainGrouped) 
+drivetrainCounted <- count(drivetrainGrouped)
 percentdrivetrain <- paste0(round(100*drivetrainCounted$n/sum(drivetrainCounted$n), 2), "%")
 pie(drivetrainCounted$n, labels = percentdrivetrain, main = "Drivetrain Distribution", col = rainbow(nrow(drivetrainCounted)))
 legend("right", c("all", "front", "rear"), cex = 0.8,
        fill = rainbow(nrow(drivetrainCounted)))
-# Although most vehicles are front wheel drive there is enough all and real wheel drive to gather some promising insights 
+# Although most vehicles are front wheel drive there is enough all and real wheel drive to gather some promising insights
 
 # 12) Number of cars with same price
 ggplot(cars_edited, aes(x = price_usd), stat = "count") + geom_histogram()
@@ -204,7 +204,7 @@ ggplot(cars_edited, aes(x = price_usd), stat = "count") + geom_histogram()
 
 # 13) Pie Graph exchangeability Distribution
 exchangeableGrouped <- group_by(cars_edited, is_exchangeable)
-exchangeableCounted <- count(exchangeableGrouped) 
+exchangeableCounted <- count(exchangeableGrouped)
 percentexchangeable <- paste0(round(100*exchangeableCounted$n/sum(exchangeableCounted$n), 2), "%")
 pie(exchangeableCounted$n, labels = percentexchangeable, main = "Exchangeability Distribution", col = rainbow(nrow(exchangeableCounted)))
 legend("right", c("False", "True"), cex = 0.8,
@@ -218,7 +218,7 @@ percentRegion <- paste0(round(100*regionPriceDFCount$n/sum(regionPriceDFCount$n)
 pie(regionPriceDFCount$n, labels = percentRegion, main = "Region Price Distribution", col = rainbow(nrow(regionPriceDFCount)))
 legend("right", c("Brest Region", "Gomel Region", "Grodno Region", "Minsk Region", "Mogilev Region", "Vitebsk Region"), cex = 0.8,
        fill = rainbow(nrow(regionPriceDFCount)))
-# Minsk accounts for a very large amount of vehicles(makes sense considering the population sizes) with even distributions everywhere else. 
+# Minsk accounts for a very large amount of vehicles(makes sense considering the population sizes) with even distributions everywhere else.
 # The usefulness of the attribute may be less since Minsk is such a large portion of the data.
 
 # 15) Histogram Number of photos: Graph to see how the data is skewed
@@ -231,7 +231,7 @@ ggplot(cars_edited) + geom_boxplot(mapping = aes(number_of_photos))
 
 # 17) Histogram Up counter: investigating how our outliers look with our modifications
 ggplot(cars_edited) + geom_histogram(mapping = aes(up_counter))
-# Clearly an outliers exists since there is a large scale. 
+# Clearly an outliers exists since there is a large scale.
 
 # 18) Box plot Duration listed: investigating how our outliers look with our modifications
 ggplot(cars_edited) + geom_boxplot(mapping = aes(duration_listed))
@@ -308,7 +308,7 @@ cars_edited %>% group_by(manufacturer_name) %>% summarize(mean(price_usd)) %>% V
 # (Emma Doyle)
 #
 # 1) What impact does region have on price?
-# 
+#
 # Region does impact price. However, the extent of this impact would have to be assessed in a model that includes more attributes.
 # The best indicator of the relationship will be seen in the total model.
 # Regions: Minsk, Gomel, Brest, Vitebsk, Mogilev, Grodno
@@ -320,7 +320,7 @@ cars_edited %>% group_by(manufacturer_name) %>% summarize(mean(price_usd)) %>% V
 #per region
 regionPriceDF <- group_by(cars_edited, location_region)
 regionPriceDF_averages <- summarise(regionPriceDF, average_price_usd = mean(price_usd))
-ggplot(regionPriceDF_averages,aes(x= location_region, y = average_price_usd)) + geom_bar(stat = "identity") 
+ggplot(regionPriceDF_averages,aes(x= location_region, y = average_price_usd)) + geom_bar(stat = "identity")
 
 #one-way anova
 group_by(regionPriceDF, regionPriceDF$location_region) %>%
@@ -341,7 +341,7 @@ TukeyHSD(res.aov)
 ###################################################################################################
 #
 # (Emma Doyle)
-# 
+#
 # 2) Do manufacturers have a significant impact on the asking price of a vehicle?
 # Manufacturers does correlate to the asking price of a vehicle.
 #
@@ -376,8 +376,8 @@ TukeyHSD(res.aovTwo)
 # (Reid Hoffmeier)
 #
 # 3) What is the relationship between odometer and price?
-# 
-# There is a low negative correlation between price and odometer. 
+#
+# There is a low negative correlation between price and odometer.
 # We can conclude that although there is an impact many more attributes effect the price of a vehicle.
 #
 
@@ -414,7 +414,7 @@ sigma(odometer_on_price)*100/mean(cars_edited$price_usd)
 #
 
 #Scatter plot: Number of photos and price
-ggplot(cars_edited, aes( x =number_of_photos, y=price_usd)) + geom_hex() + stat_smooth(color = "red") 
+ggplot(cars_edited, aes( x =number_of_photos, y=price_usd)) + geom_hex() + stat_smooth(color = "red")
 
 #getting the cor value
 cor.test(cars_edited$number_of_photos, cars_edited$price_usd)
@@ -496,7 +496,7 @@ TukeyHSD(body_engine_type_on_price.aov)
 # 7) Dplyr count with group_by, One-Way Anova:
 # What is the most popular model?
 # Most popular is Passat.
-# 
+#
 # Can we conclude that the popularity of a model has a direct impact on the price of a vehicle?
 # The popularity of a vehicle does seem to have an impact on the average_price of a vehicle
 # More attributes would be needed to predict price.
@@ -525,7 +525,7 @@ sigma(modelPrice)*100/mean(cars_edited$price_usd)
 #
 # (Mikhail Mikhaylov)
 # 8) Scatter plot, Two-Way ANOVA/ :
-# 
+#
 # What is the average age of each vehicle manufacturer?
 # Does the manufacturer change how the production year impacts the selling price?
 #
@@ -557,15 +557,15 @@ sigma(ManufyearPrice)*100/mean(cars_edited$price_usd)
 
 ###################################################################################################
 #
-# Predicting Exchangeability 
+# Predicting Exchangeability
 # We will see if we can predict exchangeability given all the other attributes
 #
 ###################################################################################################
 ## Using Decision Tree to predict exchangeability
 model_DT_Exchangeable <-  train(is_exchangeable ~ . , data = train.data, method = "rpart",
-                                                 trControl = trainControl("cv",number = 10),
-                                                 preProcess = c("center","scale"),
-                                                 tuneLength = 10)
+                                trControl = trainControl("cv",number = 10),
+                                preProcess = c("center","scale"),
+                                tuneLength = 10)
 
 predictionsDT <- predict(model_DT_Exchangeable, test.data)
 
@@ -629,39 +629,6 @@ rocModelLR.data <- data_frame(
 rocModelLR.data %>% filter(specificity >= 0.5)
 plot.roc(res.rocLR, print.auc = TRUE, print.thres = "best")
 
-## Using QDA to predict exchangeability
-model_QDA_Exchangeable <-  train( is_exchangeable ~ ., data = train.data, method = "qda",
-                                 trControl = trainControl("cv", number =10),
-                                 preProcess = c("center", "scale"),
-                                 tuneLength = 10
-)
-
-predictionsQDA <- predict(model_QDA_Exchangeable, test.data)
-# Check accuracy, error, and confusion matrix
-accuracy <- mean(test.data$is_exchangeable == predictionsQDA)
-accuracy
-# [1] 0.6647557
-error <- mean(test.data$is_exchangeable != predictionsQDA)
-error
-# [1] 0.3352443
-confusionMatrix(test.data$is_exchangeable, predictionsQDA)
-
-#Compute roc
-predictionsQDAProb <- predict(model_LDA_Exchangeable, test.data, type = "prob")
-res.rocLDA <- roc(test.data$is_exchangeable ~ predictionsQDAProb[,2])
-plot.roc(res.rocLR, print.auc = TRUE)
-as.numeric(res.rocLDA$auc)
-# [1] 0.6443938
-
-# Get the probability threshold for specificity = 0.5
-library(vctrs)
-rocModelLDA.data <- data_frame(
-  thresholds = res.rocLR$thresholds,
-  sensitivity = res.rocLR$sensitivities,
-  specificity = res.rocLR$specificities
-)
-rocModelLDA.data %>% filter(specificity >= 0.5)
-plot.roc(res.rocLDA, print.auc = TRUE, print.thres = "best")
 ###################################################################################################
 #
 # (Everyone) Goal:
@@ -673,99 +640,48 @@ plot.roc(res.rocLDA, print.auc = TRUE, print.thres = "best")
 ## Multiple Linear Regression Models
 
 # R^2 for test/train dataset
-LMCont <- lm(price_usd ~ odometer_value
-             + year_produced
-             + number_of_photos
-             + duration_listed
-             + up_counter
-             , data = train.data)
+LM <- lm(price_usd ~ ., data = train.data)
 
-vif(LMCont)
-#  odometer_value    year_produced number_of_photos 
-#1.311552         1.375432         1.088560 
-#duration_listed       up_counter 
-#1.985559         1.995992 
-step.LMConts <- LMCont %>% stepAIC(trace = FALSE)
-vif(step.LMConts)
-#odometer_value    year_produced number_of_photos 
-#1.311552         1.375432         1.088560 
-#duration_listed       up_counter 
-#1.985559         1.995992 
-summary(step.LMConts)
-#See summary(step.LMConts).txt
-coef(step.LMConts)
-#(Intercept)   odometer_value    year_produced 
-#-9.916423e+05    -4.419525e-03     4.981272e+02 
-#number_of_photos  duration_listed       up_counter 
-#1.481601e+02     2.241819e+00     2.252599e+00 
-confint(step.LMConts)
-#                2.5 %        97.5 %
-#(Intercept)      -1.005960e+06 -9.773249e+05
-#odometer_value   -4.833614e-03 -4.005436e-03
-#year_produced     4.909951e+02  5.052594e+02
-#number_of_photos  1.398282e+02  1.564919e+02
-#duration_listed   1.625863e+00  2.857775e+00
-#up_counter        6.685618e-01  3.836636e+00
-#
-# Predict using Multiple Linear Regression Model
-LMContPrediction <- predict(step.LMConts, test.data)
+step.LM <- LM %>% stepAIC(trace = FALSE)
+vif(step.LM)
+summary(step.LM)
+coef(step.LM)
+confint(step.LM)
+LMPrediction <- predict(step.LM, test.data)
 
 # Prediction error, rmse
-RMSE(LMContPrediction,test.data$price_usd)
-#[1] 4573.511
-# Compute R-square
-R2(LMContPrediction,test.data$price_usd) ## R^2 for test/train is 50.95891%
-#[1] 0.5095891
-# Log transformation
-LogLMConts <- lm(log(price_usd) ~ odometer_value
-                 + year_produced
-                 + number_of_photos
-                 + duration_listed
-                 + up_counter
-                 , data = train.data)
+RMSE(LMPrediction,test.data$price_usd)
 
-vif(LogLMConts)
-#  odometer_value    year_produced number_of_photos 
-#1.311552         1.375432         1.088560 
-#duration_listed       up_counter 
-#1.985559         1.995992 
+# Compute R-square
+R2(LMPrediction,test.data$price_usd) ## R^2 for test/train is 50.95891%
+
+# Log transformation
+LogLMConts <- lm(log(price_usd) ~ . -model_name
+                 , data = train.data)
 
 step.logConts <- LogLMConts %>% stepAIC(trace = FALSE)
 vif(step.logConts)
-#  odometer_value    year_produced number_of_photos 
-#1.311231         1.375118         1.070669 
-#duration_listed 
-#1.000910 
+
 summary(step.logConts)
-#See summary(step.logConts).txt
 
 coef(step.logConts)
-#     (Intercept)   odometer_value    year_produced 
-#-1.946299e+02     1.674743e-07     1.012069e-01 
-#number_of_photos  duration_listed 
-#1.907346e-02     5.426537e-04 
+
 confint(step.logConts)
-#                         2.5 %        97.5 %
-#(Intercept)      -1.965454e+02 -1.927144e+02
-#odometer_value    1.120756e-07  2.228729e-07
-#year_produced     1.002527e-01  1.021610e-01
-#number_of_photos  1.796785e-02  2.017907e-02
-#duration_listed   4.841392e-04  6.011683e-04
+
 
 # Predict using Multiple Linear Regression Model
 LogLMContsPrediction <- step.logConts %>% predict(test.data)
 
 # Prediction error, rmse
 RMSE(LogLMContsPrediction,test.data$price_usd)
-#[1] 9325.461
 
 # Compute R-square
 R2(LogLMContsPrediction,test.data$price_usd)
-#[1] 0.4949189
+
 # Log transformation is less accurate
 ###################################################################################################
 # SVR Models
-# 
+#
 # Create SVR Model using Linear Method
 #
 
@@ -776,8 +692,8 @@ modelSVRLinTrain <- train( price_usd ~ ., data = train.data, method = "svmLinear
 )
 
 summary(modelSVRLinTrain)
-#Length  Class   Mode 
-#1   ksvm     S4 
+#Length  Class   Mode
+#1   ksvm     S4
 modelSVRLinTrain$bestTune
 #C
 #1 1
@@ -822,17 +738,17 @@ modelSVRRadialTrain <- train(price_usd ~ ., data = train.data, method = "svmRadi
 
 summary(modelSVRRadialTrain)
 #Length  Class   Mode
-#1   ksvm     S4					 
+#1   ksvm     S4                    
 modelSVRRadialTrain$bestTune
 #sigma   C
-#10 0.001556481 128				   
+#10 0.001556481 128                   
 
 # Predict using SVR Model with Radial Method
 modelSVRRadialTrainPrediction <- predict(modelSVRRadialTrain, test.data)
 
 # Prediction error, rmse
 RMSE(modelSVRRadialTrainPrediction,test.data$price_usd)
-#[1] 4752.231			 
+#[1] 4752.231            
 
 # Compute R-square
 R2(modelSVRRadialTrainPrediction,test.data$price_usd)
@@ -864,18 +780,18 @@ text(model_DT_Train$finalModel, digits = 3)
 
 #Decision rules in the model
 model_DT_Train$finalModel
-# See model_DT_Train$finalModel.txt						  
+# See model_DT_Train$finalModel.txt                          
 
 # Make predictions on the test data
 prediction_DT_Train <- model_DT_Train %>% predict(test.data)
 
 # Prediction error, rmse
 RMSE(prediction_DT_Train,test.data$price_usd)
-#[1] 3245.413	 
+#[1] 3245.413    
 
 # Compute R-square
 R2(prediction_DT_Train,test.data$price_usd)
-#[1] 0.7529956			  
+#[1] 0.7529956              
 
 ###################################################################################################
 #
@@ -912,18 +828,17 @@ summary(random_forest_ranger)
 #problemType                   1  -none-        character
 #tuneValue                     3  data.frame    list     
 #obsLevels                     1  -none-        logical  
-#param                         0  -none-        list 
+#param                         0  -none-        list
 
-plot(random_forest_ranger)
 print(random_forest_ranger)
-#Random Forest 
+#Random Forest
 #
 #30815 samples
 #16 predictor
 #
-#Pre-processing: centered (1176), scaled (1176) 
-#Resampling: Cross-Validated (10 fold) 
-#Summary of sample sizes: 27733, 27733, 27732, 27735, 27734, 27734, ... 
+#Pre-processing: centered (1176), scaled (1176)
+#Resampling: Cross-Validated (10 fold)
+#Summary of sample sizes: 27733, 27733, 27732, 27735, 27734, 27734, ...
 #Resampling results across tuning parameters:
 #  
 #  mtry  splitrule   RMSE      Rsquared   MAE     
@@ -956,19 +871,19 @@ random_forest_ranger$finalModel
 #Ranger result
 #
 #Call:
-#  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = min(param$mtry, ncol(x)), min.node.size = param$min.node.size,      splitrule = as.character(param$splitrule), write.forest = TRUE,      probability = classProbs, ...) 
+#  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = min(param$mtry, ncol(x)), min.node.size = param$min.node.size,      splitrule = as.character(param$splitrule), write.forest = TRUE,      probability = classProbs, ...)
 #
-#Type:                             Regression 
-#Number of trees:                  500 
-#Sample size:                      30815 
-#Number of independent variables:  1215 
-#Mtry:                             1215 
-#Target node size:                 5 
-#Variable importance mode:         none 
-#Splitrule:                        extratrees 
-#Number of random splits:          1 
-#OOB prediction error (MSE):       3137444 
-#R squared (OOB):                  0.9233405 
+#Type:                             Regression
+#Number of trees:                  500
+#Sample size:                      30815
+#Number of independent variables:  1215
+#Mtry:                             1215
+#Target node size:                 5
+#Variable importance mode:         none
+#Splitrule:                        extratrees
+#Number of random splits:          1
+#OOB prediction error (MSE):       3137444
+#R squared (OOB):                  0.9233405
 
 # Make predictions on the test data
 rf_predict_ranger <- predict(random_forest_ranger, test.data)
@@ -1002,7 +917,7 @@ summary(model_knn$finalModel)
 #problemType    1   -none-     character
 #tuneValue      1   data.frame list     
 #obsLevels      1   -none-     logical  
-#param          0   -none-     list	
+#param          0   -none-     list    
 
 # Print the best tuning parameter k that maximizes model accuracy
 model_knn$bestTune
@@ -1091,43 +1006,6 @@ summary(Cars_continuous)
 
 #Summary of Attributes_without Outliers
 summary(cars_edited_without_outliers)
-
-# Train No_Outliers
-trainingCont.samples <- cars_edited_without_outliers$manufacturer_name %>% createDataPartition(p = 0.8, list = FALSE)
-trainCont.data <- cars_edited_without_outliers[training.samples,]
-testCont.data <- cars_edited_without_outliers[-training.samples,]
-
-
-
-LMOutliers <- lm(price_usd ~ odometer_value
-         + year_produced
-         + number_of_photos
-         + duration_listed
-         + up_counter
-         , data = cars_edited_without_outliers)
-step.LMOutliers <- LM %>% stepAIC(trace = FALSE)
-vif(step.LMOutliers)
-summary(step.LMOutliers)
-
-# R^2 for test/train dataset
-LMContOutliers <- lm(price_usd ~ odometer_value
-             + year_produced
-             + number_of_photos
-             + duration_listed
-             + up_counter
-             , data = trainCont.data)
-
-vif(LMContOutliers)
-step.LMContsOutliers <- LMContOutliers %>% stepAIC(trace = FALSE)
-vif(step.LMContsOutliers)
-summary(step.LMContsOutliers)
-coef(step.LMContsOutliers)
-confint(step.LMContsOutliers)
-LMContOutliersPrediction <- predict(step.LMContsOutliers, test.data)
-rmse(test.data$price_usd, LMContOutliersPrediction)
-rmse(test.data$price_usd, LMContOutliersPrediction)/mean(test.data$price_usd)  ##0.7025614
-R2(LMContOutliersPrediction,test.data$price_usd) ## R^2 for test/train is 51.10202%
-
 ##############################################################################################################
 #
 # Clean up
@@ -1144,3 +1022,5 @@ detach("package:datasets", unload = TRUE)  # For base
 
 # Clear console
 cat("\014")
+
+
