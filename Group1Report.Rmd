@@ -23,13 +23,39 @@ library(vctrs)
 
 # Abstract: Description of the project and the findings
 
-The dataset in question is of used cars in a popular catalog from the country of Belarus. This dataset will be cleaned and analyzed to answer several questions about the effect that certain variables have on the price point at which cars are sold at. Ultimately, Multiple Linear Regression Models, SVR, Decision Tree Regression, Random Forest Regression, and KNN will all be used to predict the market price of a used car in Belarus given the attributes found in the dataset. The accuracy of these models were analyzed and performance tested for real-world application with the help of a training and testing dataset. Afterwords, the models were compared to find the most effective model for predicting the price of a used car in Belarus. Also, a Decision Tree and a Logistic Regression Model will be used to create an exploratory and predictive model for the exchangeability of a vehicle in the Belarus.
+The dataset in question is of used cars in a popular catalog from the country of Belarus. This dataset will be cleaned and analyzed to answer several questions about the effect that certain variables have on the price point at which cars are sold at. Ultimately, Multiple Linear Regression Models, SVR, Decision Tree Regression, Random Forest Regression, and KNN will all be used to predict the market price of a used car in Belarus given the attributes found in the dataset. The accuracy of these models were analyzed and performance tested for real-world application with the help of a training and testing dataset. Ultimately it was discovered that the Random Forest Tree Model was the most accurate. Meanwhile, the Multiple Linear Regression and the SVR with radial method were the worst. Regardless, the models struggled with relatively high error rates that could be explained by skewed samples towards certain regions and car models. Also, a Decision Tree and a Logistic Regression Model were used to create an exploratory and predictive model for the exchangeability of a vehicle in the Belarus with the Decision Tree Model being slightly more accurate with an accuracy of around 69%..
 
-**STATE OUR FINDINGS**
+**OUR FINDINGS:** What we have found is that the Random forest tree had the best R2 value and error rate, meaning it had the best predictions. The two worst prediction models were the Multiple Linear Regression, and SVR Radial. Here is the list of of all of our results from each of our models. The lower the error rate the better, and the higher the R2 value the better the correlation the model has with the data.
+
++-------------------------------+--------------+--------------+---------------+
+| Machine-Learning Methods      | RMSE         | Error Rate   | R-Square      |
++:==============================+:============:+:============:+==============:+
+| Multiple Linear Regression    | **4573.511** | **68.60393** | **0.5095891** |
++-------------------------------+--------------+--------------+---------------+
+| SVR Linear                    | **3257.887** | **48.86921** | **0.7772176** |
++-------------------------------+--------------+--------------+---------------+
+| SVR Radial                    | **4752.231** | **71.28478** | **0.5937837** |
++-------------------------------+--------------+--------------+---------------+
+| Decision Tree Regression      | **3245.413** | **48.68209** | **0.7529956** |
++-------------------------------+--------------+--------------+---------------+
+| Random Forest Tree Regression | **1879.884** | **28.19878** | **0.9184761** |
++-------------------------------+--------------+--------------+---------------+
+| KNN(K Nearest Neighbor)       | **3693.127** | **55.39793** | **0.6802895** |
++-------------------------------+--------------+--------------+---------------+
+
+Lastly we have the results from the exchangeability predictive models. We had two different models to test the vehicle exchangeability, these two models are the decision tree and logistic regression. Both of these trees were very similar, however the decision tree was slightly better in predicting exchangeability.
+
+The reason for this being the case is because of these values.
+
+Decision tree: AUC: 0.653 Accuracy: 0.6872 Sensitivity: 0.7039 Specificity: 0.6062
+
+Logistic regression: AUC: 0.644 Accuracy: 0.6648 Sensitivity: 0.6846 Specificity: 0.6445
+
+The AUC, accuracy, sensitivity, and specificity are higher in the decision tree. All of these values allow us to conclude that the Decision Tree produces a better predictive model.
 
 # Introduction: Overview of the problems/goals and how they will be solved
 
-There are several objectives that will be the focal point of the research done on the used cars dataset. First and foremost, we will be attempted to create a predictive model for the price of a used car given the attributes in the dataset. **Since cars are such a big investment we all wondered what affected the price on cars. This is what sparked our initial questions and goals. Solving our proposed questions and goal we hope to gain insights in what affects car prices which would leave us with more knowledge we can use later in life. To solve our questions and answer our goal we are going to use R to make graphs to answer our questions. We will make sure to use different statistical analyses to make sure our graphs are confirmed to be accurate.**
+There are several objectives that will be the focal point of the research done on the used cars dataset. First and foremost, we will be attempted to create a predictive model for the price of a used car given the attributes in the dataset. Since cars are such a big investment we all wondered what affected the price on cars. This is what sparked our initial questions and goals. Solving our proposed questions and goal we hope to gain insights in what affects car prices which would leave us with more knowledge we can use later in life. To solve our questions and answer our goal we are going to use R to make graphs to answer our questions. We will make sure to use different statistical analyses to make sure our graphs are confirmed to be accurate.
 
 # Initial Questions
 
@@ -343,7 +369,7 @@ KNN:K Nearest Neighbor was chosen due to its popularity and simplicity. KNN is a
 
 #### **Q1:** What impact does a region have on price?
 
-**A:** Although the region does impact price the extent of this impact would have to be assessed in a model that includes more attributes. The reason for this is because correlation does not necessitate causation. In other words, more attributes may be at play and to get a better understanding of the impact of region on price it will be vital to access the role region has in the overall models.
+**A: Although the region does impact price the extent of this impact would have to be assessed in a model that includes more attributes. The reason for this is because correlation does not necessitate causation. In other words, more attributes may be at play and to get a better understanding of the impact of region on price it will be vital to access the role region has in the overall models.**
 
 **Justification:**
 
@@ -403,7 +429,7 @@ TukeyHSD(res.aov)
 
 #### **Q2:** What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
 
-**A:** We can confirm that there is a relationship between the manufacturer and asking price. The relationship seems to be one of the larger factor for asking price, but is not significant enough to predict price on its own.
+**A: We can confirm that there is a relationship between the manufacturer and asking price. The relationship seems to be one of the larger factor for asking price, but is not significant enough to predict price on its own.**
 
 **Justification:**
 
@@ -456,7 +482,7 @@ Investigating the results of the one-way anova we can confirm our claim. The p-v
 We continue with the Tukey HSD to do multiple pairwise-comparisons between the means of our groups. This will allow us to see exactly which manufacturers significantly differ in asking price.
 
 ```{r ManufTukey, eval=FALSE, include=TRUE}
-# Result ommitted for brevity sake}
+# Result ommitted for brevity sake
 # Tukey Test
 TukeyHSD(res.aovTwo)
 ```
@@ -469,7 +495,7 @@ With the results see that numerous manufacturers are statistically different and
 
 #### **Q3:** What is the relationship between odometer and price?
 
-**A:** There is a low negative correlation between price and odometer.
+**A: There is a low negative correlation between price and odometer.**
 
 **Justification:**
 
@@ -500,7 +526,7 @@ Since the p-value is less than 0.05 we can conclude that Price and Odometer are 
 
 We continue with our question by investigating how good of an indicator of price odometer is. To do this we will use linear regression, and check the percentage of accuracy of that line. Afterwords, we will graph the linear regression line to provide us with a useful visual.
 
-```{r odometerLm, echo=FALSE}
+```{r odometerLm}
 odometer_on_price <- lm (price_usd ~ odometer_value, data = cars_edited)
 
 ggplot (cars_edited, aes(x=odometer_value, y=price_usd)) + geom_point() + stat_smooth(method=lm)
@@ -527,7 +553,7 @@ The R2 is 0.1765 which indicates that a low proportion of prices in the data can
 
 #### **Q4:** Does the number of photos a vehicle has impact the selling price?
 
-**A:** There exists a low positive correlation between number of photos a vehicle has and the selling price.
+**A: There exists a low positive correlation between number of photos a vehicle has and the selling price.**
 
 **Justification:**
 
@@ -591,7 +617,7 @@ The R2 is 0.09994 which indicates that a low proportion of prices in the data ca
 
 #### **Q5:** Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
 
-**A:** The number of times a vehicle has been upped has a negligible impact on the selling price.
+**A:** **The number of times a vehicle has been upped has a negligible impact on the selling price.**
 
 **Justification:**
 
@@ -650,7 +676,7 @@ The R2 is 0.003311 which indicates that a low proportion of prices in the data c
 
 #### **Q6:** Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
 
-**A:** Sedan and Gasoline is the most common followed by Gasoline and Hatchback. Engine Type and Body Type do have an impact on the selling price, but the extend of this impact will need to be investigated in our overall model.
+**A: Sedan and Gasoline is the most common followed by Gasoline and Hatchback. Engine Type and Body Type do have an impact on the selling price, but the extend of this impact will need to be investigated in our overall model.**
 
 **Justification**:
 
@@ -728,7 +754,7 @@ The Tukey Test results can be evaluated to gain more detailed information on the
 
 #### **Q7:** What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
 
-**A**: The most popular is the Passat. Furthermore, The popularity of a vehicle does seem to have an impact on the average_price of a vehicle. However, more attributes would be needed to predict price.
+**A**: **The most popular is the Passat. Furthermore, The popularity of a vehicle does seem to have an impact on the average_price of a vehicle. However, more attributes would be needed to predict price.**
 
 **Justification:**
 
@@ -873,7 +899,7 @@ Our prediction error rate is lower than for other attributes (60.12396%) which c
 
 #### Predicting Exchangeability using a Decision Tree
 
-In an attempt to predict exchangeability we will deploy a Decsiion tree. The model will be running the train function with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate)l. These settings should prune our tree and ensured an optimal decision tree to predict exchangeability.
+In an attempt to predict exchangeability we will deploy a Decision tree. The model will be running the train function with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate)l. These settings should prune our tree and ensured an optimal decision tree to predict exchangeability.
 
 ```{r DTRegressionExchangeability, eval=FALSE, include=TRUE}
 ### DT Regression
@@ -894,7 +920,7 @@ error
 confusionMatrix(test.data$is_exchangeable, predictionDT)
 ```
 
-The accuracy above tells us that the Decision Tree correctly predicted \~69% of the individuals who agreed to exchangeing their vehicles. This is better than random guessing. The missclassification error rate is \~31%.
+The accuracy above tells us that the Decision Tree correctly predicted \~69% of the individuals who agreed to exchangeing their vehicles. This is better than random guessing. The misclassification error rate is \~31%.
 
 ![](images/DTExchangeability%20CMpng.PNG)
 
@@ -917,7 +943,7 @@ as.numeric(res.roc$auc)
 
 In this graph the AUC is 0.653, which i relatively good. Remember that a classifier that performs no better than chance is expected to have an AUC of 0.5 when evaluated on an independent test set not used to train the model. Meaning, that this model does in fact predict exchangeability with some success.
 
-```{r LRRegressionExchangeabilityBestRoc, eval=FALSE, include=TRUE}
+```{r DTRegressionExchangeabilityBestRoc, eval=FALSE, include=TRUE}
 # Get the probability threshold for specificity = 0.5
 rocModelDT.data <- data_frame(
   thresholds = res.roc$thresholds,
@@ -993,66 +1019,48 @@ In an attempt to create the most accurate and significant predictive model we cr
 
 ### Linear Regression Model
 
-Firstly, we created a Multiple Linear Regression Model which utilized the attributes in our dataset that had continuous data and optimized the model. The code for this looks as follows:
+Firstly, we created a Multiple Linear Regression Model which utilized the attributes in our dataset(except model_names) and optimized the model. The code for this looks as follows:
 
 ```{r LinearRegressionModel}
-LMCont <- lm(price_usd ~ odometer_value
-             + year_produced
-             + number_of_photos
-             + duration_listed
-             + up_counter
-             , data = train.data)
-
-vif(LMCont)
-#  odometer_value    year_produced number_of_photos 
-#1.311552         1.375432         1.088560 
-#duration_listed       up_counter 
-#1.985559         1.995992 
-
-step.LMConts <- LMCont %>% stepAIC(trace = FALSE)
+LM <- lm(price_usd ~ . -model_name, data = train.data)
+step.LM <- LM %>% stepAIC(trace = FALSE)
 ```
 
-```{r LMContInformation}
-vif(step.LMConts)
-#odometer_value    year_produced number_of_photos 
-#1.311552         1.375432         1.088560 
-#duration_listed       up_counter 
-#1.985559         1.995992 
-## Changes nothing
-summary(step.LMConts)
-
-coef(step.LMConts)
-#(Intercept)   odometer_value    year_produced 
-#-9.916423e+05    -4.419525e-03     4.981272e+02 
-#number_of_photos  duration_listed       up_counter 
-#1.481601e+02     2.241819e+00     2.252599e+00 
-confint(step.LMConts)
-#                2.5 %        97.5 %
-#(Intercept)      -1.005960e+06 -9.773249e+05
-#odometer_value   -4.833614e-03 -4.005436e-03
-#year_produced     4.909951e+02  5.052594e+02
-#number_of_photos  1.398282e+02  1.564919e+02
-#duration_listed   1.625863e+00  2.857775e+00
-#up_counter        6.685618e-01  3.836636e+00
+```{r LMVIF}
+vif(step.LM)
 ```
 
-Using vif we notice that Step-Wise regression doesn't eliminate any of our variables. Furthermore, we are able to find the coefficients(to be used in calculations we may want to do), and the confidence intervals for each coefficient(gives us some indication of accuracy).
+The VIF tells us vital information:
+
+Since transmission color, odometer_value, year_produced, engine_fuel, engine_capacity have VIF less than 5 we can conclude that there is no significant multi-collinearity for these attributes.
+
+However, body_type and drivetrain had VIF over 5 and less than 10 which tells us some multi-collinearity may exist for these attributes.
+
+Lastly, Manufacturer_name had a VIF of 15 which tells us there is significant multi-collinearity. This should be noted as a possible reason for flaws in the model.
 
 Now that the model is created and optimized it is vital to check the accuracy of the model. To do this we will employed our test.data to test how accurately the Linear Regression model can predict the price of a vehicle.
 
-```{r LMTesting}
-# Predict using Multiple Linear Regression Model
-LMContPrediction <- predict(step.LMConts, test.data)
-
-# Prediction error, rmse
-RMSE(LMContPrediction,test.data$price_usd)
-#[1] 4573.511
-# Compute R-square
-R2(LMContPrediction,test.data$price_usd) ## R^2 for test/train is 50.95891%
-#[1] 0.5095891
+```{r LMSummary}
+summary(step.LM)
+coef(step.LM)
+confint(step.LM)
 ```
 
-From the code above we see that our **rmse is 4573.511 which represents an error rate of 4573.511/mean(test.data\$price_usd) = 68.60393** which is not good at all. Meanwhile, the **R2 is 0.5095891**, meaning that the observed and predicted outcome values are not very correlated, which is not good. These results are not surprising and inform us that the price of a vehicle in Belarus is dependent on more attributes than simply our continuous attributes. We shall proceed with more robust models in order to achieve a better result.
+The information above is crucial for calculating values and having a general idea for the stability of our coefficients.
+
+```{r LMTesting}
+LMPrediction <- predict(step.LM, test.data)
+
+# Prediction error, rmse
+RMSE(LMPrediction,test.data$price_usd)
+#[1] 3542.066
+
+# Compute R-square
+R2(LMPrediction,test.data$price_usd)
+# [1] 0.7058649
+```
+
+From the code above we see that our **rmse is 3542.066 which represents an error rate of 3542.066/mean(test.data\$price_usd) = 53.13197** which is not good at all. Meanwhile, the **R-Squared is 0.7058649**, meaning that the observed and predicted outcome values are not very correlated, which is not good. These results are not surprising and inform us that the price of a vehicle in Belarus is dependent on more attributes than simply our continuous attributes. We shall proceed with more robust models in order to achieve a better result.
 
 note: A logarithmic transformation was done on the price and achieved an even worse result. Given the poor quality of this model we continued with SVR in an attempt to get a more robust and accurate predictive model.
 
@@ -1093,7 +1101,7 @@ R2(modelSVRLinTrainPrediction,test.data$price_usd)
 #[1] 0.7772176
 ```
 
-Observing RMSE(**3257.887**) we are able to see how concentrated the data is around our model. **Calculating our error rate we see 3257.887/mean(test.data\$price_usd) \*100 = 48.86921** is not great, but significantly better than our Linear Regression Model. Also, a **R2 of 0.7772176** is a significant increase in accuracy as well. We know that around 77.7% of our prices can be explained by our model. Nevertheless, we continue to find better models:
+Observing RMSE(**3257.887**) we are able to see how concentrated the data is around our model. **Calculating our error rate we see 3257.887/mean(test.data\$price_usd) \*100 = 48.86921** is not great, but significantly better than our Linear Regression Model. Also, a **R-Squared of 0.7772176** is a significant increase in accuracy as well. We know that around 77.7% of our prices can be explained by our model. Nevertheless, we continue to find better models:
 
 The next model to be computed is the SVR model using the polynomial method:
 
@@ -1123,7 +1131,7 @@ RMSE(modelSVRPolyTrainPrediction,test.data$price_usd)
 R2(modelSVRPolyTrainPrediction,test.data$price_usd)
 ```
 
-**Observing RMSE we are able to see how concentrated the data is around our model. Calculating our error rate we see 3257.887/mean(test.data\$price_usd) \*100 = 48.86921 is not great, but significantly better than our Linear Regression Model. Also, a R2 of 0.7772176 is a significant increase in accuracy as well. We know that around 77.7% of our prices can be explained by our model. Nevertheless, we continue to find better models:**
+**Observing RMSE we are able to see how concentrated the data is around our model. Calculating our error rate we see 3257.887/mean(test.data\$price_usd) \*100 = 48.86921 is not great, but significantly better than our Linear Regression Model. Also, a R-Squared of 0.7772176 is a significant increase in accuracy as well. We know that around 77.7% of our prices can be explained by our model. Nevertheless, we continue to find better models:**
 
 Lastly, the radial method was used with the SVR model:
 
@@ -1159,7 +1167,7 @@ R2(modelSVRRadialTrainPrediction,test.data$price_usd)
 
 ```
 
-**From the RMSE(4752.231) we calculated our error rate as 4752.231/mean(test.data\$price_usd) \*100 = 71.28478.** This is even worse than the results we had from the Linear Regression Model. Not surprisingly our R2 was also quite poor. **The R2 was 0.5937837** which again is not a good value. We know that around 59.4% of our prices can be explained by our model. These results convince us that radial basis functions are not the optimal function to be used with SVR for our model.
+**From the RMSE(4752.231) we calculated our error rate as 4752.231/mean(test.data\$price_usd) \*100 = 71.28478.** This is even worse than the results we had from the Linear Regression Model. Not surprisingly our R2 was also quite poor. **The R-Squared was 0.5937837** which again is not a good value. We know that around 59.4% of our prices can be explained by our model. These results convince us that radial basis functions are not the optimal function to be used with SVR for our model.
 
 Even though the SVR model did much better as a whole than the Linear Regression Model it was vital to investigate more models in an attempt to create an even more accurate model. The Decision Tree was a perfect candidate since it is incredibly robust and relies on very few assumptions. Its simpler nature also makes it a model that would be preferred over other models (such as Random Forest Regression).
 
@@ -1218,7 +1226,7 @@ R2(prediction_DT_Train,test.data$price_usd)
 #[1] 0.7529956
 ```
 
-**Given the RMSE being 3245.413 we calculated our error rate as 3245.413/mean(test.data\$price_usd) \*100 = 48.68209.** This is better than the Linear Regression Model, as well as SVR with Linear and Radial Kernels. Not surprisingly we have a relatively good **R2 at 0.7529956** which is better than all but SVR with linear and polynomial kernels. The R2 tells us that around 75.3% of our prices can be explained by our model. These results are fairly good, but at this point more models could not hurt. There is no guarantee that other models would perform better, but experimentation is optimal in a search for a better model.
+**Given the RMSE being 3245.413 we calculated our error rate as 3245.413/mean(test.data\$price_usd) \*100 = 48.68209.** This is better than the Linear Regression Model, as well as SVR with Linear and Radial Kernels. Not surprisingly we have a relatively good **R-Squared at 0.7529956** which is better than all but SVR with Linear Kernel and Linear Regression. The R-Squared tells us that around 75.3% of our prices can be explained by our model. These results are fairly good, but at this point more models could not hurt. There is no guarantee that other models would perform better, but experimentation is optimal in a search for a better model.
 
 Given how well the Decision Tree model operated it would make sense to try the Random Forest Tree Model given that the Random Forest Regression is a more complicated application of the Decision Tree since it leverages multiple decision trees. In essence, one can expect a better result from the Random Forest Tree (the question lies in whether the improvement is worth the complexity in calculation)
 
@@ -1258,8 +1266,6 @@ summary(random_forest_ranger)
 #obsLevels                     1  -none-        logical  
 #param                         0  -none-        list 
 
-plot(random_forest_ranger)
-#print(random_forest_ranger) #I didn't see this line....
 random_forest_ranger$finalModel
 #Ranger result
 #
@@ -1298,7 +1304,7 @@ R2(rf_predict_ranger,test.data$price_usd)
 #[1] 0.9184761
 ```
 
-**The RMSE is 1879.884 we calculated our error rate as 1879.884/mean(test.data\$price_usd) \*100 = 28.19878.** This is the best error rate so far. Not surprisingly we have a great **R2 at 0.9184761**. The R2 tells us that around 91.8% of our prices can be explained by our model. These results are the best we have so far, but improvement may still be possible. We continue with KNN in order to achieve a better result(if possible).
+**The RMSE is 1879.884 we calculated our error rate as 1879.884/mean(test.data\$price_usd) \*100 = 28.19878.** This is the best error rate so far. Not surprisingly we have a great **R-Squared at 0.9184761**. The R2 tells us that around 91.8% of our prices can be explained by our model. These results are the best we have so far, but improvement may still be possible. We continue with KNN in order to achieve a better result(if possible).
 
 ### KNN Model
 
@@ -1355,24 +1361,24 @@ R2(knn_predictions,test.data$price_usd)
 #[1] 0.6802895
 ```
 
-\*\*Given the RMSE being 3693.127 we calculated our error rate as 3693.127/mean(test.data\$price_usd) \*100 = 55.39793. **This is better than the Linear Regression Model, as well as SVR with Linear and Radial Kernels. Not surprisingly we have a relatively good R2 at 0.6802895** which is better than all but SVR with linear and polynomial kernels. The R2 tells us that around 68.02% of our prices can be explained by our model. These results are fairly good, but at this point more models could not hurt. There is no guarantee that other models would perform better, but experimentation is optimal in a search for a better model.
+Given the RMSE being 3693.127 we calculated our error rate as 3693.127/mean(test.data\$price_usd) \*100 = 55.39793. **This is better than SVR with Radial Kernel, and puts it at our second lowest performing model. The R-Squared at 0.6802895** tells us that around 68.02% of our prices can be explained by our model.
 
 ## Results obtained using different ML methods
 
-+-------------------------------+--------------+--------------+---------------+
-| Machine-Learning Methods      | RMSE         | Error Rate   | R-Square      |
-+:==============================+:============:+:============:+==============:+
-| Multiple Linear Regression    | **4573.511** | **68.60393** | **0.5095891** |
-+-------------------------------+--------------+--------------+---------------+
-| SVR Linear                    | **3257.887** | **48.86921** | **0.7772176** |
-+-------------------------------+--------------+--------------+---------------+
-| SVR Polynomial                |              |              |               |
-+-------------------------------+--------------+--------------+---------------+
-| SVR Radial                    | **4752.231** | **71.28478** | **0.5937837** |
-+-------------------------------+--------------+--------------+---------------+
-| Decision Tree Regression      | **3245.413** | **48.68209** | **0.7529956** |
-+-------------------------------+--------------+--------------+---------------+
-| Random Forest Tree Regression | **1879.884** | **28.19878** | **0.9184761** |
-+-------------------------------+--------------+--------------+---------------+
-| KNN(K Nearest Neighbor)       | **3693.127** | **55.39793** | **0.6802895** |
-+-------------------------------+--------------+--------------+---------------+
++----------------------------------------------+---------------+---------------+---------------+
+| Machine-Learning Methods                     | RMSE          | Error Rate    | R-Square      |
++:=============================================+:=============:+:=============:+==============:+
+| Multiple Linear Regression (w/o Model_Names) | **3542.066**  | **53.13197**  | **0.7058649** |
++----------------------------------------------+---------------+---------------+---------------+
+| SVR Linear                                   | **3257.887**  | **48.86921**  | **0.7772176** |
++----------------------------------------------+---------------+---------------+---------------+
+| SVR Radial                                   | **4752.231**  | **71.28478**  | **0.5937837** |
++----------------------------------------------+---------------+---------------+---------------+
+| Decision Tree Regression                     | **3245.413**  | **48.68209**  | **0.7529956** |
++----------------------------------------------+---------------+---------------+---------------+
+| Random Forest Tree Regression                | **1879.884**  | **28.19878**  | **0.9184761** |
++----------------------------------------------+---------------+---------------+---------------+
+| KNN(K Nearest Neighbor)                      | **3693.127**  | **55.39793**  | **0.6802895** |
++----------------------------------------------+---------------+---------------+---------------+
+
+Note: Some vehicles do not occur often due to a limit in the data collected and for that reason prediction made on vehicles(specifically models) that are not common ought to be taken with the limitations of the models in mind.
