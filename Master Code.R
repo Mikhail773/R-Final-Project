@@ -629,26 +629,26 @@ rocModelLR.data <- data_frame(
 rocModelLR.data %>% filter(specificity >= 0.5)
 plot.roc(res.rocLR, print.auc = TRUE, print.thres = "best")
 
-## Using LDA to predict exchangeability
-model_LDA_Exchangeable <-  train( is_exchangeable ~ ., data = train.data, method = "lda",
+## Using QDA to predict exchangeability
+model_QDA_Exchangeable <-  train( is_exchangeable ~ ., data = train.data, method = "qda",
                                  trControl = trainControl("cv", number =10),
                                  preProcess = c("center", "scale"),
                                  tuneLength = 10
 )
 
-predictionsLDA <- predict(model_LDA_Exchangeable, test.data)
+predictionsQDA <- predict(model_QDA_Exchangeable, test.data)
 # Check accuracy, error, and confusion matrix
-accuracy <- mean(test.data$is_exchangeable == predictionsLDA)
+accuracy <- mean(test.data$is_exchangeable == predictionsQDA)
 accuracy
 # [1] 0.6647557
-error <- mean(test.data$is_exchangeable != predictionsLDA)
+error <- mean(test.data$is_exchangeable != predictionsQDA)
 error
 # [1] 0.3352443
-confusionMatrix(test.data$is_exchangeable, predictionsLDA)
+confusionMatrix(test.data$is_exchangeable, predictionsQDA)
 
 #Compute roc
-predictionsLDAProb <- predict(model_LDA_Exchangeable, test.data, type = "prob")
-res.rocLDA <- roc(test.data$is_exchangeable ~ predictionsLDAProb[,2])
+predictionsQDAProb <- predict(model_LDA_Exchangeable, test.data, type = "prob")
+res.rocLDA <- roc(test.data$is_exchangeable ~ predictionsQDAProb[,2])
 plot.roc(res.rocLR, print.auc = TRUE)
 as.numeric(res.rocLDA$auc)
 # [1] 0.6443938
