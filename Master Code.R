@@ -563,9 +563,9 @@ sigma(ManufyearPrice)*100/mean(cars_edited$price_usd)
 ###################################################################################################
 ## Using Decision Tree to predict exchangeability
 model_DT_Exchangeable <-  train(is_exchangeable ~ . , data = train.data, method = "rpart",
-                                trControl = trainControl("cv",number = 10),
-                                preProcess = c("center","scale"),
-                                tuneLength = 10)
+                                                 trControl = trainControl("cv",number = 10),
+                                                 preProcess = c("center","scale"),
+                                                 tuneLength = 10)
 
 predictionsDT <- predict(model_DT_Exchangeable, test.data)
 
@@ -629,6 +629,39 @@ rocModelLR.data <- data_frame(
 rocModelLR.data %>% filter(specificity >= 0.5)
 plot.roc(res.rocLR, print.auc = TRUE, print.thres = "best")
 
+## Using QDA to predict exchangeability
+model_QDA_Exchangeable <-  train( is_exchangeable ~ ., data = train.data, method = "qda",
+                                 trControl = trainControl("cv", number =10),
+                                 preProcess = c("center", "scale"),
+                                 tuneLength = 10
+)
+
+predictionsQDA <- predict(model_QDA_Exchangeable, test.data)
+# Check accuracy, error, and confusion matrix
+accuracy <- mean(test.data$is_exchangeable == predictionsQDA)
+accuracy
+# [1] 0.6647557
+error <- mean(test.data$is_exchangeable != predictionsQDA)
+error
+# [1] 0.3352443
+confusionMatrix(test.data$is_exchangeable, predictionsQDA)
+
+#Compute roc
+predictionsQDAProb <- predict(model_LDA_Exchangeable, test.data, type = "prob")
+res.rocLDA <- roc(test.data$is_exchangeable ~ predictionsQDAProb[,2])
+plot.roc(res.rocLR, print.auc = TRUE)
+as.numeric(res.rocLDA$auc)
+# [1] 0.6443938
+
+# Get the probability threshold for specificity = 0.5
+library(vctrs)
+rocModelLDA.data <- data_frame(
+  thresholds = res.rocLR$thresholds,
+  sensitivity = res.rocLR$sensitivities,
+  specificity = res.rocLR$specificities
+)
+rocModelLDA.data %>% filter(specificity >= 0.5)
+plot.roc(res.rocLDA, print.auc = TRUE, print.thres = "best")
 ###################################################################################################
 #
 # (Everyone) Goal:
@@ -638,59 +671,97 @@ plot.roc(res.rocLR, print.auc = TRUE, print.thres = "best")
 ###################################################################################################
 
 ## Multiple Linear Regression Models
-# R^2 for test/train dataset
-LM <- lm(price_usd ~ . -model_name, data = train.data)
 
-step.LM <- LM %>% stepAIC(trace = FALSE)
-vif(step.LM)
-# GVIF Df GVIF^(1/(2*Df))
-# manufacturer_name 15.288862 54        1.025573
-# transmission       1.840427  1        1.356623
-# color              1.545952 11        1.019999
-# odometer_value     1.627875  1        1.275882
-# year_produced      2.136749  1        1.461762
-# engine_fuel        1.691724  5        1.053981
-# engine_capacity    2.224866  1        1.491598
-# body_type          8.701242 11        1.103337
-# drivetrain         6.095660  2        1.571286
-# location_region    1.099706  5        1.009550
-# number_of_photos   1.113954  1        1.055440
-# duration_listed    1.023732  1        1.011797
-summary(step.LM)
-coef(step.LM)
-confint(step.LM)
-LMPrediction <- predict(step.LM, test.data)
+# R^2 for test/train dataset
+LMCont <- lm(price_usd ~ odometer_value
+             + year_produced
+             + number_of_photos
+             + duration_listed
+             + up_counter
+             , data = train.data)
+
+vif(LMCont)
+#  odometer_value    year_produced number_of_photos 
+#1.311552         1.375432         1.088560 
+#duration_listed       up_counter 
+#1.985559         1.995992 
+step.LMConts <- LMCont %>% stepAIC(trace = FALSE)
+vif(step.LMConts)
+#odometer_value    year_produced number_of_photos 
+#1.311552         1.375432         1.088560 
+#duration_listed       up_counter 
+#1.985559         1.995992 
+summary(step.LMConts)
+#See summary(step.LMConts).txt
+coef(step.LMConts)
+#(Intercept)   odometer_value    year_produced 
+#-9.916423e+05    -4.419525e-03     4.981272e+02 
+#number_of_photos  duration_listed       up_counter 
+#1.481601e+02     2.241819e+00     2.252599e+00 
+confint(step.LMConts)
+#                2.5 %        97.5 %
+#(Intercept)      -1.005960e+06 -9.773249e+05
+#odometer_value   -4.833614e-03 -4.005436e-03
+#year_produced     4.909951e+02  5.052594e+02
+#number_of_photos  1.398282e+02  1.564919e+02
+#duration_listed   1.625863e+00  2.857775e+00
+#up_counter        6.685618e-01  3.836636e+00
+#
+# Predict using Multiple Linear Regression Model
+LMContPrediction <- predict(step.LMConts, test.data)
 
 # Prediction error, rmse
-RMSE(LMPrediction,test.data$price_usd)
-#[1] 3542.066
-
+RMSE(LMContPrediction,test.data$price_usd)
+#[1] 4573.511
 # Compute R-square
-R2(LMPrediction,test.data$price_usd)
-# [1] 0.7058649
-
+R2(LMContPrediction,test.data$price_usd) ## R^2 for test/train is 50.95891%
+#[1] 0.5095891
 # Log transformation
-LogLM <- lm(log(price_usd) ~ . -model_name, data = train.data)
+LogLMConts <- lm(log(price_usd) ~ odometer_value
+                 + year_produced
+                 + number_of_photos
+                 + duration_listed
+                 + up_counter
+                 , data = train.data)
 
-step.LogLM <- LogLM %>% stepAIC(trace = FALSE)
-vif(step.LogLM)
+vif(LogLMConts)
+#  odometer_value    year_produced number_of_photos 
+#1.311552         1.375432         1.088560 
+#duration_listed       up_counter 
+#1.985559         1.995992 
 
-summary(step.LogLM)
+step.logConts <- LogLMConts %>% stepAIC(trace = FALSE)
+vif(step.logConts)
+#  odometer_value    year_produced number_of_photos 
+#1.311231         1.375118         1.070669 
+#duration_listed 
+#1.000910 
+summary(step.logConts)
+#See summary(step.logConts).txt
 
-coef(step.LogLM)
-
-confint(step.LogLM)
-
+coef(step.logConts)
+#     (Intercept)   odometer_value    year_produced 
+#-1.946299e+02     1.674743e-07     1.012069e-01 
+#number_of_photos  duration_listed 
+#1.907346e-02     5.426537e-04 
+confint(step.logConts)
+#                         2.5 %        97.5 %
+#(Intercept)      -1.965454e+02 -1.927144e+02
+#odometer_value    1.120756e-07  2.228729e-07
+#year_produced     1.002527e-01  1.021610e-01
+#number_of_photos  1.796785e-02  2.017907e-02
+#duration_listed   4.841392e-04  6.011683e-04
 
 # Predict using Multiple Linear Regression Model
-LogLMPrediction <- step.LogLM %>% predict(test.data)
+LogLMContsPrediction <- step.logConts %>% predict(test.data)
 
 # Prediction error, rmse
-RMSE(LogLMPrediction,test.data$price_usd)
+RMSE(LogLMContsPrediction,test.data$price_usd)
+#[1] 9325.461
 
 # Compute R-square
-R2(LogLMPrediction,test.data$price_usd)
-
+R2(LogLMContsPrediction,test.data$price_usd)
+#[1] 0.4949189
 # Log transformation is less accurate
 ###################################################################################################
 # SVR Models
@@ -843,6 +914,7 @@ summary(random_forest_ranger)
 #obsLevels                     1  -none-        logical  
 #param                         0  -none-        list 
 
+plot(random_forest_ranger)
 print(random_forest_ranger)
 #Random Forest 
 #
@@ -1019,6 +1091,42 @@ summary(Cars_continuous)
 
 #Summary of Attributes_without Outliers
 summary(cars_edited_without_outliers)
+
+# Train No_Outliers
+trainingCont.samples <- cars_edited_without_outliers$manufacturer_name %>% createDataPartition(p = 0.8, list = FALSE)
+trainCont.data <- cars_edited_without_outliers[training.samples,]
+testCont.data <- cars_edited_without_outliers[-training.samples,]
+
+
+
+LMOutliers <- lm(price_usd ~ odometer_value
+         + year_produced
+         + number_of_photos
+         + duration_listed
+         + up_counter
+         , data = cars_edited_without_outliers)
+step.LMOutliers <- LM %>% stepAIC(trace = FALSE)
+vif(step.LMOutliers)
+summary(step.LMOutliers)
+
+# R^2 for test/train dataset
+LMContOutliers <- lm(price_usd ~ odometer_value
+             + year_produced
+             + number_of_photos
+             + duration_listed
+             + up_counter
+             , data = trainCont.data)
+
+vif(LMContOutliers)
+step.LMContsOutliers <- LMContOutliers %>% stepAIC(trace = FALSE)
+vif(step.LMContsOutliers)
+summary(step.LMContsOutliers)
+coef(step.LMContsOutliers)
+confint(step.LMContsOutliers)
+LMContOutliersPrediction <- predict(step.LMContsOutliers, test.data)
+rmse(test.data$price_usd, LMContOutliersPrediction)
+rmse(test.data$price_usd, LMContOutliersPrediction)/mean(test.data$price_usd)  ##0.7025614
+R2(LMContOutliersPrediction,test.data$price_usd) ## R^2 for test/train is 51.10202%
 
 ##############################################################################################################
 #
