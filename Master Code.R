@@ -640,95 +640,44 @@ plot.roc(res.rocLR, print.auc = TRUE, print.thres = "best")
 ## Multiple Linear Regression Models
 
 # R^2 for test/train dataset
-LMCont <- lm(price_usd ~ odometer_value
-             + year_produced
-             + number_of_photos
-             + duration_listed
-             + up_counter
-             , data = train.data)
+LM <- lm(price_usd ~ ., data = train.data)
 
-vif(LMCont)
-#  odometer_value    year_produced number_of_photos 
-#1.311552         1.375432         1.088560 
-#duration_listed       up_counter 
-#1.985559         1.995992 
-step.LMConts <- LMCont %>% stepAIC(trace = FALSE)
-vif(step.LMConts)
-#odometer_value    year_produced number_of_photos 
-#1.311552         1.375432         1.088560 
-#duration_listed       up_counter 
-#1.985559         1.995992 
-summary(step.LMConts)
-#See summary(step.LMConts).txt
-coef(step.LMConts)
-#(Intercept)   odometer_value    year_produced 
-#-9.916423e+05    -4.419525e-03     4.981272e+02 
-#number_of_photos  duration_listed       up_counter 
-#1.481601e+02     2.241819e+00     2.252599e+00 
-confint(step.LMConts)
-#                2.5 %        97.5 %
-#(Intercept)      -1.005960e+06 -9.773249e+05
-#odometer_value   -4.833614e-03 -4.005436e-03
-#year_produced     4.909951e+02  5.052594e+02
-#number_of_photos  1.398282e+02  1.564919e+02
-#duration_listed   1.625863e+00  2.857775e+00
-#up_counter        6.685618e-01  3.836636e+00
-#
-# Predict using Multiple Linear Regression Model
-LMContPrediction <- predict(step.LMConts, test.data)
+step.LM <- LM %>% stepAIC(trace = FALSE)
+vif(step.LM)
+summary(step.LM)
+coef(step.LM)
+confint(step.LM)
+LMPrediction <- predict(step.LM, test.data)
 
 # Prediction error, rmse
-RMSE(LMContPrediction,test.data$price_usd)
-#[1] 4573.511
-# Compute R-square
-R2(LMContPrediction,test.data$price_usd) ## R^2 for test/train is 50.95891%
-#[1] 0.5095891
-# Log transformation
-LogLMConts <- lm(log(price_usd) ~ odometer_value
-                 + year_produced
-                 + number_of_photos
-                 + duration_listed
-                 + up_counter
-                 , data = train.data)
+RMSE(LMPrediction,test.data$price_usd)
 
-vif(LogLMConts)
-#  odometer_value    year_produced number_of_photos 
-#1.311552         1.375432         1.088560 
-#duration_listed       up_counter 
-#1.985559         1.995992 
+# Compute R-square
+R2(LMPrediction,test.data$price_usd) ## R^2 for test/train is 50.95891%
+
+# Log transformation
+LogLMConts <- lm(log(price_usd) ~ . -model_name
+                 , data = train.data)
 
 step.logConts <- LogLMConts %>% stepAIC(trace = FALSE)
 vif(step.logConts)
-#  odometer_value    year_produced number_of_photos 
-#1.311231         1.375118         1.070669 
-#duration_listed 
-#1.000910 
+
 summary(step.logConts)
-#See summary(step.logConts).txt
 
 coef(step.logConts)
-#     (Intercept)   odometer_value    year_produced 
-#-1.946299e+02     1.674743e-07     1.012069e-01 
-#number_of_photos  duration_listed 
-#1.907346e-02     5.426537e-04 
+
 confint(step.logConts)
-#                         2.5 %        97.5 %
-#(Intercept)      -1.965454e+02 -1.927144e+02
-#odometer_value    1.120756e-07  2.228729e-07
-#year_produced     1.002527e-01  1.021610e-01
-#number_of_photos  1.796785e-02  2.017907e-02
-#duration_listed   4.841392e-04  6.011683e-04
+
 
 # Predict using Multiple Linear Regression Model
 LogLMContsPrediction <- step.logConts %>% predict(test.data)
 
 # Prediction error, rmse
 RMSE(LogLMContsPrediction,test.data$price_usd)
-#[1] 9325.461
 
 # Compute R-square
 R2(LogLMContsPrediction,test.data$price_usd)
-#[1] 0.4949189
+
 # Log transformation is less accurate
 ###################################################################################################
 # SVR Models
