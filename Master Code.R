@@ -307,22 +307,20 @@ cars_edited %>% group_by(manufacturer_name) %>% summarize(mean(price_usd)) %>% V
 #
 # (Emma Doyle)
 #
-# 1) What impact does region have on price?
+# 1) Q: What impact does region have on price?
 #
-# Region does impact price. However, the extent of this impact would have to be assessed in a model that includes more attributes.
+# A: Region does impact price. However, the extent of this impact would have to be assessed in a model that includes more attributes.
 # The best indicator of the relationship will be seen in the total model.
 # Regions: Minsk, Gomel, Brest, Vitebsk, Mogilev, Grodno
 #
 
-#Aggregating the data of price to region to get the mean of prices
-#per region
-#Aggregating the data of price to region to get the mean of prices
-#per region
+# Aggregating the data of price to region to get the mean of prices per region
+# Aggregating the data of price to region to get the mean of prices per region
 regionPriceDF <- group_by(cars_edited, location_region)
 regionPriceDF_averages <- summarise(regionPriceDF, average_price_usd = mean(price_usd))
 ggplot(regionPriceDF_averages,aes(x= location_region, y = average_price_usd)) + geom_bar(stat = "identity")
 
-#one-way anova
+# one-way anova
 group_by(regionPriceDF, regionPriceDF$location_region) %>%
   summarise(
     count = n(),
@@ -342,10 +340,10 @@ TukeyHSD(res.aov)
 #
 # (Emma Doyle)
 #
-# 2) Do manufacturers have a significant impact on the asking price of a vehicle?
+# 2) Q: Do manufacturers have a significant impact on the asking price of a vehicle?
 # Manufacturers does correlate to the asking price of a vehicle.
 #
-# Our final models will show us exactly how large this correlation is with regards to the other attributes.
+# A: Our final models will show us exactly how large this correlation is with regards to the other attributes.
 #
 
 # 1)What is the distribution of manufacturers?
@@ -375,28 +373,28 @@ TukeyHSD(res.aovTwo)
 #
 # (Reid Hoffmeier)
 #
-# 3) What is the relationship between odometer and price?
+# 3) A: What is the relationship between odometer and price?
 #
-# There is a low negative correlation between price and odometer.
+# Q: There is a low negative correlation between price and odometer.
 # We can conclude that although there is an impact many more attributes effect the price of a vehicle.
 #
 
-#Scatter plot: Odometer and price
+# Scatter plot: Odometer and price
 ggplot (cars_edited, aes( x =odometer_value, y=price_usd)) + geom_point() + stat_smooth()
 
-#Getting cor value
+# Getting cor value
 cor.test(cars_edited$odometer_value, cars_edited$price_usd)
 # Since the p-value is less than 0.05 we can conclude that Price and Odometer have a low negative correlation
 # The correlation coefficient is -0.4212043 and p-value of < 2.2e-16.
 
-#Getting the formula for linear regression
+# Getting the formula for linear regression
 odometer_on_price <- lm (price_usd ~ odometer_value, data = cars_edited)
 odometer_on_price
 
-#Scatter plot: Odometer and price with linear regression line
+# Scatter plot: Odometer and price with linear regression line
 ggplot(cars_edited, aes(x=odometer_value, y=price_usd)) + geom_point() + stat_smooth(method=lm)
 
-#Finding how well this line fits our data
+# Finding how well this line fits our data
 summary(odometer_on_price)
 
 confint(odometer_on_price)
@@ -407,29 +405,29 @@ sigma(odometer_on_price)*100/mean(cars_edited$price_usd)
 # (Reid Hoffmeier)
 #
 # 4) Scatter Plot, Simple Regression Analysis:
-# Does the number of photos a vehicle has impact the selling price?
+# Q: Does the number of photos a vehicle has impact the selling price?
 #
-# A low positive correlation between number of photos a vehicle has and the selling price.
+# A: A low positive correlation between number of photos a vehicle has and the selling price.
 # However, on its own photo amount is not a good predictor of price and for that reason we must use several more attributes when predicting price.
 #
 
-#Scatter plot: Number of photos and price
+# Scatter plot: Number of photos and price
 ggplot(cars_edited, aes( x =number_of_photos, y=price_usd)) + geom_hex() + stat_smooth(color = "red")
 
-#getting the cor value
+# Getting the cor value
 cor.test(cars_edited$number_of_photos, cars_edited$price_usd)
 
 # Since the p-value is less than 0.05 we can conclude that Price and Number of photos have a low positive correlation
 # The correlation coefficient is 0.3168586 and p-value of < 2.2e-16.
 
-#Getting the formula for linear regression
+# Getting the formula for linear regression
 number_of_photos_on_price <- lm (price_usd ~ number_of_photos, data = cars_edited)
 number_of_photos_on_price
 
-#Scatter plot: Number of photos and price with linear regression line
+# Scatter plot: Number of photos and price with linear regression line
 ggplot (cars_edited, aes(x=number_of_photos, y=price_usd)) + geom_point() + stat_smooth(method=lm)
 
-#Finding how well this line fits the data
+# Finding how well this line fits the data
 summary(number_of_photos_on_price)
 confint(number_of_photos_on_price)
 sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
@@ -439,9 +437,9 @@ sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
 # (Matthew Lane)
 #
 # 5) Scatter Plot, Simple Regression Analysis:
-# Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
+# Q: Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
 #
-# The number of times a vehicle has been upped has a negligible impact on the selling price
+# A: The number of times a vehicle has been upped has a negligible impact on the selling price
 #
 
 #Regression analysis
@@ -466,11 +464,11 @@ ggplot (cars_edited, aes(x=up_counter, y=price_usd)) + geom_point() + stat_smoot
 # (Matthew Lane)
 # 6) Mosaic Plot/ Chi-Squared Test, Two-Way ANOVA:
 #
-# Relationship between Engine Type and Body Type?
-# Sedan and Gasoline is the most common followed by Gasoline and Hatchback
+# Q: Relationship between Engine Type and Body Type?
+# A: Sedan and Gasoline is the most common followed by Gasoline and Hatchback
 #
-# What is the impact of Engine Type and Body Type on the selling price?
-# Limousine and pickup trucks appear to have the only impact.
+# Q: What is the impact of Engine Type and Body Type on the selling price?
+# A: Limousine and pickup trucks appear to have the only impact.
 
 # Balloon Plot
 ggplot(cars_edited, aes(body_type, engine_type)) + geom_count()
@@ -494,11 +492,11 @@ TukeyHSD(body_engine_type_on_price.aov)
 # (Mikhail Mikhaylov)
 #
 # 7) Dplyr count with group_by, One-Way Anova:
-# What is the most popular model?
-# Most popular is Passat.
+# Q: What is the most popular model?
+# A: Most popular is Passat.
 #
-# Can we conclude that the popularity of a model has a direct impact on the price of a vehicle?
-# The popularity of a vehicle does seem to have an impact on the average_price of a vehicle
+# Q: Can we conclude that the popularity of a model has a direct impact on the price of a vehicle?
+# A: The popularity of a vehicle does seem to have an impact on the average_price of a vehicle
 # More attributes would be needed to predict price.
 #
 
@@ -526,8 +524,11 @@ sigma(modelPrice)*100/mean(cars_edited$price_usd)
 # (Mikhail Mikhaylov)
 # 8) Scatter plot, Two-Way ANOVA/ :
 #
-# What is the average age of each vehicle manufacturer?
-# Does the manufacturer change how the production year impacts the selling price?
+# Q: What is the average age of each vehicle manufacturer?
+# A: Tibble included below
+#
+# Q: Does the manufacturer change how the production year impacts the selling price? 
+# A: The manufacturer does influence how production year changes the price of a vehicle.
 #
 
 #Scatter plot: Year produced by price and colored by manufacturer name
@@ -663,9 +664,11 @@ LMPrediction <- predict(step.LM, test.data)
 
 # Prediction error, rmse
 RMSE(LMPrediction,test.data$price_usd)
+#[1] 3542.066
 
 # Compute R-square
-R2(LMPrediction,test.data$price_usd) ## R^2 for test/train is 50.95891%
+R2(LMPrediction,test.data$price_usd)
+# [1] 0.7058649
 
 # Log transformation
 LogLMConts <- lm(log(price_usd) ~ . -model_name
@@ -675,46 +678,17 @@ step.logConts <- LogLMConts %>% stepAIC(trace = FALSE)
 vif(step.logConts)
 
 summary(step.logConts)
-
 coef(step.logConts)
-
 confint(step.logConts)
-=======
-#[1] 3542.066
-
-# Compute R-square
-R2(LMPrediction,test.data$price_usd)
-# [1] 0.7058649
-
-# Log transformation
-LogLM <- lm(log(price_usd) ~ . -model_name, data = train.data)
-
-step.LogLM <- LogLM %>% stepAIC(trace = FALSE)
-vif(step.LogLM)
-
-summary(step.LogLM)
-
-coef(step.LogLM)
-
-confint(step.LogLM)
->>>>>>> parent of 40043cfd (Revert "Fix LM, comparison chart and talk about VIF")
-
 
 # Predict using Multiple Linear Regression Model
 LogLMPrediction <- step.LogLM %>% predict(test.data)
 
 # Prediction error, rmse
-<<<<<<< HEAD
 RMSE(LogLMContsPrediction,test.data$price_usd)
 
 # Compute R-square
 R2(LogLMContsPrediction,test.data$price_usd)
-=======
-RMSE(LogLMPrediction,test.data$price_usd)
-
-# Compute R-square
-R2(LogLMPrediction,test.data$price_usd)
->>>>>>> parent of 40043cfd (Revert "Fix LM, comparison chart and talk about VIF")
 
 # Log transformation is less accurate
 ###################################################################################################
@@ -1044,10 +1018,6 @@ summary(Cars_continuous)
 
 #Summary of Attributes_without Outliers
 summary(cars_edited_without_outliers)
-<<<<<<< HEAD
-=======
-
->>>>>>> parent of 40043cfd (Revert "Fix LM, comparison chart and talk about VIF")
 ##############################################################################################################
 #
 # Clean up
@@ -1064,5 +1034,3 @@ detach("package:datasets", unload = TRUE)  # For base
 
 # Clear console
 cat("\014")
-
-
