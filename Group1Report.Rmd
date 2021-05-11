@@ -1327,7 +1327,7 @@ model_knn$bestTune
 #1 5
 ```
 
-**A bestTune of 5** tells us what the best tuning parameter C that maximizes our accuracy is 5.
+**A best k value was 5** tells us what the best tuning parameter K that maximizes our accuracy is 5.
 
 We continue our investigation of KNN by plotting the model accuracy of KNN relative to different values of k.
 
