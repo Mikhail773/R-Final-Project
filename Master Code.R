@@ -639,12 +639,6 @@ plot.roc(res.rocLR, print.auc = TRUE, print.thres = "best")
 
 ## Multiple Linear Regression Models
 # R^2 for test/train dataset
-<<<<<<< HEAD
-LM <- lm(price_usd ~ ., data = train.data)
-
-step.LM <- LM %>% stepAIC(trace = FALSE)
-vif(step.LM)
-=======
 LM <- lm(price_usd ~ . -model_name, data = train.data)
 
 step.LM <- LM %>% stepAIC(trace = FALSE)
@@ -662,7 +656,6 @@ vif(step.LM)
 # location_region    1.099706  5        1.009550
 # number_of_photos   1.113954  1        1.055440
 # duration_listed    1.023732  1        1.011797
->>>>>>> parent of 40043cfd (Revert "Fix LM, comparison chart and talk about VIF")
 summary(step.LM)
 coef(step.LM)
 confint(step.LM)
@@ -670,7 +663,6 @@ LMPrediction <- predict(step.LM, test.data)
 
 # Prediction error, rmse
 RMSE(LMPrediction,test.data$price_usd)
-<<<<<<< HEAD
 
 # Compute R-square
 R2(LMPrediction,test.data$price_usd) ## R^2 for test/train is 50.95891%
@@ -948,7 +940,7 @@ R2(rf_predict_ranger,test.data$price_usd)
 #
 
 model_knn <- train(
-  price_usd ~., data = train.data, method = "knn",
+  price_usd ~. -model_name, data = train.data, method = "knn",
   trControl = trainControl("cv", number = 10),
   preProcess = c("center","scale"),
   tuneLength = 20
