@@ -567,7 +567,23 @@ model_DT_Exchangeable <-  train(is_exchangeable ~ . , data = train.data, method 
                                 trControl = trainControl("cv",number = 10),
                                 preProcess = c("center","scale"),
                                 tuneLength = 10)
+# Exploratory
+predictionsDTExploratory <- predict(model_DT_Exchangeable, train.data)
 
+# Check accuracy, error, and confusion matrix
+accuracy <- mean(train.data$is_exchangeable == predictionsDTExploratory)
+accuracy
+error <- mean(train.data$is_exchangeable != predictionsDTExploratory)
+error
+confusionMatrix(train.data$is_exchangeable, predictionsDTExploratory)
+
+#Compute roc
+predictionsDTExploratoryProb <- predict(model_DT_Exchangeable, test.data, type = "prob")
+res.roc <- roc(train.data$is_exchangeable ~ predictionsDTExploratoryProb[,2])
+plot.roc(res.roc, print.auc = TRUE)
+as.numeric(res.roc$auc)
+
+#Predictive
 predictionsDT <- predict(model_DT_Exchangeable, test.data)
 
 # Check accuracy, error, and confusion matrix
@@ -603,6 +619,23 @@ model_LR_Exchangeable <-  train( is_exchangeable ~ ., data = train.data, method 
                                  tuneLength = 10
 )
 
+# Exploratory
+predictionsLRExploratory <- predict(model_LR_Exchangeable, train.data)
+
+# Check accuracy, error, and confusion matrix
+accuracy <- mean(train.data$is_exchangeable == predictionsLRExploratory)
+accuracy
+error <- mean(train.data$is_exchangeable != predictionsLRExploratory)
+error
+confusionMatrix(train.data$is_exchangeable, predictionsLRExploratory)
+
+#Compute roc
+predictionsLRExploratoryProb <- predict(predictionsLRExploratory, test.data, type = "prob")
+res.roc <- roc(train.data$is_exchangeable ~ predictionsLRExploratoryProb[,2])
+plot.roc(res.roc, print.auc = TRUE)
+as.numeric(res.roc$auc)
+
+# Predictive
 predictionsLR <- predict(model_LR_Exchangeable, test.data)
 # Check accuracy, error, and confusion matrix
 accuracy <- mean(test.data$is_exchangeable == predictionsLR)
