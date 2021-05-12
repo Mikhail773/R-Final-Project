@@ -563,7 +563,7 @@ sigma(ManufyearPrice)*100/mean(cars_edited$price_usd)
 #
 ###################################################################################################
 ## Using Decision Tree to create an exploratory model for exchangeability
-model_DT_Exchangeable <-  train(is_exchangeable ~ . , data = train.data, method = "rpart",
+model_DT_Exchangeable <-  train(is_exchangeable ~ . -model_name, data = train.data, method = "rpart",
                                 trControl = trainControl("cv",number = 10),
                                 preProcess = c("center","scale"),
                                 tuneLength = 10)
@@ -604,6 +604,7 @@ confusionMatrix(train.data$is_exchangeable, predictionsDTExploratory)
 #       Balanced Accuracy : 0.6706          
 #                                           
 #        'Positive' Class : FALSE 
+#[1] 0.6939802
 
 # Compute roc
 predictionsDTExploratoryProb <- predict(model_DT_Exchangeable, train.data, type = "prob")
@@ -650,7 +651,32 @@ error <- mean(test.data$is_exchangeable != predictionsDT)
 error
 # [1] 0.3128339
 confusionMatrix(test.data$is_exchangeable, predictionsDT)
-
+#Confusion Matrix and Statistics
+#
+#Reference
+#Prediction FALSE TRUE
+#FALSE  4475  519
+#TRUE   1882  799
+#
+#Accuracy : 0.6872          
+#95% CI : (0.6767, 0.6975)
+#No Information Rate : 0.8283          
+#P-Value [Acc > NIR] : 1               
+#
+#Kappa : 0.22            
+#
+#Mcnemar's Test P-Value : <2e-16          
+#                                          
+#            Sensitivity : 0.7039          
+#            Specificity : 0.6062          
+#         Pos Pred Value : 0.8961          
+#         Neg Pred Value : 0.2980          
+#             Prevalence : 0.8283          
+#         Detection Rate : 0.5831          
+#   Detection Prevalence : 0.6507          
+#      Balanced Accuracy : 0.6551          
+#                                          
+#       'Positive' Class : FALSE  	   
 #Compute roc
 predictionsDTProb <- predict(model_DT_Exchangeable, test.data, type = "prob")
 res.roc <- roc(test.data$is_exchangeable ~ predictionsDTProb[,2])
@@ -665,10 +691,28 @@ rocModelDT.data <- data_frame(
   specificity = res.roc$specificities
 )
 rocModelDT.data %>% filter(specificity >= 0.5)
+#   thresholds sensitivity specificity
+#1   0.3269864  0.63707572   0.5826992
+#2   0.3324625  0.45729206   0.7715258
+#3   0.3373490  0.45057814   0.7773328
+#4   0.3405653  0.43043640   0.7933520
+#5   0.3463600  0.41253264   0.8151782
+#6   0.3568692  0.40917568   0.8189828
+#7   0.3869302  0.40693771   0.8201842
+#8   0.4180577  0.30249907   0.8936724
+#9   0.4972896  0.29802313   0.8960753
+#10  0.5722631  0.28161134   0.9048859
+#11  0.5936936  0.17157777   0.9607529
+#12  0.6293493  0.16113391   0.9649579
+#13  0.6481293  0.15143603   0.9669604
+#14  0.6665233  0.12719135   0.9771726
+#15  0.7002933  0.07198806   0.9883861
+#16  0.8158251  0.01342783   0.9985983
+#17        Inf  0.00000000   1.0000000					  
 plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
 ## Using Logistic Regression to create an exploratory model for exchangeability
-model_LR_Exchangeable <-  train( is_exchangeable ~ ., data = train.data, method = "glm", family = "binomial",
+model_LR_Exchangeable <-  train( is_exchangeable ~ . -model_name, data = train.data, method = "glm", family = "binomial",
                                  trControl = trainControl("cv", number =10),
                                  preProcess = c("center", "scale"),
                                  tuneLength = 10
@@ -680,10 +724,37 @@ predictionsLRExploratory <- predict(model_LR_Exchangeable, train.data)
 # Check accuracy, error, and confusion matrix
 accuracy <- mean(train.data$is_exchangeable == predictionsLRExploratory)
 accuracy
+#[1] 0.6624371		  
 error <- mean(train.data$is_exchangeable != predictionsLRExploratory)
 error
+#[1] 0.3375629	  
 confusionMatrix(train.data$is_exchangeable, predictionsLRExploratory)
-
+#Confusion Matrix and Statistics
+#
+#Reference
+#Prediction FALSE  TRUE
+#FALSE 18799  1147
+#TRUE   9255  1614
+#
+#Accuracy : 0.6624          
+#95% CI : (0.6571, 0.6677)
+#No Information Rate : 0.9104          
+#P-Value [Acc > NIR] : 1               
+#
+#Kappa : 0.1096          
+#
+#Mcnemar's Test P-Value : <2e-16          
+#                                          
+#            Sensitivity : 0.6701          
+#            Specificity : 0.5846          
+#         Pos Pred Value : 0.9425          
+#         Neg Pred Value : 0.1485          
+#             Prevalence : 0.9104          
+#         Detection Rate : 0.6101          
+#   Detection Prevalence : 0.6473          
+#      Balanced Accuracy : 0.6273          
+#                                          
+#       'Positive' Class : FALSE    		 
 #Compute roc
 predictionsLRExploratoryProb <- predict(predictionsLRExploratory, train.data, type = "prob")
 res.roc <- roc(train.data$is_exchangeable ~ predictionsLRExploratoryProb[,2])
@@ -784,7 +855,7 @@ R2(LogLMContsPrediction,test.data$price_usd)
 # Create SVR Model using Linear Method
 #
 
-modelSVRLinTrain <- train( price_usd ~ ., data = train.data, method = "svmLinear",
+modelSVRLinTrain <- train( price_usd ~ . -model_name, data = train.data, method = "svmLinear",
                            trControl = trainControl("cv", number =10),
                            preProcess = c("center", "scale"),
                            tuneLength = 10
@@ -810,7 +881,7 @@ R2(modelSVRLinTrainPrediction,test.data$price_usd)
 
 # Create SVR Model using Polynomial Method
 
-modelSVRPolyTrain <- train(price_usd ~ ., data = train.data, method = "svmPoly",
+modelSVRPolyTrain <- train(price_usd ~ . -model_name, data = train.data, method = "svmPoly",
                            trControl = trainControl("cv", number =10),
                            preProcess = c("center", "scale"),
                            tuneLength = 10
@@ -829,7 +900,7 @@ RMSE(modelSVRPolyTrainPrediction,test.data$price_usd)
 R2(modelSVRPolyTrainPrediction,test.data$price_usd)
 
 # Create SVR Model using Radial Method
-modelSVRRadialTrain <- train(price_usd ~ ., data = train.data, method = "svmRadial",
+modelSVRRadialTrain <- train(price_usd ~ . -model_name, data = train.data, method = "svmRadial",
                              trControl = trainControl("cv", number =10),
                              preProcess = c("center", "scale"),
                              tuneLength = 10
@@ -897,7 +968,7 @@ R2(prediction_DT_Train,test.data$price_usd)
 # Random Forest Model
 #
 
-random_forest_ranger <- train(price_usd ~ . ,
+random_forest_ranger <- train(price_usd ~ . -model_name,
                               data = train.data,
                               method = "ranger",
                               trControl = trainControl("cv", number = 10),
@@ -923,77 +994,81 @@ summary(random_forest_ranger)
 #importance.mode               1  -none-        character
 #num.samples                   1  -none-        numeric  
 #replace                       1  -none-        logical  
-#xNames                     1215  -none-        character
+#xNames                       98  -none-        character
 #problemType                   1  -none-        character
 #tuneValue                     3  data.frame    list     
 #obsLevels                     1  -none-        logical  
 #param                         0  -none-        list
-
+#
+random_forest_ranger$bestTune
+#   mtry  splitrule min.node.size
+#20   98 extratrees             5
+plot(random_forest_ranger)
 print(random_forest_ranger)
 #Random Forest
 #
 #30815 samples
 #16 predictor
 #
-#Pre-processing: centered (1176), scaled (1176)
-#Resampling: Cross-Validated (10 fold)
+#Pre-processing: centered (98), scaled (98) 
+#Resampling: Cross-Validated (10 fold) 
 #Summary of sample sizes: 27733, 27733, 27732, 27735, 27734, 27734, ...
 #Resampling results across tuning parameters:
 #  
 #  mtry  splitrule   RMSE      Rsquared   MAE     
-#2  variance    5796.395  0.6833211  4060.727
-#2  extratrees  5929.265  0.5779019  4191.958
-#4  variance    4993.217  0.6910534  3380.338
-#4  extratrees  5264.557  0.5893240  3653.191
-#8  variance    4281.951  0.7276363  2797.724
-#8  extratrees  4649.024  0.6271083  3153.437
-#16  variance    3598.959  0.7801678  2264.988
-#16  extratrees  4098.441  0.6806259  2700.753
-#34  variance    2862.853  0.8442325  1731.513
-#34  extratrees  3414.402  0.7657837  2157.714
-#69  variance    2296.147  0.8888291  1345.853
-#69  extratrees  2765.699  0.8390356  1665.808
-#140  variance    1969.847  0.9115935  1134.639
-#140  extratrees  2254.877  0.8878216  1300.747
-#285  variance    1840.388  0.9193532  1052.805
-#285  extratrees  1952.594  0.9122632  1095.061
-#579  variance    1811.345  0.9204740  1033.302
-#579  extratrees  1808.614  0.9221763  1010.627
-#1175  variance    1860.773  0.9155560  1048.325
-#1175  extratrees  1787.308  0.9226437  1001.803
+#2    variance    4243.263  0.7369980  2793.194
+#2    extratrees  4819.240  0.6049541  3292.147
+#12    variance    2121.529  0.8976088  1256.828
+#12    extratrees  2517.810  0.8610071  1525.127
+#23    variance    1939.954  0.9100209  1133.567
+#23    extratrees  2114.654  0.8965483  1237.008
+#34    variance    1899.804  0.9125608  1105.994
+#34    extratrees  1978.951  0.9072004  1142.945
+#44    variance    1893.489  0.9127624  1099.677
+#44    extratrees  1922.414  0.9114298  1104.583
+#55    variance    1892.166  0.9126866  1096.447
+#55    extratrees  1887.598  0.9139901  1084.031
+#66    variance    1896.973  0.9121727  1098.183
+#66    extratrees  1871.296  0.9151156  1074.076
+#76    variance    1906.764  0.9111840  1102.032
+#76    extratrees  1862.667  0.9156676  1069.721
+#87    variance    1916.485  0.9102418  1106.084
+#87    extratrees  1856.855  0.9160557  1066.920
+#98    variance    1933.863  0.9085671  1111.908
+#98    extratrees  1856.234  0.9160062  1066.489
 #
 #Tuning parameter 'min.node.size' was held constant at a value of 5
 #RMSE was used to select the optimal model using the smallest value.
-#The final values used for the model were mtry = 1175, splitrule
-#= extratrees and min.node.size = 5.
+#The final values used for the model were mtry = 98, splitrule = extratrees 
+#and min.node.size = 5.
 random_forest_ranger$finalModel
 #Ranger result
 #
 #Call:
-#  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = min(param$mtry, ncol(x)), min.node.size = param$min.node.size,      splitrule = as.character(param$splitrule), write.forest = TRUE,      probability = classProbs, ...)
+#  ranger::ranger(dependent.variable.name = ".outcome", data = x,      mtry = min(param$mtry, ncol(x)), min.node.size = param$min.node.size,      splitrule = as.character(param$splitrule), write.forest = TRUE,      probability = classProbs, ...) 
 #
-#Type:                             Regression
-#Number of trees:                  500
-#Sample size:                      30815
-#Number of independent variables:  1215
-#Mtry:                             1215
-#Target node size:                 5
-#Variable importance mode:         none
-#Splitrule:                        extratrees
-#Number of random splits:          1
-#OOB prediction error (MSE):       3137444
-#R squared (OOB):                  0.9233405
-
+#Type:                             Regression 
+#Number of trees:                  500 
+#Sample size:                      30815 
+#Number of independent variables:  98 
+#Mtry:                             98 
+#Target node size:                 5 
+#Variable importance mode:         none 
+#Splitrule:                        extratrees 
+#Number of random splits:          1 
+#OOB prediction error (MSE):       3405480 
+#R squared (OOB):                  0.9167914 
+#
 # Make predictions on the test data
 rf_predict_ranger <- predict(random_forest_ranger, test.data)
 
 # Prediction error, rmse
 RMSE(rf_predict_ranger,test.data$price_usd)
-#[1] 1879.884
+#[1] 1946.668
 
 # Compute R-square
 R2(rf_predict_ranger,test.data$price_usd)
-#[1] 0.9184761
+#[1] 0.9117607
 
 ###################################################################################################
 #
