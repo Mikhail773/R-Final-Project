@@ -573,37 +573,44 @@ predictionsDTExploratory <- predict(model_DT_Exchangeable, train.data)
 # Check accuracy, error, and confusion matrix
 accuracy <- mean(train.data$is_exchangeable == predictionsDTExploratory)
 accuracy
-# [1] 0.6944141
+# [1] 0.6939802
 error <- mean(train.data$is_exchangeable != predictionsDTExploratory)
 error
-# [1] 0.3055859
+# [1] 0.3060198
 confusionMatrix(train.data$is_exchangeable, predictionsDTExploratory)
-# Accuracy : 0.6944         
-# 95% CI : (0.6898, 0.699)
-# No Information Rate : 0.8381         
-# P-Value [Acc > NIR] : 1              
+# Confusion Matrix and Statistics
 # 
-# Kappa : 0.2359         
+# Reference
+# Prediction FALSE  TRUE
+# FALSE 17998  1948
+# TRUE   7482  3387
 # 
-# Mcnemar's Test P-Value : <2e-16         
-#                                          
-#             Sensitivity : 0.7042         
-#             Specificity : 0.6435         
-#          Pos Pred Value : 0.9109         
-#          Neg Pred Value : 0.2959         
-#              Prevalence : 0.8381         
-#          Detection Rate : 0.5903         
-#    Detection Prevalence : 0.6480         
-#       Balanced Accuracy : 0.6739         
-#                                          
-#        'Positive' Class : FALSE  
+# Accuracy : 0.694           
+# 95% CI : (0.6888, 0.6991)
+# No Information Rate : 0.8269          
+# P-Value [Acc > NIR] : 1               
+# 
+# Kappa : 0.242           
+# 
+# Mcnemar's Test P-Value : <2e-16          
+#                                           
+#             Sensitivity : 0.7064          
+#             Specificity : 0.6349          
+#          Pos Pred Value : 0.9023          
+#          Neg Pred Value : 0.3116          
+#              Prevalence : 0.8269          
+#          Detection Rate : 0.5841          
+#    Detection Prevalence : 0.6473          
+#       Balanced Accuracy : 0.6706          
+#                                           
+#        'Positive' Class : FALSE 
 
 # Compute roc
 predictionsDTExploratoryProb <- predict(model_DT_Exchangeable, train.data, type = "prob")
 res.roc <- roc(train.data$is_exchangeable ~ predictionsDTExploratoryProb[,2])
 plot.roc(res.roc, print.auc = TRUE)
 as.numeric(res.roc$auc)
-# [1] 0.6570493
+# [1] 0.6571428
 
 # Get the probability threshold for specificity = 0.5
 rocModelDT.data <- data_frame(
@@ -613,28 +620,27 @@ rocModelDT.data <- data_frame(
 )
 rocModelDT.data %>% filter(specificity >= 0.5)
 # thresholds sensitivity specificity
-# 1   0.3221210  0.64073801   0.5760225
-# 2   0.3286891  0.63638376   0.5809142
-# 3   0.3335378  0.45822878   0.7761828
-# 4   0.3410165  0.44051661   0.7952285
-# 5   0.3535022  0.43594096   0.7999198
-# 6   0.3744926  0.41416974   0.8208901
-# 7   0.3975646  0.41121771   0.8234162
-# 8   0.4110868  0.40413284   0.8290297
-# 9   0.4343919  0.30376384   0.9057739
-# 10  0.4934509  0.29586716   0.9109463
-# 11  0.5585664  0.28118081   0.9179230
-# 12  0.5886301  0.18125461   0.9566560
-# 13  0.6029422  0.16885609   0.9612670
-# 14  0.6147921  0.15557196   0.9658380
-# 15  0.6547752  0.12509225   0.9761026
-# 16  0.7172594  0.08442804   0.9859262
-# 17  0.8301282  0.01321033   0.9993585
-# 18        Inf  0.00000000   1.0000000
+# 1   0.3269864  0.64302144   0.5724456
+# 2   0.3324625  0.46554421   0.7691266
+# 3   0.3373490  0.46029994   0.7747919
+# 4   0.3405653  0.44143895   0.7947959
+# 5   0.3463600  0.42395805   0.8131455
+# 6   0.3568692  0.41908179   0.8180588
+# 7   0.3869302  0.41567762   0.8213176
+# 8   0.4180577  0.31631245   0.8988770
+# 9   0.4972896  0.31162020   0.9023363
+# 10  0.5722631  0.29542736   0.9090043
+# 11  0.5936936  0.17085288   0.9591898
+# 12  0.6293493  0.15907627   0.9632508
+# 13  0.6481293  0.15033582   0.9658578
+# 14  0.6665233  0.12282639   0.9739296
+# 15  0.7002933  0.07167173   0.9868645
+# 16  0.8158251  0.01370871   0.9992981
+# 17        Inf  0.00000000   1.0000000
 plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
-#Predictive
-predictionsDT <- predict(model_DT_Exchangeable_Pred, test.data)
+# Predictive Model
+predictionsDT <- predict(model_DT_Exchangeable, test.data)
 
 # Check accuracy, error, and confusion matrix
 accuracy <- mean(test.data$is_exchangeable == predictionsDT)
@@ -646,7 +652,7 @@ error
 confusionMatrix(test.data$is_exchangeable, predictionsDT)
 
 #Compute roc
-predictionsDTProb <- predict(model_DT_Exchangeable_Pred, test.data, type = "prob")
+predictionsDTProb <- predict(model_DT_Exchangeable, test.data, type = "prob")
 res.roc <- roc(test.data$is_exchangeable ~ predictionsDTProb[,2])
 plot.roc(res.roc, print.auc = TRUE)
 as.numeric(res.roc$auc)
