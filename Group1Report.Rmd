@@ -894,7 +894,7 @@ error
 confusionMatrix(test.data$is_exchangeable, predictionDT)
 ```
 
-The accuracy above tells us that the Decision Tree correctly predicted \~69% of the individuals who agreed to exchangeing their vehicles. This is better than random guessing. The misclassification error rate is \~31%.
+The accuracy above tells us that the Decision Tree correctly predicted \~69% of the individuals who agreed to exchangeing their vehicles. This is better than random guessing. The missclassification error rate is \~31%.
 
 ![](images/DTExchangeability%20CMpng.PNG)
 
@@ -917,7 +917,7 @@ as.numeric(res.roc$auc)
 
 In this graph the AUC is 0.653, which i relatively good. Remember that a classifier that performs no better than chance is expected to have an AUC of 0.5 when evaluated on an independent test set not used to train the model. Meaning, that this model does in fact predict exchangeability with some success.
 
-```{r DTRegressionExchangeabilityBestRoc, eval=FALSE, include=TRUE}
+```{r LRRegressionExchangeabilityBestRoc, eval=FALSE, include=TRUE}
 # Get the probability threshold for specificity = 0.5
 rocModelDT.data <- data_frame(
   thresholds = res.roc$thresholds,
