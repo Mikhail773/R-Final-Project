@@ -15,6 +15,7 @@ library(rpart) # Decision Tree Regression
 library(randomForest) #  Random Forest Tree Regression
 library(ranger) # RFT more than 53 factors
 library(pROC) # Calculate roc
+library(vctrs)
 ###################################################################################################
 #
 # Evaluate the data
@@ -23,7 +24,7 @@ library(pROC) # Calculate roc
 #Read our dataset into the cars variable
 cars <- read_csv("cars.csv")
 
-View(cars) #view the data
+View(cars) #View the data
 
 ###################################################################################################
 #
@@ -35,7 +36,7 @@ View(cars) #view the data
 # -(19) is a column that shows the number of times a car has been upped. This column not descriptive and has been removed
 # -(20:29) are boolean columns for various features. There is no description of what these features are and for that reason they have been omitted.
 cars_edited <- cars %>% dplyr::select(-8 & -(12:13) & -(20:29))
-View(cars_edited) #view the data
+View(cars_edited) #View the data
 
 # This recoding was done on the csv file and saved permanently to avoid future locale issues.
 # #Recode foreign language into their English meaning (location_region)
@@ -152,8 +153,7 @@ transmissionGrouped <- group_by(cars_edited, transmission)
 transmissionCounted <- count(transmissionGrouped)
 percentTransmission <- paste0(round(100*transmissionCounted$n/sum(transmissionCounted$n), 2), "%")
 pie(transmissionCounted$n, labels = percentTransmission, main = "Transmission Distribution", col = rainbow(nrow(transmissionCounted)))
-legend("right", c("Automatic", "Mechanical"), cex = 0.8,
-       fill = rainbow(length(transmissionCounted)))
+legend("right", c("Automatic", "Mechanical"), cex = 0.8, fill = rainbow(length(transmissionCounted)))
 # Mechanical is significantly more common than Automatic. This will definitely be an attribute to consider in our final model
 
 # 4) Plotting cars by color and quantity
@@ -307,22 +307,20 @@ cars_edited %>% group_by(manufacturer_name) %>% summarize(mean(price_usd)) %>% V
 #
 # (Emma Doyle)
 #
-# 1) What impact does region have on price?
+# 1) Q: What impact does region have on price?
 #
-# Region does impact price. However, the extent of this impact would have to be assessed in a model that includes more attributes.
+# A: Region does impact price. However, the extent of this impact would have to be assessed in a model that includes more attributes.
 # The best indicator of the relationship will be seen in the total model.
 # Regions: Minsk, Gomel, Brest, Vitebsk, Mogilev, Grodno
 #
 
-#Aggregating the data of price to region to get the mean of prices
-#per region
-#Aggregating the data of price to region to get the mean of prices
-#per region
+# Aggregating the data of price to region to get the mean of prices per region
+# Aggregating the data of price to region to get the mean of prices per region
 regionPriceDF <- group_by(cars_edited, location_region)
 regionPriceDF_averages <- summarise(regionPriceDF, average_price_usd = mean(price_usd))
 ggplot(regionPriceDF_averages,aes(x= location_region, y = average_price_usd)) + geom_bar(stat = "identity")
 
-#one-way anova
+# one-way anova
 group_by(regionPriceDF, regionPriceDF$location_region) %>%
   summarise(
     count = n(),
@@ -342,10 +340,10 @@ TukeyHSD(res.aov)
 #
 # (Emma Doyle)
 #
-# 2) Do manufacturers have a significant impact on the asking price of a vehicle?
+# 2) Q: Do manufacturers have a significant impact on the asking price of a vehicle?
 # Manufacturers does correlate to the asking price of a vehicle.
 #
-# Our final models will show us exactly how large this correlation is with regards to the other attributes.
+# A: Our final models will show us exactly how large this correlation is with regards to the other attributes.
 #
 
 # 1)What is the distribution of manufacturers?
@@ -375,28 +373,28 @@ TukeyHSD(res.aovTwo)
 #
 # (Reid Hoffmeier)
 #
-# 3) What is the relationship between odometer and price?
+# 3) A: What is the relationship between odometer and price?
 #
-# There is a low negative correlation between price and odometer.
+# Q: There is a low negative correlation between price and odometer.
 # We can conclude that although there is an impact many more attributes effect the price of a vehicle.
 #
 
-#Scatter plot: Odometer and price
+# Scatter plot: Odometer and price
 ggplot (cars_edited, aes( x =odometer_value, y=price_usd)) + geom_point() + stat_smooth()
 
-#Getting cor value
+# Getting cor value
 cor.test(cars_edited$odometer_value, cars_edited$price_usd)
 # Since the p-value is less than 0.05 we can conclude that Price and Odometer have a low negative correlation
 # The correlation coefficient is -0.4212043 and p-value of < 2.2e-16.
 
-#Getting the formula for linear regression
+# Getting the formula for linear regression
 odometer_on_price <- lm (price_usd ~ odometer_value, data = cars_edited)
 odometer_on_price
 
-#Scatter plot: Odometer and price with linear regression line
+# Scatter plot: Odometer and price with linear regression line
 ggplot(cars_edited, aes(x=odometer_value, y=price_usd)) + geom_point() + stat_smooth(method=lm)
 
-#Finding how well this line fits our data
+# Finding how well this line fits our data
 summary(odometer_on_price)
 
 confint(odometer_on_price)
@@ -407,29 +405,29 @@ sigma(odometer_on_price)*100/mean(cars_edited$price_usd)
 # (Reid Hoffmeier)
 #
 # 4) Scatter Plot, Simple Regression Analysis:
-# Does the number of photos a vehicle has impact the selling price?
+# Q: Does the number of photos a vehicle has impact the selling price?
 #
-# A low positive correlation between number of photos a vehicle has and the selling price.
+# A: A low positive correlation between number of photos a vehicle has and the selling price.
 # However, on its own photo amount is not a good predictor of price and for that reason we must use several more attributes when predicting price.
 #
 
-#Scatter plot: Number of photos and price
+# Scatter plot: Number of photos and price
 ggplot(cars_edited, aes( x =number_of_photos, y=price_usd)) + geom_hex() + stat_smooth(color = "red")
 
-#getting the cor value
+# Getting the cor value
 cor.test(cars_edited$number_of_photos, cars_edited$price_usd)
 
 # Since the p-value is less than 0.05 we can conclude that Price and Number of photos have a low positive correlation
 # The correlation coefficient is 0.3168586 and p-value of < 2.2e-16.
 
-#Getting the formula for linear regression
+# Getting the formula for linear regression
 number_of_photos_on_price <- lm (price_usd ~ number_of_photos, data = cars_edited)
 number_of_photos_on_price
 
-#Scatter plot: Number of photos and price with linear regression line
+# Scatter plot: Number of photos and price with linear regression line
 ggplot (cars_edited, aes(x=number_of_photos, y=price_usd)) + geom_point() + stat_smooth(method=lm)
 
-#Finding how well this line fits the data
+# Finding how well this line fits the data
 summary(number_of_photos_on_price)
 confint(number_of_photos_on_price)
 sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
@@ -439,9 +437,9 @@ sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
 # (Matthew Lane)
 #
 # 5) Scatter Plot, Simple Regression Analysis:
-# Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
+# Q: Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
 #
-# The number of times a vehicle has been upped has a negligible impact on the selling price
+# A: The number of times a vehicle has been upped has a negligible impact on the selling price
 #
 
 #Regression analysis
@@ -466,11 +464,11 @@ ggplot (cars_edited, aes(x=up_counter, y=price_usd)) + geom_point() + stat_smoot
 # (Matthew Lane)
 # 6) Mosaic Plot/ Chi-Squared Test, Two-Way ANOVA:
 #
-# Relationship between Engine Type and Body Type?
-# Sedan and Gasoline is the most common followed by Gasoline and Hatchback
+# Q: Relationship between Engine Type and Body Type?
+# A: Sedan and Gasoline is the most common followed by Gasoline and Hatchback
 #
-# What is the impact of Engine Type and Body Type on the selling price?
-# Limousine and pickup trucks appear to have the only impact.
+# Q: What is the impact of Engine Type and Body Type on the selling price?
+# A: Limousine and pickup trucks appear to have the only impact.
 
 # Balloon Plot
 ggplot(cars_edited, aes(body_type, engine_type)) + geom_count()
@@ -494,11 +492,11 @@ TukeyHSD(body_engine_type_on_price.aov)
 # (Mikhail Mikhaylov)
 #
 # 7) Dplyr count with group_by, One-Way Anova:
-# What is the most popular model?
-# Most popular is Passat.
+# Q: What is the most popular model?
+# A: Most popular is Passat.
 #
-# Can we conclude that the popularity of a model has a direct impact on the price of a vehicle?
-# The popularity of a vehicle does seem to have an impact on the average_price of a vehicle
+# Q: Can we conclude that the popularity of a model has a direct impact on the price of a vehicle?
+# A: The popularity of a vehicle does seem to have an impact on the average_price of a vehicle
 # More attributes would be needed to predict price.
 #
 
@@ -526,8 +524,11 @@ sigma(modelPrice)*100/mean(cars_edited$price_usd)
 # (Mikhail Mikhaylov)
 # 8) Scatter plot, Two-Way ANOVA/ :
 #
-# What is the average age of each vehicle manufacturer?
-# Does the manufacturer change how the production year impacts the selling price?
+# Q: What is the average age of each vehicle manufacturer?
+# A: Tibble included below
+#
+# Q: Does the manufacturer change how the production year impacts the selling price? 
+# A: The manufacturer does influence how production year changes the price of a vehicle.
 #
 
 #Scatter plot: Year produced by price and colored by manufacturer name
@@ -561,13 +562,83 @@ sigma(ManufyearPrice)*100/mean(cars_edited$price_usd)
 # We will see if we can predict exchangeability given all the other attributes
 #
 ###################################################################################################
-## Using Decision Tree to predict exchangeability
-model_DT_Exchangeable <-  train(is_exchangeable ~ . , data = train.data, method = "rpart",
+## Using Decision Tree to create an exploratory model for exchangeability
+model_DT_Exchangeable <-  train(is_exchangeable ~ . , data = cars_edited, method = "rpart",
                                 trControl = trainControl("cv",number = 10),
                                 preProcess = c("center","scale"),
                                 tuneLength = 10)
+# Exploratory
+predictionsDTExploratory <- predict(model_DT_Exchangeable, cars_edited)
 
-predictionsDT <- predict(model_DT_Exchangeable, test.data)
+# Check accuracy, error, and confusion matrix
+accuracy <- mean(cars_edited$is_exchangeable == predictionsDTExploratory)
+accuracy
+# [1] 0.6944141
+error <- mean(cars_edited$is_exchangeable != predictionsDTExploratory)
+error
+# [1] 0.3055859
+confusionMatrix(cars_edited$is_exchangeable, predictionsDTExploratory)
+# Accuracy : 0.6944         
+# 95% CI : (0.6898, 0.699)
+# No Information Rate : 0.8381         
+# P-Value [Acc > NIR] : 1              
+# 
+# Kappa : 0.2359         
+# 
+# Mcnemar's Test P-Value : <2e-16         
+#                                          
+#             Sensitivity : 0.7042         
+#             Specificity : 0.6435         
+#          Pos Pred Value : 0.9109         
+#          Neg Pred Value : 0.2959         
+#              Prevalence : 0.8381         
+#          Detection Rate : 0.5903         
+#    Detection Prevalence : 0.6480         
+#       Balanced Accuracy : 0.6739         
+#                                          
+#        'Positive' Class : FALSE  
+
+# Compute roc
+predictionsDTExploratoryProb <- predict(model_DT_Exchangeable, cars_edited, type = "prob")
+res.roc <- roc(cars_edited$is_exchangeable ~ predictionsDTExploratoryProb[,2])
+plot.roc(res.roc, print.auc = TRUE)
+as.numeric(res.roc$auc)
+# [1] 0.6570493
+
+# Get the probability threshold for specificity = 0.5
+rocModelDT.data <- data_frame(
+  thresholds = res.roc$thresholds,
+  sensitivity = res.roc$sensitivities,
+  specificity = res.roc$specificities
+)
+rocModelDT.data %>% filter(specificity >= 0.5)
+# thresholds sensitivity specificity
+# 1   0.3221210  0.64073801   0.5760225
+# 2   0.3286891  0.63638376   0.5809142
+# 3   0.3335378  0.45822878   0.7761828
+# 4   0.3410165  0.44051661   0.7952285
+# 5   0.3535022  0.43594096   0.7999198
+# 6   0.3744926  0.41416974   0.8208901
+# 7   0.3975646  0.41121771   0.8234162
+# 8   0.4110868  0.40413284   0.8290297
+# 9   0.4343919  0.30376384   0.9057739
+# 10  0.4934509  0.29586716   0.9109463
+# 11  0.5585664  0.28118081   0.9179230
+# 12  0.5886301  0.18125461   0.9566560
+# 13  0.6029422  0.16885609   0.9612670
+# 14  0.6147921  0.15557196   0.9658380
+# 15  0.6547752  0.12509225   0.9761026
+# 16  0.7172594  0.08442804   0.9859262
+# 17  0.8301282  0.01321033   0.9993585
+# 18        Inf  0.00000000   1.0000000
+plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
+
+#Predictive
+model_DT_Exchangeable_Pred <-  train(is_exchangeable ~ . , data = train.data, method = "rpart",
+                                trControl = trainControl("cv",number = 10),
+                                preProcess = c("center","scale"),
+                                tuneLength = 10)
+predictionsDT <- predict(model_DT_Exchangeable_Pred, test.data)
 
 # Check accuracy, error, and confusion matrix
 accuracy <- mean(test.data$is_exchangeable == predictionsDT)
@@ -579,14 +650,13 @@ error
 confusionMatrix(test.data$is_exchangeable, predictionsDT)
 
 #Compute roc
-predictionsDTProb <- predict(model_DT_Exchangeable, test.data, type = "prob")
+predictionsDTProb <- predict(model_DT_Exchangeable_Pred, test.data, type = "prob")
 res.roc <- roc(test.data$is_exchangeable ~ predictionsDTProb[,2])
 plot.roc(res.roc, print.auc = TRUE)
 as.numeric(res.roc$auc)
 # [1] 0.6525616
 
 # Get the probability threshold for specificity = 0.5
-library(vctrs)
 rocModelDT.data <- data_frame(
   thresholds = res.roc$thresholds,
   sensitivity = res.roc$sensitivities,
@@ -595,13 +665,35 @@ rocModelDT.data <- data_frame(
 rocModelDT.data %>% filter(specificity >= 0.5)
 plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
-## Using Logistic Regression to predict exchangeability
-model_LR_Exchangeable <-  train( is_exchangeable ~ ., data = train.data, method = "glm", family = "binomial",
+## Using Logistic Regression to create an exploratory model for exchangeability
+model_LR_Exchangeable <-  train( is_exchangeable ~ ., data = cars_edited, method = "glm", family = "binomial",
                                  trControl = trainControl("cv", number =10),
                                  preProcess = c("center", "scale"),
                                  tuneLength = 10
 )
 
+# Exploratory
+predictionsLRExploratory <- predict(model_LR_Exchangeable, cars_edited)
+
+# Check accuracy, error, and confusion matrix
+accuracy <- mean(cars_edited$is_exchangeable == predictionsLRExploratory)
+accuracy
+error <- mean(cars_edited$is_exchangeable != predictionsLRExploratory)
+error
+confusionMatrix(cars_edited$is_exchangeable, predictionsLRExploratory)
+
+#Compute roc
+predictionsLRExploratoryProb <- predict(predictionsLRExploratory, cars_edited, type = "prob")
+res.roc <- roc(cars_edited$is_exchangeable ~ predictionsLRExploratoryProb[,2])
+plot.roc(res.roc, print.auc = TRUE)
+as.numeric(res.roc$auc)
+
+# Predictive
+model_LR_Exchangeable <-  train( is_exchangeable ~ ., data = train.data, method = "glm", family = "binomial",
+                                 trControl = trainControl("cv", number =10),
+                                 preProcess = c("center", "scale"),
+                                 tuneLength = 10
+)
 predictionsLR <- predict(model_LR_Exchangeable, test.data)
 # Check accuracy, error, and confusion matrix
 accuracy <- mean(test.data$is_exchangeable == predictionsLR)
@@ -620,7 +712,6 @@ as.numeric(res.rocLR$auc)
 # [1] 0.6443938
 
 # Get the probability threshold for specificity = 0.5
-library(vctrs)
 rocModelLR.data <- data_frame(
   thresholds = res.rocLR$thresholds,
   sensitivity = res.rocLR$sensitivities,
@@ -638,12 +729,24 @@ plot.roc(res.rocLR, print.auc = TRUE, print.thres = "best")
 ###################################################################################################
 
 ## Multiple Linear Regression Models
-
 # R^2 for test/train dataset
-LM <- lm(price_usd ~ ., data = train.data)
+LM <- lm(price_usd ~ . -model_name, data = train.data)
 
 step.LM <- LM %>% stepAIC(trace = FALSE)
 vif(step.LM)
+# GVIF Df GVIF^(1/(2*Df))
+# manufacturer_name 15.288862 54        1.025573
+# transmission       1.840427  1        1.356623
+# color              1.545952 11        1.019999
+# odometer_value     1.627875  1        1.275882
+# year_produced      2.136749  1        1.461762
+# engine_fuel        1.691724  5        1.053981
+# engine_capacity    2.224866  1        1.491598
+# body_type          8.701242 11        1.103337
+# drivetrain         6.095660  2        1.571286
+# location_region    1.099706  5        1.009550
+# number_of_photos   1.113954  1        1.055440
+# duration_listed    1.023732  1        1.011797
 summary(step.LM)
 coef(step.LM)
 confint(step.LM)
@@ -651,9 +754,11 @@ LMPrediction <- predict(step.LM, test.data)
 
 # Prediction error, rmse
 RMSE(LMPrediction,test.data$price_usd)
+#[1] 3542.066
 
 # Compute R-square
-R2(LMPrediction,test.data$price_usd) ## R^2 for test/train is 50.95891%
+R2(LMPrediction,test.data$price_usd)
+# [1] 0.7058649
 
 # Log transformation
 LogLMConts <- lm(log(price_usd) ~ . -model_name
@@ -663,14 +768,11 @@ step.logConts <- LogLMConts %>% stepAIC(trace = FALSE)
 vif(step.logConts)
 
 summary(step.logConts)
-
 coef(step.logConts)
-
 confint(step.logConts)
 
-
 # Predict using Multiple Linear Regression Model
-LogLMContsPrediction <- step.logConts %>% predict(test.data)
+LogLMPrediction <- step.LogLM %>% predict(test.data)
 
 # Prediction error, rmse
 RMSE(LogLMContsPrediction,test.data$price_usd)
@@ -902,7 +1004,7 @@ R2(rf_predict_ranger,test.data$price_usd)
 #
 
 model_knn <- train(
-  price_usd ~., data = train.data, method = "knn",
+  price_usd ~. -model_name, data = train.data, method = "knn",
   trControl = trainControl("cv", number = 10),
   preProcess = c("center","scale"),
   tuneLength = 20
@@ -1022,5 +1124,3 @@ detach("package:datasets", unload = TRUE)  # For base
 
 # Clear console
 cat("\014")
-
-
