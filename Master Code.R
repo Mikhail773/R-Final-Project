@@ -562,29 +562,83 @@ sigma(ManufyearPrice)*100/mean(cars_edited$price_usd)
 # We will see if we can predict exchangeability given all the other attributes
 #
 ###################################################################################################
-## Using Decision Tree to predict exchangeability
-model_DT_Exchangeable <-  train(is_exchangeable ~ . , data = train.data, method = "rpart",
+## Using Decision Tree to create an exploratory model for exchangeability
+model_DT_Exchangeable <-  train(is_exchangeable ~ . , data = cars_edited, method = "rpart",
                                 trControl = trainControl("cv",number = 10),
                                 preProcess = c("center","scale"),
                                 tuneLength = 10)
 # Exploratory
-predictionsDTExploratory <- predict(model_DT_Exchangeable, train.data)
+predictionsDTExploratory <- predict(model_DT_Exchangeable, cars_edited)
 
 # Check accuracy, error, and confusion matrix
-accuracy <- mean(train.data$is_exchangeable == predictionsDTExploratory)
+accuracy <- mean(cars_edited$is_exchangeable == predictionsDTExploratory)
 accuracy
-error <- mean(train.data$is_exchangeable != predictionsDTExploratory)
+# [1] 0.6944141
+error <- mean(cars_edited$is_exchangeable != predictionsDTExploratory)
 error
-confusionMatrix(train.data$is_exchangeable, predictionsDTExploratory)
+# [1] 0.3055859
+confusionMatrix(cars_edited$is_exchangeable, predictionsDTExploratory)
+# Accuracy : 0.6944         
+# 95% CI : (0.6898, 0.699)
+# No Information Rate : 0.8381         
+# P-Value [Acc > NIR] : 1              
+# 
+# Kappa : 0.2359         
+# 
+# Mcnemar's Test P-Value : <2e-16         
+#                                          
+#             Sensitivity : 0.7042         
+#             Specificity : 0.6435         
+#          Pos Pred Value : 0.9109         
+#          Neg Pred Value : 0.2959         
+#              Prevalence : 0.8381         
+#          Detection Rate : 0.5903         
+#    Detection Prevalence : 0.6480         
+#       Balanced Accuracy : 0.6739         
+#                                          
+#        'Positive' Class : FALSE  
 
-#Compute roc
-predictionsDTExploratoryProb <- predict(model_DT_Exchangeable, test.data, type = "prob")
-res.roc <- roc(train.data$is_exchangeable ~ predictionsDTExploratoryProb[,2])
+# Compute roc
+predictionsDTExploratoryProb <- predict(model_DT_Exchangeable, cars_edited, type = "prob")
+res.roc <- roc(cars_edited$is_exchangeable ~ predictionsDTExploratoryProb[,2])
 plot.roc(res.roc, print.auc = TRUE)
 as.numeric(res.roc$auc)
+# [1] 0.6570493
+
+# Get the probability threshold for specificity = 0.5
+rocModelDT.data <- data_frame(
+  thresholds = res.roc$thresholds,
+  sensitivity = res.roc$sensitivities,
+  specificity = res.roc$specificities
+)
+rocModelDT.data %>% filter(specificity >= 0.5)
+# thresholds sensitivity specificity
+# 1   0.3221210  0.64073801   0.5760225
+# 2   0.3286891  0.63638376   0.5809142
+# 3   0.3335378  0.45822878   0.7761828
+# 4   0.3410165  0.44051661   0.7952285
+# 5   0.3535022  0.43594096   0.7999198
+# 6   0.3744926  0.41416974   0.8208901
+# 7   0.3975646  0.41121771   0.8234162
+# 8   0.4110868  0.40413284   0.8290297
+# 9   0.4343919  0.30376384   0.9057739
+# 10  0.4934509  0.29586716   0.9109463
+# 11  0.5585664  0.28118081   0.9179230
+# 12  0.5886301  0.18125461   0.9566560
+# 13  0.6029422  0.16885609   0.9612670
+# 14  0.6147921  0.15557196   0.9658380
+# 15  0.6547752  0.12509225   0.9761026
+# 16  0.7172594  0.08442804   0.9859262
+# 17  0.8301282  0.01321033   0.9993585
+# 18        Inf  0.00000000   1.0000000
+plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
 #Predictive
-predictionsDT <- predict(model_DT_Exchangeable, test.data)
+model_DT_Exchangeable_Pred <-  train(is_exchangeable ~ . , data = train.data, method = "rpart",
+                                trControl = trainControl("cv",number = 10),
+                                preProcess = c("center","scale"),
+                                tuneLength = 10)
+predictionsDT <- predict(model_DT_Exchangeable_Pred, test.data)
 
 # Check accuracy, error, and confusion matrix
 accuracy <- mean(test.data$is_exchangeable == predictionsDT)
@@ -596,7 +650,7 @@ error
 confusionMatrix(test.data$is_exchangeable, predictionsDT)
 
 #Compute roc
-predictionsDTProb <- predict(model_DT_Exchangeable, test.data, type = "prob")
+predictionsDTProb <- predict(model_DT_Exchangeable_Pred, test.data, type = "prob")
 res.roc <- roc(test.data$is_exchangeable ~ predictionsDTProb[,2])
 plot.roc(res.roc, print.auc = TRUE)
 as.numeric(res.roc$auc)
@@ -611,30 +665,35 @@ rocModelDT.data <- data_frame(
 rocModelDT.data %>% filter(specificity >= 0.5)
 plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
-## Using Logistic Regression to predict exchangeability
-model_LR_Exchangeable <-  train( is_exchangeable ~ ., data = train.data, method = "glm", family = "binomial",
+## Using Logistic Regression to create an exploratory model for exchangeability
+model_LR_Exchangeable <-  train( is_exchangeable ~ ., data = cars_edited, method = "glm", family = "binomial",
                                  trControl = trainControl("cv", number =10),
                                  preProcess = c("center", "scale"),
                                  tuneLength = 10
 )
 
 # Exploratory
-predictionsLRExploratory <- predict(model_LR_Exchangeable, train.data)
+predictionsLRExploratory <- predict(model_LR_Exchangeable, cars_edited)
 
 # Check accuracy, error, and confusion matrix
-accuracy <- mean(train.data$is_exchangeable == predictionsLRExploratory)
+accuracy <- mean(cars_edited$is_exchangeable == predictionsLRExploratory)
 accuracy
-error <- mean(train.data$is_exchangeable != predictionsLRExploratory)
+error <- mean(cars_edited$is_exchangeable != predictionsLRExploratory)
 error
-confusionMatrix(train.data$is_exchangeable, predictionsLRExploratory)
+confusionMatrix(cars_edited$is_exchangeable, predictionsLRExploratory)
 
 #Compute roc
-predictionsLRExploratoryProb <- predict(predictionsLRExploratory, test.data, type = "prob")
-res.roc <- roc(train.data$is_exchangeable ~ predictionsLRExploratoryProb[,2])
+predictionsLRExploratoryProb <- predict(predictionsLRExploratory, cars_edited, type = "prob")
+res.roc <- roc(cars_edited$is_exchangeable ~ predictionsLRExploratoryProb[,2])
 plot.roc(res.roc, print.auc = TRUE)
 as.numeric(res.roc$auc)
 
 # Predictive
+model_LR_Exchangeable <-  train( is_exchangeable ~ ., data = train.data, method = "glm", family = "binomial",
+                                 trControl = trainControl("cv", number =10),
+                                 preProcess = c("center", "scale"),
+                                 tuneLength = 10
+)
 predictionsLR <- predict(model_LR_Exchangeable, test.data)
 # Check accuracy, error, and confusion matrix
 accuracy <- mean(test.data$is_exchangeable == predictionsLR)
