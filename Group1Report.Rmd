@@ -998,10 +998,10 @@ predictionsLRExploratory <- predict(model_LR_Exchangeable, train.data)
 # Check accuracy, error, and confusion matrix
 accuracy <- mean(train.data$is_exchangeable == predictionsLRExploratory)
 accuracy
-# [1] 0.6821029		  
+# [1] 0.6624371		  
 error <- mean(train.data$is_exchangeable != predictionsLRExploratory)
 error
-# [1] 0.3178971	  
+# [1] 0.3375629 	  
 confusionMatrix(train.data$is_exchangeable, predictionsLRExploratory)
 ```
 
@@ -1013,7 +1013,7 @@ predictionsLRExploratoryProb <- predict(model_LR_Exchangeable, train.data, type 
 res.roc <- roc(train.data$is_exchangeable ~ predictionsLRExploratoryProb[,2])
 plot.roc(res.roc, print.auc = TRUE)
 as.numeric(res.roc$auc)
-# [1] 0.6890279
+# [1] 0.6505955
 
 # Get the probability threshold for specificity = 0.5
 rocModelLRExploratory.data <- data_frame(
@@ -1041,10 +1041,10 @@ predictionsLR <- predict(model_LR_Exchangeable, test.data)
 # Check accuracy, error, and confusion matrix
 accuracy <- mean(test.data$is_exchangeable == predictionsLR)
 accuracy
-# [1] 0.6647557
+# [1] 0.6650163
 error <- mean(test.data$is_exchangeable != predictionsLR)
 error
-# [1] 0.3352443
+# [1] 0.3349837
 confusionMatrix(test.data$is_exchangeable, predictionsLR)
 ```
 
@@ -1064,7 +1064,7 @@ predictionsLRProb <- predict(model_LR_Exchangeable, test.data, type = "prob")
 res.rocLR <- roc(test.data$is_exchangeable ~ predictionsLRProb[,2])
 plot.roc(res.rocLR, print.auc = TRUE)
 as.numeric(res.rocLR$auc)
-# [1] 0.6312427
+# [1] 0.6480223
 
 
 # Get the probability threshold for specificity = 0.5
@@ -1432,20 +1432,20 @@ Given the RMSE being 3693.127 we calculated our error rate as 3693.127/mean(test
 
 ## Results obtained using different ML methods
 
-+----------------------------------------------+----------------+-----------------+-----------------+
-| Machine-Learning Methods                     | RMSE           | Error Rate      | R-Square        |
-+:=============================================+:==============:+:===============:+================:+
-| Multiple Linear Regression (w/o Model_Names) | **3542.066**   | **53.13197**    | **0.7058649**   |
-+----------------------------------------------+----------------+-----------------+-----------------+
-| SVR Linear                                   | **3257.887**   | **48.86921**    | **0.7772176**   |
-+----------------------------------------------+----------------+-----------------+-----------------+
-| SVR Radial                                   | **4752.231**   | **71.28478**    | **0.5937837**   |
-+----------------------------------------------+----------------+-----------------+-----------------+
-| Decision Tree Regression                     | **3245.413**   | **48.68209**    | **0.7529956**   |
-+----------------------------------------------+----------------+-----------------+-----------------+
-| Random Forest Tree Regression                | **1879.884**   | **28.19878**    | **0.9184761**   |
-+----------------------------------------------+----------------+-----------------+-----------------+
-| KNN(K Nearest Neighbor)                      | **3693.127**   | **55.39793**    | **0.6802895**   |
-+----------------------------------------------+----------------+-----------------+-----------------+
++----------------------------------------------+--------------+--------------+---------------+
+| Machine-Learning Methods                     | RMSE         | Error Rate   | R-Square      |
++:=============================================+:============:+:============:+==============:+
+| Multiple Linear Regression (w/o Model_Names) | **3542.066** | **53.13197** | **0.7058649** |
++----------------------------------------------+--------------+--------------+---------------+
+| SVR Linear                                   | **3257.887** | **48.86921** | **0.7772176** |
++----------------------------------------------+--------------+--------------+---------------+
+| SVR Radial                                   | **4752.231** | **71.28478** | **0.5937837** |
++----------------------------------------------+--------------+--------------+---------------+
+| Decision Tree Regression                     | **3245.413** | **48.68209** | **0.7529956** |
++----------------------------------------------+--------------+--------------+---------------+
+| Random Forest Tree Regression                | **1879.884** | **28.19878** | **0.9184761** |
++----------------------------------------------+--------------+--------------+---------------+
+| KNN(K Nearest Neighbor)                      | **3693.127** | **55.39793** | **0.6802895** |
++----------------------------------------------+--------------+--------------+---------------+
 
 Note: Some vehicles do not occur often due to a limit in the data collected and for that reason prediction made on vehicles(specifically models) that are not common ought to be taken with the limitations of the models in mind.
