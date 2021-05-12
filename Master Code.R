@@ -563,6 +563,7 @@ sigma(ManufyearPrice)*100/mean(cars_edited$price_usd)
 #
 ###################################################################################################
 ## Using Decision Tree to create an exploratory model for exchangeability
+set.seed(123)
 model_DT_Exchangeable <-  train(is_exchangeable ~ . -model_name, data = train.data, method = "rpart",
                                 trControl = trainControl("cv",number = 10),
                                 preProcess = c("center","scale"),
@@ -640,7 +641,8 @@ rocModelDT.data %>% filter(specificity >= 0.5)
 # 17        Inf  0.00000000   1.0000000
 plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
-# Predictive Model
+############## Predictive Model DT
+
 predictionsDT <- predict(model_DT_Exchangeable, test.data)
 
 # Check accuracy, error, and confusion matrix
@@ -712,6 +714,7 @@ rocModelDT.data %>% filter(specificity >= 0.5)
 plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
 ## Using Logistic Regression to create an exploratory model for exchangeability
+set.seed(123)
 model_LR_Exchangeable <-  train( is_exchangeable ~ . -model_name, data = train.data, method = "glm", family = "binomial",
                                  trControl = trainControl("cv", number =10),
                                  preProcess = c("center", "scale"),
@@ -790,7 +793,7 @@ rocModelLRExploratory.data %>% filter(specificity >= 0.5)
 # More ommitted
 plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
-# Predictive
+############## Predictive Model LR
 predictionsLR <- predict(model_LR_Exchangeable, test.data)
 # Check accuracy, error, and confusion matrix
 accuracy <- mean(test.data$is_exchangeable == predictionsLR)
