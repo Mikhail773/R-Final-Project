@@ -24,7 +24,7 @@ library(vctrs)
 #Read our dataset into the cars variable
 cars <- read_csv("cars.csv")
 
-View(cars) #view the data
+View(cars) #View the data
 
 ###################################################################################################
 #
@@ -36,7 +36,7 @@ View(cars) #view the data
 # -(19) is a column that shows the number of times a car has been upped. This column not descriptive and has been removed
 # -(20:29) are boolean columns for various features. There is no description of what these features are and for that reason they have been omitted.
 cars_edited <- cars %>% dplyr::select(-8 & -(12:13) & -(20:29))
-View(cars_edited) #view the data
+View(cars_edited) #View the data
 
 # This recoding was done on the csv file and saved permanently to avoid future locale issues.
 # #Recode foreign language into their English meaning (location_region)
@@ -153,8 +153,7 @@ transmissionGrouped <- group_by(cars_edited, transmission)
 transmissionCounted <- count(transmissionGrouped)
 percentTransmission <- paste0(round(100*transmissionCounted$n/sum(transmissionCounted$n), 2), "%")
 pie(transmissionCounted$n, labels = percentTransmission, main = "Transmission Distribution", col = rainbow(nrow(transmissionCounted)))
-legend("right", c("Automatic", "Mechanical"), cex = 0.8,
-       fill = rainbow(length(transmissionCounted)))
+legend("right", c("Automatic", "Mechanical"), cex = 0.8, fill = rainbow(length(transmissionCounted)))
 # Mechanical is significantly more common than Automatic. This will definitely be an attribute to consider in our final model
 
 # 4) Plotting cars by color and quantity
