@@ -568,7 +568,7 @@ model_DT_Exchangeable <-  train(is_exchangeable ~ . , data = train.data, method 
                                 preProcess = c("center","scale"),
                                 tuneLength = 10)
 # Exploratory
-predictionsDTExploratory <- predict(model_DT_Exchangeable, cars_edited)
+predictionsDTExploratory <- predict(model_DT_Exchangeable, train.data)
 
 # Check accuracy, error, and confusion matrix
 accuracy <- mean(train.data$is_exchangeable == predictionsDTExploratory)
