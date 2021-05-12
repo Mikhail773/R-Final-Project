@@ -724,60 +724,115 @@ predictionsLRExploratory <- predict(model_LR_Exchangeable, train.data)
 # Check accuracy, error, and confusion matrix
 accuracy <- mean(train.data$is_exchangeable == predictionsLRExploratory)
 accuracy
-#[1] 0.6624371		  
+# [1] 0.6821029		  
 error <- mean(train.data$is_exchangeable != predictionsLRExploratory)
 error
-#[1] 0.3375629	  
+# [1] 0.3178971	  
 confusionMatrix(train.data$is_exchangeable, predictionsLRExploratory)
-#Confusion Matrix and Statistics
-#
-#Reference
-#Prediction FALSE  TRUE
-#FALSE 18799  1147
-#TRUE   9255  1614
-#
-#Accuracy : 0.6624          
-#95% CI : (0.6571, 0.6677)
-#No Information Rate : 0.9104          
-#P-Value [Acc > NIR] : 1               
-#
-#Kappa : 0.1096          
-#
-#Mcnemar's Test P-Value : <2e-16          
-#                                          
-#            Sensitivity : 0.6701          
-#            Specificity : 0.5846          
-#         Pos Pred Value : 0.9425          
-#         Neg Pred Value : 0.1485          
-#             Prevalence : 0.9104          
-#         Detection Rate : 0.6101          
-#   Detection Prevalence : 0.6473          
-#      Balanced Accuracy : 0.6273          
-#                                          
-#       'Positive' Class : FALSE    		 
-#Compute roc
-predictionsLRExploratoryProb <- predict(predictionsLRExploratory, train.data, type = "prob")
+# Confusion Matrix and Statistics
+# 
+# Reference
+# Prediction FALSE  TRUE
+# FALSE 18402  1544
+# TRUE   8252  2617
+# 
+# Accuracy : 0.6821          
+# 95% CI : (0.6769, 0.6873)
+# No Information Rate : 0.865           
+# P-Value [Acc > NIR] : 1               
+# 
+# Kappa : 0.1901          
+# 
+# Mcnemar's Test P-Value : <2e-16          
+#                                           
+#             Sensitivity : 0.6904          
+#             Specificity : 0.6289          
+#          Pos Pred Value : 0.9226          
+#          Neg Pred Value : 0.2408          
+#              Prevalence : 0.8650          
+#          Detection Rate : 0.5972          
+#    Detection Prevalence : 0.6473          
+#       Balanced Accuracy : 0.6597          
+#                                           
+#        'Positive' Class : FALSE         
+# Compute roc
+predictionsLRExploratoryProb <- predict(model_LR_Exchangeable, train.data, type = "prob")
 res.roc <- roc(train.data$is_exchangeable ~ predictionsLRExploratoryProb[,2])
 plot.roc(res.roc, print.auc = TRUE)
 as.numeric(res.roc$auc)
+# [1] 0.6890279
+
+# Get the probability threshold for specificity = 0.5
+rocModelLRExploratory.data <- data_frame(
+  thresholds = res.roc$thresholds,
+  sensitivity = res.roc$sensitivities,
+  specificity = res.roc$specificities
+)
+rocModelLRExploratory.data %>% filter(specificity >= 0.5)
+# thresholds sensitivity specificity
+# 1    0.3066859   0.7538872   0.5000000
+# 2    0.3067188   0.7537952   0.5000000
+# 3    0.3067367   0.7537952   0.5000501
+# 4    0.3067760   0.7537952   0.5001003
+# 5    0.3068087   0.7537952   0.5001504
+# 6    0.3068137   0.7537952   0.5002005
+# 7    0.3068217   0.7537032   0.5002005
+# 8    0.3068268   0.7537032   0.5002507
+# 9    0.3068306   0.7537032   0.5003008
+# 10   0.3068380   0.7537032   0.5003509
+# 11   0.3068442   0.7536112   0.5003509
+# 12   0.3068497   0.7536112   0.5004011
+# 13   0.3068554   0.7536112   0.5004512
+# 14   0.3068617   0.7536112   0.5005014
+# 15   0.3068687   0.7535192   0.5005014
+# 16   0.3068734   0.7535192   0.5005515
+# 17   0.3068767   0.7535192   0.5006016
+# More ommitted
+plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
 # Predictive
 predictionsLR <- predict(model_LR_Exchangeable, test.data)
 # Check accuracy, error, and confusion matrix
 accuracy <- mean(test.data$is_exchangeable == predictionsLR)
 accuracy
-# [1] 0.6647557
+# [1] 0.6585016
 error <- mean(test.data$is_exchangeable != predictionsLR)
 error
-# [1] 0.3352443
+# [1] 0.3414984
 confusionMatrix(test.data$is_exchangeable, predictionsLR)
+# Confusion Matrix and Statistics
+# 
+# Reference
+# Prediction FALSE TRUE
+# FALSE  4518  476
+# TRUE   2145  536
+# 
+# Accuracy : 0.6585          
+# 95% CI : (0.6478, 0.6691)
+# No Information Rate : 0.8681          
+# P-Value [Acc > NIR] : 1               
+# 
+# Kappa : 0.1222          
+# 
+# Mcnemar's Test P-Value : <2e-16          
+#                                           
+#             Sensitivity : 0.6781          
+#             Specificity : 0.5296          
+#          Pos Pred Value : 0.9047          
+#          Neg Pred Value : 0.1999          
+#              Prevalence : 0.8681          
+#          Detection Rate : 0.5887          
+#    Detection Prevalence : 0.6507          
+#       Balanced Accuracy : 0.6039          
+#                                           
+#        'Positive' Class : FALSE  
 
 #Compute roc
 predictionsLRProb <- predict(model_LR_Exchangeable, test.data, type = "prob")
 res.rocLR <- roc(test.data$is_exchangeable ~ predictionsLRProb[,2])
 plot.roc(res.rocLR, print.auc = TRUE)
 as.numeric(res.rocLR$auc)
-# [1] 0.6443938
+# [1] 0.6312427
 
 # Get the probability threshold for specificity = 0.5
 rocModelLR.data <- data_frame(
@@ -786,6 +841,25 @@ rocModelLR.data <- data_frame(
   specificity = res.rocLR$specificities
 )
 rocModelLR.data %>% filter(specificity >= 0.5)
+# thresholds sensitivity specificity
+# 1    0.3124277   0.6904140   0.5000000
+# 2    0.3124336   0.6904140   0.5002002
+# 3    0.3124397   0.6900410   0.5002002
+# 4    0.3124927   0.6900410   0.5004005
+# 5    0.3125795   0.6896680   0.5004005
+# 6    0.3127208   0.6892950   0.5004005
+# 7    0.3128345   0.6889220   0.5004005
+# 8    0.3128493   0.6889220   0.5006007
+# 9    0.3128604   0.6889220   0.5008010
+# 10   0.3129094   0.6889220   0.5010012
+# 11   0.3129564   0.6889220   0.5012014
+# 12   0.3129951   0.6885490   0.5012014
+# 13   0.3130347   0.6885490   0.5014017
+# 14   0.3130436   0.6885490   0.5016019
+# 15   0.3130594   0.6881761   0.5016019
+# 16   0.3130773   0.6881761   0.5018022
+# 17   0.3130941   0.6881761   0.5020024
+# More ommitted
 plot.roc(res.rocLR, print.auc = TRUE, print.thres = "best")
 
 ###################################################################################################

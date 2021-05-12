@@ -889,53 +889,37 @@ Our prediction error rate is lower than for other attributes (60.12396%) which c
 
 #### Exploring Exchangeability using a Decision Tree
 
-#### Predicting Exchangeability using a Decision Tree
-
-In an attempt to predict exchangeability we will deploy a Decision tree. The model will be running the train function with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate)l. These settings should prune our tree and ensured an optimal decision tree to predict exchangeability.
-
-```{r DTRegressionExchangeability, eval=FALSE, include=TRUE}
-### DT Regression
-model_DT_Train <- train(is_exchangeable ~ ., data = train.data, method = "rpart",
-                        trControl = trainControl("cv",number = 10),
-                        preProcess = c("center","scale"),
-                        tuneLength = 10)
-
-predictionDT <- predict(model_DT_Train, test.data)
+```{r DTExploratoryRegressionExchangeability, eval=FALSE, include=TRUE}
+## Using Decision Tree to create an exploratory model for exchangeability
+model_DT_Exchangeable <-  train(is_exchangeable ~ . -model_name, data = train.data, method = "rpart",
+                                trControl = trainControl("cv",number = 10),
+                                preProcess = c("center","scale"),
+                                tuneLength = 10)
+# Exploratory
+predictionsDTExploratory <- predict(model_DT_Exchangeable, train.data)
 
 # Check accuracy, error, and confusion matrix
-accuracy <- mean(test.data$is_exchangeable == predictionDT)
+accuracy <- mean(train.data$is_exchangeable == predictionsDTExploratory)
 accuracy
-# [1] 0.6871661
-error <- mean(test.data$is_exchangeable != predictionDT)
+# [1] 0.6939802
+error <- mean(train.data$is_exchangeable != predictionsDTExploratory)
 error
-# [1] 0.3128339
-confusionMatrix(test.data$is_exchangeable, predictionDT)
+# [1] 0.3060198
+confusionMatrix(train.data$is_exchangeable, predictionsDTExploratory)
 ```
 
-The accuracy above tells us that the Decision Tree correctly predicted \~69% of the individuals who agreed to exchangeing their vehicles. This is better than random guessing. The misclassification error rate is \~31%.
+![](images/DTCMExplorative.PNG)
 
-![](images/DTExchangeability%20CMpng.PNG)
+Compute ROC
 
-Sensitivity is \~70%, that is the proportion of individuals who were correctly identified to being willing to take part in an exchangement for their vehicle.
-
-The specificity of the model is around 61% which is the proportion of individuals who were correctly identified to not being willing to take part in an exchangement for their vehicle.
-
-The model precision or proportion of positive predicted value is \~ 90%
-
-```{r DTRegressionExchangeabilityRoc, eval=FALSE, include=TRUE}
-#Compute roc
-predictionsDTProb <- predict(model_DT_Exchangeable, test.data, type = "prob")
-res.roc <- roc(test.data$is_exchangeable ~ predictionsDTProb[,2])
+```{r DTExploratoryROCExchangeability, eval=FALSE, include=TRUE}
+# Compute roc
+predictionsDTExploratoryProb <- predict(model_DT_Exchangeable, train.data, type = "prob")
+res.roc <- roc(train.data$is_exchangeable ~ predictionsDTExploratoryProb[,2])
 plot.roc(res.roc, print.auc = TRUE)
 as.numeric(res.roc$auc)
-#[1] 0.6525616
-```
+# [1] 0.6571428
 
-![](images/DTExchangeableRocCurve.png)
-
-In this graph the AUC is 0.653, which i relatively good. Remember that a classifier that performs no better than chance is expected to have an AUC of 0.5 when evaluated on an independent test set not used to train the model. Meaning, that this model does in fact predict exchangeability with some success.
-
-```{r DTRegressionExchangeabilityBestRoc, eval=FALSE, include=TRUE}
 # Get the probability threshold for specificity = 0.5
 rocModelDT.data <- data_frame(
   thresholds = res.roc$thresholds,
@@ -946,7 +930,102 @@ rocModelDT.data %>% filter(specificity >= 0.5)
 plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 ```
 
-![](images/DTExchangeabilityBestROC.png)
+![](images/DTExploratoryplot.Bestroc.png)
+
+#### Predicting Exchangeability using a Decision Tree
+
+In an attempt to predict exchangeability we will deploy a Decision tree. The model will be running the train function with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate)l. These settings should prune our tree and ensured an optimal decision tree to predict exchangeability.
+
+```{r DTPredictiveExchangeability, eval=FALSE, include=TRUE}
+# Predictive Model
+predictionsDT <- predict(model_DT_Exchangeable, test.data)
+
+# Check accuracy, error, and confusion matrix
+accuracy <- mean(test.data$is_exchangeable == predictionsDT)
+accuracy
+# [1] 0.6871661
+error <- mean(test.data$is_exchangeable != predictionsDT)
+error
+# [1] 0.3128339
+confusionMatrix(test.data$is_exchangeable, predictionsDT)
+```
+
+The accuracy above tells us that the Decision Tree correctly predicted \~69% of the individuals who agreed to exchangeing their vehicles. This is better than random guessing. The misclassification error rate is \~31%.
+
+![](images/DTCMPredictive.PNG)
+
+Sensitivity is \~70%, that is the proportion of individuals who were correctly identified to being willing to take part in an exchangement for their vehicle.
+
+The specificity of the model is around 61% which is the proportion of individuals who were correctly identified to not being willing to take part in an exchangement for their vehicle.
+
+The model precision or proportion of positive predicted value is \~ 90%
+
+```{r DTPredictionExchangeabilityRoc, eval=FALSE, include=TRUE}
+#Compute roc
+predictionsDTProb <- predict(model_DT_Exchangeable, test.data, type = "prob")
+res.roc <- roc(test.data$is_exchangeable ~ predictionsDTProb[,2])
+plot.roc(res.roc, print.auc = TRUE)
+as.numeric(res.roc$auc)
+# [1] 0.6525616
+
+# Get the probability threshold for specificity = 0.5
+rocModelDT.data <- data_frame(
+  thresholds = res.roc$thresholds,
+  sensitivity = res.roc$sensitivities,
+  specificity = res.roc$specificities
+)
+rocModelDT.data %>% filter(specificity >= 0.5)
+plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
+```
+
+![](images/DTPredictiveBestRoc.png)
+
+In this graph the AUC is 0.653, which i relatively good. Remember that a classifier that performs no better than chance is expected to have an AUC of 0.5 when evaluated on an independent test set not used to train the model. Meaning, that this model does in fact predict exchangeability with some success.
+
+#### Exploring Exchangeability using Logistic Regression
+
+```{r LRExploratoryRegressionExchangeability, eval=FALSE, include=TRUE}
+## Using Logistic Regression to create an exploratory model for exchangeability
+model_LR_Exchangeable <-  train( is_exchangeable ~ . -model_name, data = train.data, method = "glm", family = "binomial",
+                                 trControl = trainControl("cv", number =10),
+                                 preProcess = c("center", "scale"),
+                                 tuneLength = 10
+)
+
+# Exploratory
+predictionsLRExploratory <- predict(model_LR_Exchangeable, train.data)
+
+# Check accuracy, error, and confusion matrix
+accuracy <- mean(train.data$is_exchangeable == predictionsLRExploratory)
+accuracy
+# [1] 0.6821029		  
+error <- mean(train.data$is_exchangeable != predictionsLRExploratory)
+error
+# [1] 0.3178971	  
+confusionMatrix(train.data$is_exchangeable, predictionsLRExploratory)
+```
+
+![](images/LRCMExploratory.png)
+
+```{r LRExploratoryExchangeabilityRoc, eval=FALSE, include=TRUE}
+# Compute roc
+predictionsLRExploratoryProb <- predict(model_LR_Exchangeable, train.data, type = "prob")
+res.roc <- roc(train.data$is_exchangeable ~ predictionsLRExploratoryProb[,2])
+plot.roc(res.roc, print.auc = TRUE)
+as.numeric(res.roc$auc)
+# [1] 0.6890279
+
+# Get the probability threshold for specificity = 0.5
+rocModelLRExploratory.data <- data_frame(
+  thresholds = res.roc$thresholds,
+  sensitivity = res.roc$sensitivities,
+  specificity = res.roc$specificities
+)
+rocModelLRExploratory.data %>% filter(specificity >= 0.5)
+plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
+```
+
+![](images/LRExplorataryBestRoc.png)
 
 #### Predicting Exchangeability using Logistic Regression
 
@@ -969,9 +1048,9 @@ error
 confusionMatrix(test.data$is_exchangeable, predictionsLR)
 ```
 
-The accuracy above tells us that the Logistic Regression Model correctly predicted \~66.5% of the individuals who agreed to exchangeing their vehicles. This is better than random guessing. The missclassification error rate is \~33.5%. This is not as good as the Decision Tree model.
+![](images/LRCMPredictive.png)
 
-![](images/LRExchangeabilityCM2.png)
+The accuracy above tells us that the Logistic Regression Model correctly predicted \~66.5% of the individuals who agreed to exchangeing their vehicles. This is better than random guessing. The missclassification error rate is \~33.5%. This is not as good as the Decision Tree model.
 
 Sensitivity is \~68.5% , that is the proportion of individuals who were correctly identified to being willing to take part in an exchangement for their vehicle.
 
@@ -979,18 +1058,15 @@ The specificity of the model is around 54.5% which is the proportion of individu
 
 The model precision or proportion of positive predicted value is \~ 90%
 
-```{r LRRegressionExchangeabilityRoc, eval=FALSE, include=TRUE}
+```{r LRPredictionExchangeabilityRoc, eval=FALSE, include=TRUE}
 #Compute roc
 predictionsLRProb <- predict(model_LR_Exchangeable, test.data, type = "prob")
 res.rocLR <- roc(test.data$is_exchangeable ~ predictionsLRProb[,2])
 plot.roc(res.rocLR, print.auc = TRUE)
 as.numeric(res.rocLR$auc)
-# [1] 0.6443938
-```
+# [1] 0.6312427
 
-![](images/LRExchangeabilityRoc.png) In this graph the AUC is 0.644, which i relatively good. That is, this model does in fact predict exchangeability with some success.
 
-```{r LRRegressionExchangeabilityBestRoc, eval=FALSE, include=TRUE}
 # Get the probability threshold for specificity = 0.5
 rocModelLR.data <- data_frame(
   thresholds = res.rocLR$thresholds,
@@ -1001,7 +1077,9 @@ rocModelLR.data %>% filter(specificity >= 0.5)
 plot.roc(res.rocLR, print.auc = TRUE, print.thres = "best")
 ```
 
-![](images/LRExchangeabilityBestRoc.png)
+![](images/LRPredictiveBestRoc.png)
+
+In this graph the AUC is 0.644, which i relatively good. That is, this model does in fact predict exchangeability with some success.
 
 Upon comparing the models Decision Tree and Logistic Regression we can see that the Decision Tree has a better AUC, Specificity, and Sensitivity, but a slightly worse model precision. Nevertheless, overall the Decision Tree is a better model in predicting exchangeability.
 
@@ -1354,13 +1432,20 @@ Given the RMSE being 3693.127 we calculated our error rate as 3693.127/mean(test
 
 ## Results obtained using different ML methods
 
-| Machine-Learning Methods                     |     RMSE     |  Error Rate  |      R-Square |
-|:---------------------------------------------|:------------:|:------------:|--------------:|
-| Multiple Linear Regression (w/o Model_Names) | **3542.066** | **53.13197** | **0.7058649** |
-| SVR Linear                                   | **3257.887** | **48.86921** | **0.7772176** |
-| SVR Radial                                   | **4752.231** | **71.28478** | **0.5937837** |
-| Decision Tree Regression                     | **3245.413** | **48.68209** | **0.7529956** |
-| Random Forest Tree Regression                | **1879.884** | **28.19878** | **0.9184761** |
-| KNN(K Nearest Neighbor)                      | **3693.127** | **55.39793** | **0.6802895** |
++----------------------------------------------+----------------+-----------------+-----------------+
+| Machine-Learning Methods                     | RMSE           | Error Rate      | R-Square        |
++:=============================================+:==============:+:===============:+================:+
+| Multiple Linear Regression (w/o Model_Names) | **3542.066**   | **53.13197**    | **0.7058649**   |
++----------------------------------------------+----------------+-----------------+-----------------+
+| SVR Linear                                   | **3257.887**   | **48.86921**    | **0.7772176**   |
++----------------------------------------------+----------------+-----------------+-----------------+
+| SVR Radial                                   | **4752.231**   | **71.28478**    | **0.5937837**   |
++----------------------------------------------+----------------+-----------------+-----------------+
+| Decision Tree Regression                     | **3245.413**   | **48.68209**    | **0.7529956**   |
++----------------------------------------------+----------------+-----------------+-----------------+
+| Random Forest Tree Regression                | **1879.884**   | **28.19878**    | **0.9184761**   |
++----------------------------------------------+----------------+-----------------+-----------------+
+| KNN(K Nearest Neighbor)                      | **3693.127**   | **55.39793**    | **0.6802895**   |
++----------------------------------------------+----------------+-----------------+-----------------+
 
 Note: Some vehicles do not occur often due to a limit in the data collected and for that reason prediction made on vehicles(specifically models) that are not common ought to be taken with the limitations of the models in mind.
