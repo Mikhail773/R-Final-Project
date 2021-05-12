@@ -760,7 +760,7 @@ predictionsLRExploratoryProb <- predict(model_LR_Exchangeable, train.data, type 
 res.roc <- roc(train.data$is_exchangeable ~ predictionsLRExploratoryProb[,2])
 plot.roc(res.roc, print.auc = TRUE)
 as.numeric(res.roc$auc)
-# [1] 0.6890279
+#[1] 0.6505955
 
 # Get the probability threshold for specificity = 0.5
 rocModelLRExploratory.data <- data_frame(
@@ -769,25 +769,25 @@ rocModelLRExploratory.data <- data_frame(
   specificity = res.roc$specificities
 )
 rocModelLRExploratory.data %>% filter(specificity >= 0.5)
-# thresholds sensitivity specificity
-# 1    0.3066859   0.7538872   0.5000000
-# 2    0.3067188   0.7537952   0.5000000
-# 3    0.3067367   0.7537952   0.5000501
-# 4    0.3067760   0.7537952   0.5001003
-# 5    0.3068087   0.7537952   0.5001504
-# 6    0.3068137   0.7537952   0.5002005
-# 7    0.3068217   0.7537032   0.5002005
-# 8    0.3068268   0.7537032   0.5002507
-# 9    0.3068306   0.7537032   0.5003008
-# 10   0.3068380   0.7537032   0.5003509
-# 11   0.3068442   0.7536112   0.5003509
-# 12   0.3068497   0.7536112   0.5004011
-# 13   0.3068554   0.7536112   0.5004512
-# 14   0.3068617   0.7536112   0.5005014
-# 15   0.3068687   0.7535192   0.5005014
-# 16   0.3068734   0.7535192   0.5005515
-# 17   0.3068767   0.7535192   0.5006016
-# More ommitted
+#thresholds sensitivity specificity
+#1    0.3214292   0.7111050   0.5000000
+#2    0.3214353   0.7111050   0.5000501
+#3    0.3214399   0.7110130   0.5000501
+#4    0.3214500   0.7110130   0.5001003
+#5    0.3214600   0.7109210   0.5001003
+#6    0.3214625   0.7108290   0.5001003
+#7    0.3214728   0.7107370   0.5001003
+#8    0.3214831   0.7107370   0.5001504
+#9    0.3214855   0.7107370   0.5002005
+#10   0.3214925   0.7106450   0.5002005
+#11   0.3214998   0.7105529   0.5002005
+#12   0.3215054   0.7105529   0.5002507
+#13   0.3215302   0.7105529   0.5003008
+#14   0.3215519   0.7105529   0.5003509
+#15   0.3215612   0.7105529   0.5004011
+#16   0.3215725   0.7105529   0.5005014
+#17   0.3215810   0.7105529   0.5005515
+# Many More ommitted
 plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
 # Predictive
@@ -795,44 +795,44 @@ predictionsLR <- predict(model_LR_Exchangeable, test.data)
 # Check accuracy, error, and confusion matrix
 accuracy <- mean(test.data$is_exchangeable == predictionsLR)
 accuracy
-# [1] 0.6585016
+# [1] 0.6650163
 error <- mean(test.data$is_exchangeable != predictionsLR)
 error
-# [1] 0.3414984
+# [1] 0.3349837
 confusionMatrix(test.data$is_exchangeable, predictionsLR)
-# Confusion Matrix and Statistics
-# 
-# Reference
-# Prediction FALSE TRUE
-# FALSE  4518  476
-# TRUE   2145  536
-# 
-# Accuracy : 0.6585          
-# 95% CI : (0.6478, 0.6691)
-# No Information Rate : 0.8681          
-# P-Value [Acc > NIR] : 1               
-# 
-# Kappa : 0.1222          
-# 
-# Mcnemar's Test P-Value : <2e-16          
-#                                           
-#             Sensitivity : 0.6781          
-#             Specificity : 0.5296          
-#          Pos Pred Value : 0.9047          
-#          Neg Pred Value : 0.1999          
-#              Prevalence : 0.8681          
-#          Detection Rate : 0.5887          
-#    Detection Prevalence : 0.6507          
-#       Balanced Accuracy : 0.6039          
-#                                           
-#        'Positive' Class : FALSE  
-
+#Confusion Matrix and Statistics
+#
+#Reference
+#Prediction FALSE TRUE
+#FALSE  4707  287
+#TRUE   2284  397
+#
+#Accuracy : 0.665           
+#95% CI : (0.6543, 0.6756)
+#No Information Rate : 0.9109          
+#P-Value [Acc > NIR] : 1               
+#
+#Kappa : 0.1095          
+#
+#Mcnemar's Test P-Value : <2e-16          
+#                                          
+#            Sensitivity : 0.6733          
+#            Specificity : 0.5804          
+#         Pos Pred Value : 0.9425          
+#         Neg Pred Value : 0.1481          
+#             Prevalence : 0.9109          
+#         Detection Rate : 0.6133          
+#   Detection Prevalence : 0.6507          
+#      Balanced Accuracy : 0.6269          
+#                                          
+#       'Positive' Class : FALSE           
+#                                     
 #Compute roc
 predictionsLRProb <- predict(model_LR_Exchangeable, test.data, type = "prob")
 res.rocLR <- roc(test.data$is_exchangeable ~ predictionsLRProb[,2])
 plot.roc(res.rocLR, print.auc = TRUE)
 as.numeric(res.rocLR$auc)
-# [1] 0.6312427
+# [1] 0.6480223
 
 # Get the probability threshold for specificity = 0.5
 rocModelLR.data <- data_frame(
