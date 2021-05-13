@@ -712,7 +712,7 @@ rocModelDT.data %>% filter(specificity >= 0.5)
 #17        Inf  0.00000000   1.0000000					  
 plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
-## Using Logistic Regression to create an exploratory model for exchangeability
+## Using Logistic Classfication to create an exploratory model for exchangeability
 set.seed(123)
 model_LR_Exchangeable <-  train( is_exchangeable ~ . -model_name, data = train.data, method = "glm", family = "binomial",
                                  trControl = trainControl("cv", number =10),

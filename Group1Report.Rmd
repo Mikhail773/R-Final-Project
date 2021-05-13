@@ -98,25 +98,43 @@ head(cars_edited, 20)
 
 Now to proceed with cleaning and analyzation we need a more robust knowledge of our dataset. For this reason it is vital to understand the type of data for each attribute. Therefore, we must create a table to organize all our attributes.
 
-| Column |      Details      |                                                 Value/(Units)                                                 |  Data Type |
-|:-------|:-----------------:|:-------------------------------------------------------------------------------------------------------------:|-----------:|
-| A      | Manufacturer Name |                                         Name of vehicle manufacturer                                          |    Nominal |
-| B      |    Model Name     |                                             Name of vehicle model                                             |    Nominal |
-| C      |   Transmission    |                                           Type of the transmission                                            |    Nominal |
-| D      |       Color       |                                              Vehicle body color                                               |    Nominal |
-| E      |  Odometer Value   |                                         Vehicle odometer value in km                                          | Continuous |
-| F      |   Year Produced   |                                         The year the car was produced                                         | Continuous |
-| G      |    Engine Fuel    |                                            Fuel type of the engine                                            |    Nominal |
-| I      |    Engine Type    |                                              Vehicle engine type                                              |    Nominal |
-| J      |  Engine Capacity  |                                     The capacity of the engine in liters                                      |    Nominal |
-| K      |     Body Type     |                                   Type of the body (hatchback, sedan, etc.)                                   |    Nominal |
-| M      |    Drivetrain     |                                           Front/rear/all drivetrain                                           |    Nominal |
-| N      |     Price USD     |                                Price of a cars as listed in the catalog in USD                                | Continuous |
-| O      |   Exchangeable    | If True the owner of the car is ready to exchange this car to other cars with little or no additional payment |    Nominal |
-| P      |  Location Region  |                            The region in Belarus where the car is listed for sale                             |    Nominal |
-| Q      | Number of Photos  |                                         Number of photos the cas has                                          |  Continous |
-| R      |    Up Counter     |                 How many times the sample has been upped in the catalog to raise its position                 | Continuous |
-| S      |  Duration Listed  |                                Number of days the car is listed in the catalog                                | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| Column | Details           | Value/(Units)                                                                                                 | Data Type  |
++:=======+:=================:+:=============================================================================================================:+===========:+
+| A      | Manufacturer Name | Name of vehicle manufacturer                                                                                  | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| B      | Model Name        | Name of vehicle model                                                                                         | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| C      | Transmission      | Type of the transmission                                                                                      | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| D      | Color             | Vehicle body color                                                                                            | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| E      | Odometer Value    | Vehicle odometer value in km                                                                                  | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| F      | Year Produced     | The year the car was produced                                                                                 | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| G      | Engine Fuel       | Fuel type of the engine                                                                                       | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| I      | Engine Type       | Vehicle engine type                                                                                           | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| J      | Engine Capacity   | The capacity of the engine in liters                                                                          | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| K      | Body Type         | Type of the body (hatchback, sedan, etc.)                                                                     | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| M      | Drivetrain        | Front/rear/all drivetrain                                                                                     | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| N      | Price USD         | Price of a cars as listed in the catalog in USD                                                               | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| O      | Exchangeable      | If True the owner of the car is ready to exchange this car to other cars with little or no additional payment | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| P      | Location Region   | The region in Belarus where the car is listed for sale                                                        | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| Q      | Number of Photos  | Number of photos the cas has                                                                                  | Continous  |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| R      | Up Counter        | How many times the sample has been upped in the catalog to raise its position                                 | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| S      | Duration Listed   | Number of days the car is listed in the catalog                                                               | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
 
 From summary we notice that there exists 10 NA's in the attribute engine-capacity. Our understanding of vehicles informs us that engine-capacity is a categorical data-type and as such NA is crucial to our understanding of the data. The NA values serve as a distinguishment for the Electric Vehicles in the data. For the sake of future analyzation it will be useful to replace our NA values with an arbitrary number. We choose to change NA values to -1. Thus we do the following:
 
@@ -871,6 +889,8 @@ Our prediction error rate is lower than for other attributes (60.12396%) which c
 
 #### Exploring Exchangeability using a Decision Tree
 
+In an attempt to create a good exploratory model for exchangeability we will deploy a Decision tree. The model will be running the train function with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate)l. These settings should prune our tree and ensured an optimal decision tree.
+
 ```{r DTExploratoryRegressionExchangeability, eval=FALSE, include=TRUE}
 ## Using Decision Tree to create an exploratory model for exchangeability
 model_DT_Exchangeable <-  train(is_exchangeable ~ . -model_name, data = train.data, method = "rpart",
@@ -890,11 +910,15 @@ error
 confusionMatrix(train.data$is_exchangeable, predictionsDTExploratory)
 ```
 
-The Decision Tree had an overall accuracy of around 69.4%. Meaning that the explanatory power is equal to 69.4%.
+The Decision Tree had an overall accuracy of around 69.4%. Meaning that the explanatory power is equal to 69.4%. The misclassification rate was 30.6%
 
 ![](images/DTCMExplorative.PNG)
 
-The Accuracy for when we Compute ROC
+The Accuracy for when we have an exchangeability of "TRUE" is \~63.5%(sensitivity)
+
+The Accuracy for when we have an exchangeability of "False" is \~70.6%(sensitivity)
+
+The model precision of the proportion of positive predicted value is 31.16%.
 
 ```{r DTExploratoryROCExchangeability, eval=FALSE, include=TRUE}
 # Compute roc
@@ -916,9 +940,11 @@ plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
 ![](images/DTExploratoryplot.Bestroc.png)
 
+The AUC is above 0.5 which tells us that this is good exploratory model. The best threshold with the highest sum sensitivity and specificity is 0.357 and we get a specificity of 0.818 and a sensitivity of 0.419.
+
 #### Predicting Exchangeability using a Decision Tree
 
-In an attempt to predict exchangeability we will deploy a Decision tree. The model will be running the train function with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate)l. These settings should prune our tree and ensured an optimal decision tree to predict exchangeability.
+In an attempt to analyze the predictive power of our model we used the testing dataset.
 
 ```{r DTPredictiveExchangeability, eval=FALSE, include=TRUE}
 # Predictive Model
@@ -934,15 +960,15 @@ error
 confusionMatrix(test.data$is_exchangeable, predictionsDT)
 ```
 
-The accuracy above tells us that the Decision Tree correctly predicted \~69% of the individuals who agreed to exchangeing their vehicles. This is better than random guessing. The misclassification error rate is \~31%.
+The accuracy above tells us that the Decision Tree correctly predicted \~69% of the individuals who agreed to exchanging their vehicles. This is better than random guessing. The misclassification error rate is \~31%.
 
 ![](images/DTCMPredictive.PNG)
 
-Sensitivity is \~70%, that is the proportion of individuals who were correctly identified to being willing to take part in an exchangement for their vehicle.
+Sensitivity is \~60.6%, that is the proportion of individuals who were correctly identified to being willing to take part in an exchangement for their vehicle.
 
-The specificity of the model is around 61% which is the proportion of individuals who were correctly identified to not being willing to take part in an exchangement for their vehicle.
+The specificity of the model is around 70.4% which is the proportion of individuals who were correctly identified to not being willing to take part in an exchangement for their vehicle.
 
-The model precision or proportion of positive predicted value is \~ 90%
+The model precision or proportion of positive predicted value is \~ 29.8%
 
 ```{r DTPredictionExchangeabilityRoc, eval=FALSE, include=TRUE}
 #Compute roc
@@ -964,12 +990,14 @@ plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
 ![](images/DTPredictiveBestRoc.png)
 
-In this graph the AUC is 0.653, which i relatively good. Remember that a classifier that performs no better than chance is expected to have an AUC of 0.5 when evaluated on an independent test set not used to train the model. Meaning, that this model does in fact predict exchangeability with some success.
+In this graph the AUC is 0.653, which i relatively good. Remember that a classifier that performs no better than chance is expected to have an AUC of 0.5 when evaluated on an independent test set not used to train the model. Meaning, that this model does in fact predict exchangeability with some success. The best threshold with the highest sum sensitivity and specificity is 0.332 and we get a specificity of 0.772 and a sensitivity of 0.457. Ultimately, we learn that the Decision Tree Classification produces a good predictive model for exchangeability of a vehicle.
 
-#### Exploring Exchangeability using Logistic Regression
+#### Exploring Exchangeability using Logistic Classification
 
-```{r LRExploratoryRegressionExchangeability, eval=FALSE, include=TRUE}
-## Using Logistic Regression to create an exploratory model for exchangeability
+We attempted to create a more accurate exploratory model for exchangeability by using Logistic Classification. The model will be running the train function with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate)l. These settings should optimal model.
+
+```{r LRExploratoryClassificationExchangeability, eval=FALSE, include=TRUE}
+## Using Logistic Classfication to create an exploratory model for exchangeability
 model_LR_Exchangeable <-  train( is_exchangeable ~ . -model_name, data = train.data, method = "glm", family = "binomial",
                                  trControl = trainControl("cv", number =10),
                                  preProcess = c("center", "scale"),
@@ -989,7 +1017,15 @@ error
 confusionMatrix(train.data$is_exchangeable, predictionsLRExploratory)
 ```
 
+The accuracy above tells us that the Logistic Classification correctly predicted \~66% of the individuals who agreed to exchanging their vehicles. This is better than random guessing. The misclassification error rate is \~33.76%.
+
 ![](images/LRCMExploratory.png)
+
+Sensitivity is \~58.46%, that is the proportion of individuals who were correctly identified to being willing to take part in an exchangement for their vehicle.
+
+The specificity of the model is around 67% which is the proportion of individuals who were correctly identified to not being willing to take part in an exchangement for their vehicle.
+
+The model precision or proportion of positive predicted value is \~ 14.85%
 
 ```{r LRExploratoryExchangeabilityRoc, eval=FALSE, include=TRUE}
 # Compute roc
@@ -1011,9 +1047,11 @@ plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
 ![](images/LRExplorataryBestRoc.png)
 
+In this graph the AUC is 0.651, which i relatively good and quite similar to the AUC from the Decsion Tree model. Since the classifier is better that 0.5 we can comfortable say that this is a good exploratory model. The best threshold with the highest sum sensitivity and specificity is 0.356 and we get a specificity of 0.640 and a sensitivity of 0.580. The Logistic Regression Model also produces a good exploratory model.
+
 #### Predicting Exchangeability using Logistic Regression
 
-```{r LRRegressionExchangeability, eval=FALSE, include=TRUE}
+```{r LRExchangeability, eval=FALSE, include=TRUE}
 ## Using Logistic Regression to predict exchangeability
 model_LR_Exchangeable <-  train( is_exchangeable ~ ., data = train.data, method = "glm", family = "binomial",
                                  trControl = trainControl("cv", number =10),
@@ -1032,15 +1070,15 @@ error
 confusionMatrix(test.data$is_exchangeable, predictionsLR)
 ```
 
+The accuracy above tells us that the Logistic Classification correctly predicted \~66.5% of the individuals who agreed to exchanging their vehicles. This is a good accuracy for a predictive model. The misclassification error rate is \~33.5%.
+
 ![](images/LRCMPredictive.png)
 
-The accuracy above tells us that the Logistic Regression Model correctly predicted \~66.5% of the individuals who agreed to exchangeing their vehicles. This is better than random guessing. The missclassification error rate is \~33.5%. This is not as good as the Decision Tree model.
+Sensitivity is \~58% , that is the proportion of individuals who were correctly identified to being willing to take part in an exchangement for their vehicle.
 
-Sensitivity is \~68.5% , that is the proportion of individuals who were correctly identified to being willing to take part in an exchangement for their vehicle.
+The specificity of the model is around 67.3% which is the proportion of individuals who were correctly identified to not being willing to take part in an exchangement for their vehicle.
 
-The specificity of the model is around 54.5% which is the proportion of individuals who were correctly identified to not being willing to take part in an exchangement for their vehicle.
-
-The model precision or proportion of positive predicted value is \~ 90%
+The model precision or proportion of positive predicted value is \~14.8%
 
 ```{r LRPredictionExchangeabilityRoc, eval=FALSE, include=TRUE}
 #Compute roc
@@ -1063,9 +1101,7 @@ plot.roc(res.rocLR, print.auc = TRUE, print.thres = "best")
 
 ![](images/LRPredictiveBestRoc.png)
 
-In this graph the AUC is 0.644, which i relatively good. That is, this model does in fact predict exchangeability with some success.
-
-Upon comparing the models Decision Tree and Logistic Regression we can see that the Decision Tree has a better AUC, Specificity, and Sensitivity, but a slightly worse model precision. Nevertheless, overall the Decision Tree is a better model in predicting exchangeability.
+In this graph the AUC is 0.648 is a good AUC from a model. This model does predict exchangeability with success. The best threshold with the highest sum sensitivity and specificity is 0.356 and we get a specificity of 0.647 and a sensitivity of 0.580. The Logistic Regression Model also produces a good predictive model.
 
 ## Model Results and Comparisons
 
