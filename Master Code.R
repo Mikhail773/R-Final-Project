@@ -388,6 +388,7 @@ cor.test(cars_edited$odometer_value, cars_edited$price_usd)
 # The correlation coefficient is -0.4212043 and p-value of < 2.2e-16.
 
 # Getting the formula for linear regression
+set.seed(123)
 odometer_on_price <- lm (price_usd ~ odometer_value, data = cars_edited)
 odometer_on_price
 
@@ -421,6 +422,7 @@ cor.test(cars_edited$number_of_photos, cars_edited$price_usd)
 # The correlation coefficient is 0.3168586 and p-value of < 2.2e-16.
 
 # Getting the formula for linear regression
+set.seed(123)
 number_of_photos_on_price <- lm (price_usd ~ number_of_photos, data = cars_edited)
 number_of_photos_on_price
 
@@ -874,63 +876,84 @@ plot.roc(res.rocLR, print.auc = TRUE, print.thres = "best")
 
 ## Multiple Linear Regression Models
 # R^2 for test/train dataset
-LM <- lm(price_usd ~ . -model_name, data = train.data)
+set.seed(123)
+LM <- lm(price_usd ~ odometer_value
+         + year_produced
+         + number_of_photos
+         + duration_listed
+         + up_counter, data = train.data)
 
 step.LM <- LM %>% stepAIC(trace = FALSE)
 vif(step.LM)
-# GVIF Df GVIF^(1/(2*Df))
-# manufacturer_name 15.288862 54        1.025573
-# transmission       1.840427  1        1.356623
-# color              1.545952 11        1.019999
-# odometer_value     1.627875  1        1.275882
-# year_produced      2.136749  1        1.461762
-# engine_fuel        1.691724  5        1.053981
-# engine_capacity    2.224866  1        1.491598
-# body_type          8.701242 11        1.103337
-# drivetrain         6.095660  2        1.571286
-# location_region    1.099706  5        1.009550
-# number_of_photos   1.113954  1        1.055440
-# duration_listed    1.023732  1        1.011797
+# odometer_value    year_produced number_of_photos  duration_listed       up_counter 
+# 1.311904         1.377119         1.089624         1.989733         1.999497 
 summary(step.LM)
+# Train R-Squared is 0.5286
 coef(step.LM)
+# (Intercept)   odometer_value    year_produced number_of_photos  duration_listed       up_counter 
+# -9.857706e+05    -4.602795e-03     4.952102e+02     1.511267e+02     2.253824e+00     2.039503e+00 
 confint(step.LM)
+# 2.5 %        97.5 %
+#   (Intercept)      -1.000133e+06 -9.714081e+05
+# odometer_value   -5.018477e-03 -4.187114e-03
+# year_produced     4.880555e+02  5.023649e+02
+# number_of_photos  1.427417e+02  1.595117e+02
+# duration_listed   1.635109e+00  2.872538e+00
+# up_counter        4.509941e-01  3.628013e+00
 LMPrediction <- predict(step.LM, test.data)
 
 # Prediction error, rmse
 RMSE(LMPrediction,test.data$price_usd)
-#[1] 3542.066
+#[1] 4470.274
 
 # Compute R-square
 R2(LMPrediction,test.data$price_usd)
-# [1] 0.7058649
+# [1] 0.5190641
 
 # Log transformation
-LogLMConts <- lm(log(price_usd) ~ . -model_name
-                 , data = train.data)
+set.seed(123)
+LogLMConts <- lm(log(price_usd) ~ odometer_value
+                 + year_produced
+                 + number_of_photos
+                 + duration_listed
+                 + up_counter, data = train.data)
 
 step.logConts <- LogLMConts %>% stepAIC(trace = FALSE)
 vif(step.logConts)
-
+# odometer_value    year_produced number_of_photos  duration_listed       up_counter 
+# 1.311904         1.377119         1.089624         1.989733         1.999497 
 summary(step.logConts)
+# Train R-Sqaured is 0.6718
 coef(step.logConts)
+# (Intercept)   odometer_value    year_produced number_of_photos  duration_listed       up_counter 
+# -1.935700e+02     1.608748e-07     1.006778e-01     1.928517e-02     5.934174e-04    -1.854170e-04
 confint(step.logConts)
+# 2.5 %        97.5 %
+#   (Intercept)      -1.954852e+02 -1.916549e+02
+# odometer_value    1.054472e-07  2.163023e-07
+# year_produced     9.972379e-02  1.016318e-01
+# number_of_photos  1.816710e-02  2.040324e-02
+# duration_listed   5.109171e-04  6.759176e-04
+# up_counter       -3.972310e-04  2.639698e-05
 
 # Predict using Multiple Linear Regression Model
-LogLMPrediction <- step.LogLM %>% predict(test.data)
+LogLMPrediction <- step.logConts %>% predict(test.data)
 
 # Prediction error, rmse
-RMSE(LogLMContsPrediction,test.data$price_usd)
-
+RMSE(LogLMPrediction,test.data$price_usd)
+# [1] 9229.7
 # Compute R-square
-R2(LogLMContsPrediction,test.data$price_usd)
+R2(LogLMPrediction,test.data$price_usd)
+# [1] 0.5077408
 
 # Log transformation is less accurate
+
 ###################################################################################################
 # SVR Models
 #
 # Create SVR Model using Linear Method
 #
-
+set.seed(123)
 modelSVRLinTrain <- train( price_usd ~ . -model_name, data = train.data, method = "svmLinear",
                            trControl = trainControl("cv", number =10),
                            preProcess = c("center", "scale"),
@@ -956,7 +979,7 @@ R2(modelSVRLinTrainPrediction,test.data$price_usd)
 #[1] 0.7772176
 
 # Create SVR Model using Polynomial Method
-
+set.seed(123)
 modelSVRPolyTrain <- train(price_usd ~ . -model_name, data = train.data, method = "svmPoly",
                            trControl = trainControl("cv", number =10),
                            preProcess = c("center", "scale"),
@@ -976,6 +999,7 @@ RMSE(modelSVRPolyTrainPrediction,test.data$price_usd)
 R2(modelSVRPolyTrainPrediction,test.data$price_usd)
 
 # Create SVR Model using Radial Method
+set.seed(123)
 modelSVRRadialTrain <- train(price_usd ~ . -model_name, data = train.data, method = "svmRadial",
                              trControl = trainControl("cv", number =10),
                              preProcess = c("center", "scale"),
@@ -1004,7 +1028,7 @@ R2(modelSVRRadialTrainPrediction,test.data$price_usd)
 #
 # Decision Tree Regression Model
 #
-
+set.seed(123)
 model_DT_Train <- train(price_usd ~ ., data = train.data, method = "rpart",
                         trControl = trainControl("cv",number = 10),
                         preProcess = c("center","scale"),
@@ -1043,7 +1067,7 @@ R2(prediction_DT_Train,test.data$price_usd)
 #
 # Random Forest Model
 #
-
+set.seed(123)
 random_forest_ranger <- train(price_usd ~ . -model_name,
                               data = train.data,
                               method = "ranger",
@@ -1150,6 +1174,7 @@ R2(rf_predict_ranger,test.data$price_usd)
 #
 # KNN Model
 #
+set.seed(123)
 model_knn <- train(
   price_usd ~. -model_name, data = train.data, method = "knn",
   trControl = trainControl("cv", number = 10),

@@ -29,7 +29,7 @@ Vehicles are essential to transportation as a society and one of the main method
 
 | Machine-Learning Methods      |     RMSE     |  Error Rate  |      R-Square |
 |:------------------------------|:------------:|:------------:|--------------:|
-| Multiple Linear Regression    | **4573.511** | **68.60393** | **0.5095891** |
+| Multiple Linear Regression    | **4470.274** | **67.57975** | **0.5190641** |
 | SVR Linear                    | **3257.887** | **48.86921** | **0.7772176** |
 | SVR Radial                    | **4752.231** | **71.28478** | **0.5937837** |
 | Decision Tree Regression      | **3245.413** | **48.68209** | **0.7529956** |
@@ -527,6 +527,7 @@ Since the p-value is less than 0.05 we can conclude that Price and Odometer are 
 We continue with our question by investigating how good of an indicator of price odometer is. To do this we will use linear regression, and check the percentage of accuracy of that line. Afterwords, we will graph the linear regression line to provide us with a useful visual.
 
 ```{r odometerLm}
+set.seed(123)
 odometer_on_price <- lm (price_usd ~ odometer_value, data = cars_edited)
 
 ggplot (cars_edited, aes(x=odometer_value, y=price_usd)) + geom_point() + stat_smooth(method=lm)
@@ -538,14 +539,14 @@ Once the linear regression model is created and graphed we proceed to check the 
 summary(odometer_on_price)
 confint(odometer_on_price)
 #                       2.5 %        97.5 %
-#(Intercept)     1.145654e+04  1.169971e+04
-#odometer_value -2.028451e-02 -1.942748e-02
+#(Intercept)     1.147053e+04  1.171322e+04
+#odometer_value -2.032581e-02 -1.947015e-02
 
 sigma(odometer_on_price)*100/mean(cars_edited$price_usd)
-#[1] 87.89188
+# [1] 87.80444
 ```
 
-The R2 is 0.1765 which indicates that a low proportion of prices in the data can be explained by the model. Furthermore, the percentage error is 87.89188 which confirms how poor a model would be if it solely used odometer to predict price.
+The R2 is 0.1774 which indicates that a low proportion of prices in the data can be explained by the model. Furthermore, the percentage error is 87.80444 which confirms how poor a model would be if it solely used odometer to predict price.
 
 **We can conclude that the higher the odometer the lower the price of the vehicle will be.** Nevertheless, our linear regression model informs us that in order to create an accurate model we will need to consider more attributes.
 
@@ -587,6 +588,7 @@ Next we aim to investigate how good of an indicator of price the number of vehic
 
 ```{r NumPhotosPriceLMandPlot, fig.height = 10, fig.width = 10}
 #Getting the formula for linear regression
+set.seed(123)
 number_of_photos_on_price <- lm (price_usd ~ number_of_photos, data = cars_edited)
 
 #Scatter plot: Number of photos and price with linear regression line
@@ -598,18 +600,18 @@ Although the linear regression model is created and graphed there remains inform
 ```{r NumPhotosPriceAccuracy}
 summary(number_of_photos_on_price)
 
-# R^2 is very low(0.09994) which tells us that number of photos is not a good indicator of price. 
+# R^2 is very low(0.1004) which tells us that number of photos is not a good indicator of price. 
 # We can suspect that several more variables are in play.
 
 confint(number_of_photos_on_price)
-#                    2.5 %    97.5 %
-#(Intercept)      3304.283 3532.2680
-#number_of_photos  323.305  343.2882
+#                     2.5 %    97.5 %
+#(Intercept)      3300.5010 3528.5452
+#number_of_photos  324.2843  344.2673
 sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
 # Our prediction error rate is extremely high (91.82279%) which explains the low correlation
 ```
 
-The R2 is 0.09994 which indicates that a low proportion of prices in the data can be explained by the model. In other words, number of photos is not a good indicator of price(more attributes are needed in a model). Also, the percentage error is 91.88472 which is very high. This confirms how poor a model would be if it solely used number of photos to predict price.
+The R2 is 0.1004 which indicates that a low proportion of prices in the data can be explained by the model. In other words, number of photos is not a good indicator of price(more attributes are needed in a model). Also, the percentage error is 91.82279 which is very high. This confirms how poor a model would be if it solely used number of photos to predict price.
 
 **We can conclude there is a low negative correlation between price and odometer.** Our linear regression model tells us that to create an accurate model we will need to consider more attributes.
 
@@ -1008,6 +1010,7 @@ We attempted to create a more accurate exploratory model for exchangeability by 
 
 ```{r LRExploratoryClassificationExchangeability, eval=FALSE, include=TRUE}
 ## Using Logistic Classfication to create an exploratory model for exchangeability
+set.seed(123)
 model_LR_Exchangeable <-  train( is_exchangeable ~ . -model_name, data = train.data, method = "glm", family = "binomial",
                                  trControl = trainControl("cv", number =10),
                                  preProcess = c("center", "scale"),
@@ -1063,6 +1066,7 @@ In this graph the AUC is 0.651, which i relatively good and quite similar to the
 
 ```{r LRExchangeability, eval=FALSE, include=TRUE}
 ## Using Logistic Regression to predict exchangeability
+set.seed(123)
 model_LR_Exchangeable <-  train( is_exchangeable ~ ., data = train.data, method = "glm", family = "binomial",
                                  trControl = trainControl("cv", number =10),
                                  preProcess = c("center", "scale"),
@@ -1122,7 +1126,12 @@ In an attempt to create the most accurate and significant predictive model we cr
 Firstly, we created a Multiple Linear Regression Model which utilized the attributes in our dataset(except model_names) and optimized the model. The code for this looks as follows:
 
 ```{r LinearRegressionModel}
-LM <- lm(price_usd ~ . -model_name, data = train.data)
+set.seed(123)
+LM <- lm(price_usd ~ odometer_value
+         + year_produced
+         + number_of_photos
+         + duration_listed
+         + up_counter, data = train.data)
 step.LM <- LM %>% stepAIC(trace = FALSE)
 ```
 
@@ -1130,13 +1139,7 @@ step.LM <- LM %>% stepAIC(trace = FALSE)
 vif(step.LM)
 ```
 
-The VIF tells us vital information:
-
-Since transmission color, odometer_value, year_produced, engine_fuel, engine_capacity have VIF less than 5 we can conclude that there is no significant multi-collinearity for these attributes.
-
-However, body_type and drivetrain had VIF over 5 and less than 10 which tells us some multi-collinearity may exist for these attributes.
-
-Lastly, Manufacturer_name had a VIF of 15 which tells us there is significant multi-collinearity. This should be noted as a possible reason for flaws in the model.
+The VIF tells us that there isn't significant multi-collinearity between any of the categorical attributes.
 
 Now that the model is created and optimized it is vital to check the accuracy of the model. To do this we will employed our test.data to test how accurately the Linear Regression model can predict the price of a vehicle.
 
@@ -1158,7 +1161,7 @@ RMSE(LMPrediction,test.data$price_usd)
 R2(LMPrediction,test.data$price_usd)
 ```
 
-From the code above we see that our **rmse is 3542.066 which represents an error rate of 3542.066/mean(test.data\$price_usd) = 53.13197** which is not good at all. Meanwhile, the **R-Squared is 0.7058649**, meaning that the observed and predicted outcome values are not very correlated, which is not good. These results are not surprising and inform us that the price of a vehicle in Belarus is dependent on more attributes than simply our continuous attributes. We shall proceed with more robust models in order to achieve a better result.
+From the code above we see that our **rmse is 4470.274 which represents an error rate of 4470.274/mean(test.data\$price_usd) = 67.57975** which is not good at all. Meanwhile, the **R-Squared is 0.5190641**, meaning that the observed and predicted outcome values are not very correlated, which is not good. These results are not surprising and inform us that the price of a vehicle in Belarus is dependent on more attributes than simply our continuous attributes. We shall proceed with more robust models in order to achieve a better result.
 
 note: A logarithmic transformation was done on the price and achieved an even worse result. Given the poor quality of this model we continued with SVR in an attempt to get a more robust and accurate predictive model.
 
@@ -1464,7 +1467,7 @@ Given the RMSE being 3693.127 we calculated our error rate as 3693.127/mean(test
 
 | Machine-Learning Methods                     |     RMSE     |  Error Rate  |      R-Square |
 |:---------------------------------------------|:------------:|:------------:|--------------:|
-| Multiple Linear Regression (w/o Model_Names) | **3542.066** | **53.13197** | **0.7058649** |
+| Multiple Linear Regression (w/o Model_Names) | **4470.274** | **67.57975** | **0.5190641** |
 | SVR Linear                                   | **3257.887** | **48.86921** | **0.7772176** |
 | SVR Radial                                   | **4752.231** | **71.28478** | **0.5937837** |
 | Decision Tree Regression                     | **3245.413** | **48.68209** | **0.7529956** |
