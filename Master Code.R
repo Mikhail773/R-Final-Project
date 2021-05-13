@@ -578,7 +578,7 @@ accuracy
 error <- mean(train.data$is_exchangeable != predictionsDTExploratory)
 error
 # [1] 0.3060198
-confusionMatrix(train.data$is_exchangeable, predictionsDTExploratory)
+confusionMatrix(train.data$is_exchangeable, predictionsDTExploratory, positive = "TRUE")
 # Confusion Matrix and Statistics
 # 
 # Reference
@@ -595,17 +595,16 @@ confusionMatrix(train.data$is_exchangeable, predictionsDTExploratory)
 # 
 # Mcnemar's Test P-Value : <2e-16          
 #                                           
-#             Sensitivity : 0.7064          
-#             Specificity : 0.6349          
-#          Pos Pred Value : 0.9023          
-#          Neg Pred Value : 0.3116          
-#              Prevalence : 0.8269          
-#          Detection Rate : 0.5841          
-#    Detection Prevalence : 0.6473          
+#             Sensitivity : 0.6349          
+#             Specificity : 0.7064          
+#          Pos Pred Value : 0.3116          
+#          Neg Pred Value : 0.9023          
+#              Prevalence : 0.1731          
+#          Detection Rate : 0.1099          
+#    Detection Prevalence : 0.3527          
 #       Balanced Accuracy : 0.6706          
 #                                           
-#        'Positive' Class : FALSE 
-#[1] 0.6939802
+#        'Positive' Class : TRUE  
 
 # Compute roc
 predictionsDTExploratoryProb <- predict(model_DT_Exchangeable, train.data, type = "prob")
@@ -652,33 +651,33 @@ accuracy
 error <- mean(test.data$is_exchangeable != predictionsDT)
 error
 # [1] 0.3128339
-confusionMatrix(test.data$is_exchangeable, predictionsDT)
-#Confusion Matrix and Statistics
-#
-#Reference
-#Prediction FALSE TRUE
-#FALSE  4475  519
-#TRUE   1882  799
-#
-#Accuracy : 0.6872          
-#95% CI : (0.6767, 0.6975)
-#No Information Rate : 0.8283          
-#P-Value [Acc > NIR] : 1               
-#
-#Kappa : 0.22            
-#
-#Mcnemar's Test P-Value : <2e-16          
-#                                          
-#            Sensitivity : 0.7039          
-#            Specificity : 0.6062          
-#         Pos Pred Value : 0.8961          
-#         Neg Pred Value : 0.2980          
-#             Prevalence : 0.8283          
-#         Detection Rate : 0.5831          
-#   Detection Prevalence : 0.6507          
-#      Balanced Accuracy : 0.6551          
-#                                          
-#       'Positive' Class : FALSE  	   
+confusionMatrix(test.data$is_exchangeable, predictionsDT, positive = "TRUE")
+# Confusion Matrix and Statistics
+# 
+# Reference
+# Prediction FALSE TRUE
+# FALSE  4475  519
+# TRUE   1882  799
+# 
+# Accuracy : 0.6872          
+# 95% CI : (0.6767, 0.6975)
+# No Information Rate : 0.8283          
+# P-Value [Acc > NIR] : 1               
+# 
+# Kappa : 0.22            
+# 
+# Mcnemar's Test P-Value : <2e-16          
+#                                           
+#             Sensitivity : 0.6062          
+#             Specificity : 0.7039          
+#          Pos Pred Value : 0.2980          
+#          Neg Pred Value : 0.8961          
+#              Prevalence : 0.1717          
+#          Detection Rate : 0.1041          
+#    Detection Prevalence : 0.3493          
+#       Balanced Accuracy : 0.6551          
+#                                           
+#        'Positive' Class : TRUE    
 #Compute roc
 predictionsDTProb <- predict(model_DT_Exchangeable, test.data, type = "prob")
 res.roc <- roc(test.data$is_exchangeable ~ predictionsDTProb[,2])
@@ -731,7 +730,7 @@ accuracy
 error <- mean(train.data$is_exchangeable != predictionsLRExploratory)
 error
 # [1] 0.3375629  
-confusionMatrix(train.data$is_exchangeable, predictionsLRExploratory)
+confusionMatrix(train.data$is_exchangeable, predictionsLRExploratory, positive = "TRUE")
 # Confusion Matrix and Statistics
 # 
 # Reference
@@ -748,16 +747,16 @@ confusionMatrix(train.data$is_exchangeable, predictionsLRExploratory)
 # 
 # Mcnemar's Test P-Value : <2e-16          
 #                                           
-#             Sensitivity : 0.6701          
-#             Specificity : 0.5846          
-#          Pos Pred Value : 0.9425          
-#          Neg Pred Value : 0.1485          
-#              Prevalence : 0.9104          
-#          Detection Rate : 0.6101          
-#    Detection Prevalence : 0.6473          
-#       Balanced Accuracy : 0.6273          
+#             Sensitivity : 0.58457         
+#             Specificity : 0.67010         
+#          Pos Pred Value : 0.14850         
+#          Neg Pred Value : 0.94249         
+#              Prevalence : 0.08960         
+#          Detection Rate : 0.05238         
+#    Detection Prevalence : 0.35272         
+#       Balanced Accuracy : 0.62734         
 #                                           
-#        'Positive' Class : FALSE       
+#        'Positive' Class : TRUE      
 # Compute roc
 predictionsLRExploratoryProb <- predict(model_LR_Exchangeable, train.data, type = "prob")
 res.roc <- roc(train.data$is_exchangeable ~ predictionsLRExploratoryProb[,2])
@@ -802,7 +801,7 @@ accuracy
 error <- mean(test.data$is_exchangeable != predictionsLR)
 error
 # [1] 0.3349837
-confusionMatrix(test.data$is_exchangeable, predictionsLR)
+confusionMatrix(test.data$is_exchangeable, predictionsLR, positive = "TRUE")
 # Confusion Matrix and Statistics
 # 
 # Reference
@@ -819,16 +818,16 @@ confusionMatrix(test.data$is_exchangeable, predictionsLR)
 # 
 # Mcnemar's Test P-Value : <2e-16          
 #                                           
-#             Sensitivity : 0.6733          
-#             Specificity : 0.5804          
-#          Pos Pred Value : 0.9425          
-#          Neg Pred Value : 0.1481          
-#              Prevalence : 0.9109          
-#          Detection Rate : 0.6133          
-#    Detection Prevalence : 0.6507          
-#       Balanced Accuracy : 0.6269          
+#             Sensitivity : 0.58041         
+#             Specificity : 0.67329         
+#          Pos Pred Value : 0.14808         
+#          Neg Pred Value : 0.94253         
+#              Prevalence : 0.08912         
+#          Detection Rate : 0.05173         
+#    Detection Prevalence : 0.34932         
+#       Balanced Accuracy : 0.62685         
 #                                           
-#        'Positive' Class : FALSE 
+#        'Positive' Class : TRUE  
 
 #Compute roc
 predictionsLRProb <- predict(model_LR_Exchangeable, test.data, type = "prob")
@@ -1151,12 +1150,11 @@ R2(rf_predict_ranger,test.data$price_usd)
 #
 # KNN Model
 #
-
 model_knn <- train(
   price_usd ~. -model_name, data = train.data, method = "knn",
   trControl = trainControl("cv", number = 10),
   preProcess = c("center","scale"),
-  tuneLength = 20
+  tuneLength = 10
 )
 
 summary(model_knn$finalModel)
