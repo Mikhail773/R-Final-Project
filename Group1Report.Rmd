@@ -23,7 +23,7 @@ library(vctrs)
 
 # Abstract: Description of the Project and the Findings
 
-The dataset in question is of used cars in a popular catalog from the country of Belarus. This dataset will be cleaned and analyzed to answer several questions about the effect that certain variables have on the price point at which cars are sold at. Ultimately, Multiple Linear Regression Models, SVR, Decision Tree Regression, Random Forest Regression, and KNN will all be used to predict the market price of a used car in Belarus given the attributes found in the dataset. The accuracy of these models were analyzed and performance tested for real-world application with the help of a training and testing dataset. Ultimately it was discovered that the Random Forest Tree Model was the most accurate. Meanwhile, the Multiple Linear Regression and the SVR with radial method were the worst. Regardless, the models struggled with relatively high error rates that could be explained by skewed samples towards certain regions and car models. Also, a Decision Tree and a Logistic Regression Model were used to create an exploratory and predictive model for the exchangeability of a vehicle in the Belarus with the Decision Tree Model being slightly more accurate with an accuracy of around 69%..
+Vehicles are essential to transportation as a society and one of the main methods of obtaining a vehicle is through the purchase of a previously owned vehicle. As is the case with many nations worldwide Belarus has an extensive used vehicle market and the dataset in question is of used cars in a popular catalog from the country of Belarus. This dataset will be cleaned and analyzed to answer several questions and accomplish our main two goals. Multiple Linear Regression, SVR, Decision Tree Regression, Random Forest Regression, and KNN will all be used to predict the market price of a used car in Belarus given the attributes found in the dataset. Also, a Decision Tree and a Logistic Regression Model were used to create an exploratory and predictive model for the exchangeability of a vehicle in the Belarus. The accuracy of these models were analyzed and performance tested for real-world application with the help of a training and testing dataset.
 
 **OUR FINDINGS:** What we have found is that the Random forest tree had the best R2 value and error rate, meaning it had the best predictions. The two worst prediction models were the Multiple Linear Regression, and SVR Radial. Here is the list of of all of our results from each of our models. The lower the error rate the better, and the higher the R2 value the better the correlation the model has with the data.
 
@@ -36,7 +36,7 @@ The dataset in question is of used cars in a popular catalog from the country of
 | Random Forest Tree Regression | **1879.884** | **28.19878** | **0.9184761** |
 | KNN(K Nearest Neighbor)       | **3693.127** | **55.39793** | **0.6802895** |
 
-Lastly we have the results from the exchangeability predictive models. We had two different models to test the vehicle exchangeability, these two models are the decision tree and logistic regression. Both of these trees were very similar, however the decision tree was slightly better in predicting exchangeability.
+Lastly we employed used two different models to test whether the vehicle owner was willing to exchange his vehicle. The two models that were used were the decision tree and logistic classification. Both of these trees were very similar, however the decision tree was determined to perform slightly better as an exploratory and predictive model.
 
 The reason for this being the case is because of these values.
 
@@ -46,13 +46,23 @@ Logistic regression: AUC: 0.644 Accuracy: 0.6648 Sensitivity: 0.6846 Specificity
 
 The AUC, accuracy, sensitivity, and specificity are higher in the decision tree. All of these values allow us to conclude that the Decision Tree produces a better predictive model.
 
-# Introduction: Overview of the problems/goals and how they will be solved
+# Introduction:
 
-There are several objectives that will be the focal point of the research done on the used cars dataset. First and foremost, we will be attempted to create a predictive model for the price of a used car given the attributes in the dataset. Since cars are such a big investment we all wondered what affected the price on cars. This is what sparked our initial questions and goals. Solving our proposed questions and goal we hope to gain insights in what affects car prices which would leave us with more knowledge we can use later in life. To solve our questions and answer our goal we are going to use R to make graphs to answer our questions. We will make sure to use different statistical analyses to make sure our graphs are confirmed to be accurate.
+## Focus Problems
+
+There are several objectives that will be the focal point of the research done on the used cars dataset. The main scope of this project is to create an effective predictive model for the price of a used in Vehicle in Belarus. As well as creating a predictive model for vehicle prices an exploratory and predictive model will be created for the likelihood of a vehicle owner being willing to exchange their vehicle. Several questions will be answered in the process of creating models and in an attempt to gain a further understanding of the overall dataset.
+
+## Problem Motivations
+
+The popularity of the used vehicle market and personal experience in buying a vehicle led to initial intrigue in the used dataset. Furthermore, having a project member who was born in Eastern Europe led to added interest in how the vehicle market may look as opposed to the market in America. Also, personal experience with vehicle owners offering vehicle exchanges motivated the desire to create an exploratory and predictive model for the willingness of an owner to offer an exchange.
+
+## Problem Solving Methodology
+
+To solve our questions and answer our goal we are going to use R to make graphs to answer our questions. We will make sure to use different statistical analyses to make sure our graphs are confirmed to be accurate.
 
 # Initial Questions
 
-The main goal is to create a predictive model based on insights gained from analyzing the impact of variables on the selling price of a vehicle. The goal was chosen for its applicability and general interest of which attributes impact price of a used car. Secondly, a model to predict whether a vehicle would be exchangeable or not will be created using a Decision Tree. In addition, there will be several questions that will be answered concerning the dataset. These questions aid in solving the main goal and are important insights to be gleaned from the dataset. The questions that will be answered about the dataset are as follows:
+The main goal is to create a predictive model based on insights gained from analyzing the impact of variables on the selling price of a vehicle. The goal was chosen for its applicability and general interest of which attributes impact price of a used car. Secondly, exploratory and predictive models to predict whether a vehicle would be exchangeable or not will be created using a Decision Tree and Logistic Classification will be used and analyzed for accuracy. In addition, there will be several questions that will be answered concerning the dataset. These questions aid in solving the main goal and are important insights to be gleaned from the dataset. The questions that will be answered about the dataset are as follows:
 
 -   What impact does a region have on price?
 -   What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
