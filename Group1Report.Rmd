@@ -1173,6 +1173,7 @@ Linear was the first SVR model to be run and the code was as follows:
 
 ```{r SVRLinearModel, eval=FALSE, include=TRUE}
 # Create SVR Model using Linear Method
+set.seed(123)
 modelSVRLinTrain <- train( price_usd ~ ., data = train.data, method = "svmLinear",
                            trControl = trainControl("cv", number =10),
                            preProcess = c("center", "scale"),
@@ -1208,7 +1209,7 @@ The next model to be computed is the SVR model using the polynomial method:
 
 ```{r SVRPolyModel, eval=FALSE, include=TRUE}
 # Create SVR Model using Polynomial Method
-Method
+set.seed(123)
 modelSVRPolyTrain <- train(price_usd ~ ., data = train.data, method = "svmPoly",
                            trControl = trainControl("cv", number =10),
                            preProcess = c("center", "scale"),
@@ -1238,6 +1239,7 @@ Lastly, the radial method was used with the SVR model:
 
 ```{r SVRRadialModel, eval=FALSE, include=TRUE}
 # Create SVR Model using Radial Method
+set.seed(123)
 modelSVRRadialTrain <- train(price_usd ~ ., data = train.data, method = "svmRadial",
                              trControl = trainControl("cv", number =10),
                              preProcess = c("center", "scale"),
@@ -1276,6 +1278,7 @@ Even though the SVR model did much better as a whole than the Linear Regression 
 We began our Decision Tree model by running train with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate) as with our SVR model. These settings pruned our tree and ensured an optimal decision tree.
 
 ```{r DecisionTreeModel, eval=FALSE, include=TRUE}
+set.seed(123)
 model_DT_Train <- train(price_usd ~ ., data = train.data, method = "rpart",
                         trControl = trainControl("cv",number = 10),
                         preProcess = c("center","scale"),
@@ -1335,6 +1338,7 @@ Given how well the Decision Tree model operated it would make sense to try the R
 The Random Forest Tree model was run with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate for optimization) as with SVR and the Decision tree. These settings should ensure an optimal Random Forest Tree Model.
 
 ```{r RFFModel, eval=FALSE, include=TRUE}
+set.seed(123)
 random_forest_ranger <- train(price_usd ~ . ,
                               data = train.data,
                               method = "ranger",
@@ -1409,6 +1413,7 @@ R2(rf_predict_ranger,test.data$price_usd)
 ### KNN Model
 
 ```{r KNNModel, eval=FALSE, include=TRUE}
+set.seed(123)
 model_knn <- train(
   price_usd ~., data = train.data, method = "knn",
   trControl = trainControl("cv", number = 10),
