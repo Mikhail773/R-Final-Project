@@ -1470,13 +1470,13 @@ Given the RMSE being 3693.127 we calculated our error rate as 3693.127/mean(test
 
 ## Results obtained using different ML methods
 
-| Machine-Learning Methods                     |     RMSE     |  Error Rate  |      R-Square |
-|:---------------------------------------------|:------------:|:------------:|--------------:|
-| Multiple Linear Regression (w/o Model_Names) | **4470.274** | **67.57975** | **0.5190641** |
-| SVR Linear                                   | **3257.887** | **48.86921** | **0.7772176** |
-| SVR Radial                                   | **4752.231** | **71.28478** | **0.5937837** |
-| Decision Tree Regression                     | **3245.413** | **48.68209** | **0.7529956** |
-| Random Forest Tree Regression                | **1879.884** | **28.19878** | **0.9184761** |
-| KNN(K Nearest Neighbor)                      | **3693.127** | **55.39793** | **0.6802895** |
+| Machine-Learning Methods                |     RMSE     |  Error Rate  |      R-Square |
+|:----------------------------------------|:------------:|:------------:|--------------:|
+| Multiple Linear Regression (Continuous) | **4470.274** | **67.57975** | **0.5190641** |
+| SVR Linear                              | **3257.887** | **48.86921** | **0.7772176** |
+| SVR Radial                              | **4752.231** | **71.28478** | **0.5937837** |
+| Decision Tree Regression                | **3245.413** | **48.68209** | **0.7529956** |
+| Random Forest Tree Regression           | **1879.884** | **28.19878** | **0.9184761** |
+| KNN(K Nearest Neighbor)                 | **3693.127** | **55.39793** | **0.6802895** |
 
 Note: Some vehicles do not occur often due to a limit in the data collected and for that reason prediction made on vehicles(specifically models) that are not common ought to be taken with the limitations of the models in mind.
