@@ -433,7 +433,7 @@ TukeyHSD(res.aov)
 
 **Justification:**
 
-Two bar graphs were used in solving this question. First a bar graph was used to plot the distribution of vehicles for each manufacturer. Then another bar graph was used as a means of quickly inspecting how average price ranged between different manufacturers. As useful as these graph were in understanding the relationship between price and manufacturer it proved to be insufficient in proving a result. In order to prove that there existed a significant relationship between manufacturer and asking price of a car One-Way Anova was utilized. Once again were were dealing with a categorical data with several categories which lends the problem nicely to this sort of test.
+Two bar graphs were used in solving this question. First a bar graph was used to plot the distribution of vehicles for each manufacturer. Then another bar graph was used as a means of quickly inspecting how average price ranged between different manufacturers. As useful as these graphs were in understanding the relationship between price and manufacturer, it proved to be insufficient in proving a result. In order to prove that there existed a significant relationship between manufacturer and asking price of a car One-Way Anova was utilized. Once again we were dealing with categorical data with several categories which lends the problem nicely for this sort of test.
 
 First a bar graph was used to effectively plot the distribution of vehicles for each manufacturer.
 
@@ -442,7 +442,7 @@ First a bar graph was used to effectively plot the distribution of vehicles for 
 ggplot(cars_edited, aes(y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name)) + geom_text(stat='count', aes(label=..count..), hjust=1)
 ```
 
-Once the distribution of the Manufacturers was plotted we turned our attention onto the second part of the question: Whether manufacturers have a significant impact on the asking price of a vehicle?
+Once the distribution of the Manufacturers was plotted we turned our attention onto the second part of the question: **Whether manufacturers have a significant impact on the asking price of a vehicle?**
 
 Another bar graph was used as a means of quickly inspecting how average price ranged between different manufacturers.
 
@@ -487,7 +487,7 @@ We continue with the Tukey HSD to do multiple pairwise-comparisons between the m
 TukeyHSD(res.aovTwo)
 ```
 
-With the results see that numerous manufacturers are statistically different and we can use this data to list every statistically different manufacturer.
+With these results we see that numerous manufacturers are statistically different and we can use this data to list every statistically different manufacturer.
 
 **We can confirm that there is a relationship between the manufacturer and asking price.**
 
