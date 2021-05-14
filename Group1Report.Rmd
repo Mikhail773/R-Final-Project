@@ -770,7 +770,7 @@ models_counted %>% arrange(desc(n))
 
 **From the table it is clear that the most popular model is the Passat.**
 
-Now we go on to solve the next part of the question: Whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
+Now we go on to solve the next part of the question: **Whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?**
 
 Since we are using a categorical factor and attempting to find its impact on a continuous response variable we will deploy the One-Way Anova Test.
 
@@ -833,7 +833,7 @@ Our prediction error rate is lower than for other attributes (60.95455%) which c
 
 **Justification:**
 
-Prior to working on this question it would be useful to have some sort of visual understanding of our data. To accomplish this we will use a scatter plat with facet wrap to show the distribution of years for each manufacturer.
+Prior to working on this question it would be useful to have some sort of visual understanding of our data. To accomplish this we will use a scatter plot with facet wrap to show the distribution of years for each manufacturer.
 
 ```{r ScatterPlotFacetHex, fig.height = 10, fig.width = 20}
 #Scatter plot: Year produced by price and colored by manufacturer name
@@ -856,7 +856,7 @@ manufacturer_year_averages %>% arrange(desc(average))
 
 Observing the results of the summary it is clear that the manufacturers with the newest car averages are Lifan, Buick, Geely, and LADA.
 
-Next we continue with the second part of the question: Whether the manufacturer changes how the production year impacts the price?
+Next we continue with the second part of the question: **Whether the manufacturer changes how the production year impacts the price?**
 
 To solve this question we will be using the Two-Way Anova. The Two-Way Anova is used because we are attempting to evaluate the simultaneous effect of Manufacturer and Year Produced on price.
 
@@ -864,7 +864,7 @@ The hypotheses for the Two-Way Anova test are:
 
 H~o~ = 1. There is no difference in the means of Manufacturer. There is no difference in the means of Year Produced. 3. There is no interaction between Manufacturer and Year Produced
 
-Ha = For cases 1 and 2 the means are not equal and for case 3 there is an interaction between Manufacturer and Year Produced.
+Ha = For cases 1 and 2 the means are not equal and for case 3 there is an interaction between Manufacturer and Year Produced
 
 For this test we will be using 0.05 as our level of significance. The results are thus:
 
@@ -876,7 +876,7 @@ summary(manufacturer_price)
 
 In our results we can see that the p-value \< 0.05 for each of our 3 cases. In other words, there is a difference in the means of Manufacturer, the means of Year Produced, and there is an interaction between Manufacturer and Year Produced. **The manufacturer does change how the production year affects the selling price.**
 
-Now that we know that Manufacturer and Year Produced impact the price of our vehicle it important to see how well of a model we can produce given these two attributes. To do this we will use the Multiple Linear Regression Model.
+Now that we know that Manufacturer and Year Produced impact the price of our vehicle, it important to see how well of a model we can produce given these two attributes. To do this we will use the Multiple Linear Regression Model.
 
 ```{r ManufYearLM}
 #Taking the linear regression
@@ -901,7 +901,7 @@ Our prediction error rate is lower than for other attributes (60.12396%) which c
 
 #### Exploring Exchangeability using a Decision Tree
 
-In an attempt to create a good exploratory model for exchangeability we will deploy a Decision tree. The model will be running the train function with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate)l. These settings should prune our tree and ensured an optimal decision tree.
+In an attempt to create a good exploratory model for exchangeability we will deploy a Decision tree. The model will be running the train function with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate). These settings should prune our tree and ensured an optimal decision tree.
 
 ```{r DTExploratoryRegressionExchangeability, eval=FALSE, include=TRUE}
 ## Using Decision Tree to create an exploratory model for exchangeability
@@ -1002,11 +1002,11 @@ plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
 ![](images/DTPredictiveBestRoc.png)
 
-In this graph the AUC is 0.653, which i relatively good. Remember that a classifier that performs no better than chance is expected to have an AUC of 0.5 when evaluated on an independent test set not used to train the model. Meaning, that this model does in fact predict exchangeability with some success. The best threshold with the highest sum sensitivity and specificity is 0.332 and we get a specificity of 0.772 and a sensitivity of 0.457. Ultimately, we learn that the Decision Tree Classification produces a good predictive model for exchangeability of a vehicle.
+In this graph the AUC is 0.653, which is relatively good. Remember that a classifier that performs no better than chance is expected to have an AUC of 0.5. This is the case specifically when evaluated on an independent test set and not used to train the model. Meaning, that this model does in fact predict exchangeability with some success. The best threshold with the highest sum sensitivity and specificity is 0.332 and we get a specificity of 0.772 and a sensitivity of 0.457. Ultimately, we learn that the Decision Tree Classification produces a good predictive model for exchangeability of a vehicle.
 
 #### Exploring Exchangeability using Logistic Classification
 
-We attempted to create a more accurate exploratory model for exchangeability by using Logistic Classification. The model will be running the train function with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate)l. These settings should optimal model.
+We attempted to create a more accurate exploratory model for exchangeability by using Logistic Classification. The model will be running the train function with 10-fold cross-validation and a tune-length of 10 (number of cp values to evaluate). These settings should optimal model.
 
 ```{r LRExploratoryClassificationExchangeability, eval=FALSE, include=TRUE}
 ## Using Logistic Classfication to create an exploratory model for exchangeability
@@ -1060,7 +1060,7 @@ plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
 ![](images/LRExplorataryBestRoc.png)
 
-In this graph the AUC is 0.651, which i relatively good and quite similar to the AUC from the Decsion Tree model. Since the classifier is better that 0.5 we can comfortable say that this is a good exploratory model. The best threshold with the highest sum sensitivity and specificity is 0.356 and we get a specificity of 0.640 and a sensitivity of 0.580. The Logistic Regression Model also produces a good exploratory model.
+In this graph the AUC is 0.651, which is relatively good and quite similar to the AUC from the Decsion Tree model. Since the classifier is better that 0.5 we can comfortable say that this is a good exploratory model. The best threshold with the highest sum sensitivity and specificity is 0.356 and we get a specificity of 0.640 and a sensitivity of 0.580. The Logistic Regression Model also produces a good exploratory model.
 
 #### Predicting Exchangeability using Logistic Regression
 
@@ -1115,7 +1115,7 @@ plot.roc(res.rocLR, print.auc = TRUE, print.thres = "best")
 
 ![](images/LRPredictiveBestRoc.png)
 
-In this graph the AUC is 0.648 is a good AUC from a model. This model does predict exchangeability with success. The best threshold with the highest sum sensitivity and specificity is 0.356 and we get a specificity of 0.647 and a sensitivity of 0.580. The Logistic Regression Model also produces a good predictive model.
+In this graph the AUC is 0.648 which is a good AUC for the model. This model does predict exchangeability with success. The best threshold with the highest sum sensitivity and specificity is 0.356 and we get a specificity of 0.647 and a sensitivity of 0.580. The Logistic Regression Model also produces a good predictive model.
 
 ## Model Results and Comparisons
 
@@ -1123,7 +1123,7 @@ In an attempt to create the most accurate and significant predictive model we cr
 
 ### Linear Regression Model
 
-Firstly, we created a Multiple Linear Regression Model which utilized the attributes in our dataset(except model_names) and optimized the model. The code for this looks as follows:
+Firstly, we created a Multiple Linear Regression Model which utilized the attributes in our dataset (except model_names) and optimized the model. The code for this looks as follows:
 
 ```{r LinearRegressionModel}
 set.seed(123)
@@ -1220,7 +1220,7 @@ summary(modelSVRPolyTrain)
 modelSVRPolyTrain$bestTune
 ```
 
-**We were able to find that the bestTune was 1 which informs us what the best tuning parameter C that maximizes our accuracy. We proceed with using the model to predict our prices and comparing them to the actual testing prices to gauge accuracy of the model.**
+We were able to find that the **bestTune was 1** which informs us what the best tuning parameter C that maximizes our accuracy. We proceed with using the model to predict our prices and comparing them to the actual testing prices to gauge accuracy of the model.
 
 ```{r SVRPolyModelAccuracy, eval=FALSE, include=TRUE}
 # Predict using SVR Model with Linear Method
@@ -1233,7 +1233,7 @@ RMSE(modelSVRPolyTrainPrediction,test.data$price_usd)
 R2(modelSVRPolyTrainPrediction,test.data$price_usd)
 ```
 
-**Observing RMSE we are able to see how concentrated the data is around our model. Calculating our error rate we see 3257.887/mean(test.data\$price_usd) \*100 = 48.86921 is not great, but significantly better than our Linear Regression Model. Also, a R-Squared of 0.7772176 is a significant increase in accuracy as well. We know that around 77.7% of our prices can be explained by our model. Nevertheless, we continue to find better models:**
+Observing RMSE we are able to see how concentrated the data is around our model. Calculating our error rate we see **3257.887/mean(test.data\$price_usd) \*100 = 48.86921** is not great, but significantly better than our Linear Regression Model. Also, a **R-Squared of 0.7772176** is a significant increase in accuracy as well. We know that around77.7%of our prices can be explained by our model. Nevertheless, we continue to find better models:
 
 Lastly, the radial method was used with the SVR model:
 
@@ -1271,11 +1271,11 @@ R2(modelSVRRadialTrainPrediction,test.data$price_usd)
 
 **From the RMSE(4752.231) we calculated our error rate as 4752.231/mean(test.data\$price_usd) \*100 = 71.28478.** This is even worse than the results we had from the Linear Regression Model. Not surprisingly our R2 was also quite poor. **The R-Squared was 0.5937837** which again is not a good value. We know that around 59.4% of our prices can be explained by our model. These results convince us that radial basis functions are not the optimal function to be used with SVR for our model.
 
-Even though the SVR model did much better as a whole than the Linear Regression Model it was vital to investigate more models in an attempt to create an even more accurate model. The Decision Tree was a perfect candidate since it is incredibly robust and relies on very few assumptions. Its simpler nature also makes it a model that would be preferred over other models (such as Random Forest Regression).
+Even though the SVR model did much better as a whole than the Linear Regression Model it was vital to investigate more models in an attempt to create an even more accurate model. The Decision Tree was a perfect candidate since it is incredibly robust and relies on very few assumptions. It's simpler nature also makes it a model that would be preferred over other models (such as Random Forest Regression).
 
 ### Decision Tree Regression Model
 
-We began our Decision Tree model by running train with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate) as with our SVR model. These settings pruned our tree and ensured an optimal decision tree.
+We began our Decision Tree model by running train with 10-fold cross-validation and a tune-length of 10 (number of cp values to evaluate) as with our SVR model. These settings pruned our tree and ensured an optimal decision tree.
 
 ```{r DecisionTreeModel, eval=FALSE, include=TRUE}
 set.seed(123)
@@ -1297,7 +1297,7 @@ plot(model_DT_Train)
 
 ![](images/plot(model_DT_Train)_1920_1080.png)
 
-Next we will plot the final model for the decision tree as well as the decision rules for our final model
+Next we will plot the final model for the decision tree as well as the decision rules for our final model.
 
 ```{r DTPlot, eval=FALSE, include=TRUE}
 # Plot the final tree model
@@ -1331,11 +1331,11 @@ R2(prediction_DT_Train,test.data$price_usd)
 
 **Given the RMSE being 3245.413 we calculated our error rate as 3245.413/mean(test.data\$price_usd) \*100 = 48.68209.** This is better than the Linear Regression Model, as well as SVR with Linear and Radial Kernels. Not surprisingly we have a relatively good **R-Squared at 0.7529956** which is better than all but SVR with Linear Kernel and Linear Regression. The R-Squared tells us that around 75.3% of our prices can be explained by our model. These results are fairly good, but at this point more models could not hurt. There is no guarantee that other models would perform better, but experimentation is optimal in a search for a better model.
 
-Given how well the Decision Tree model operated it would make sense to try the Random Forest Tree Model given that the Random Forest Regression is a more complicated application of the Decision Tree since it leverages multiple decision trees. In essence, one can expect a better result from the Random Forest Tree (the question lies in whether the improvement is worth the complexity in calculation)
+Given how well the Decision Tree model operated it would make sense to try the Random Forest Tree Model given that the Random Forest Regression is a more complicated application of the Decision Tree since it leverages multiple decision trees. In essence, one can expect a better result from the Random Forest Tree (the question lies in whether the improvement is worth the complexity in calculation).
 
 ### Random Forest Tree Model
 
-The Random Forest Tree model was run with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate for optimization) as with SVR and the Decision tree. These settings should ensure an optimal Random Forest Tree Model.
+The Random Forest Tree model was run with 10-fold cross-validation and a tune-length of 10 (number of cp values to evaluate for optimization) as with SVR and the Decision tree. These settings should ensure an optimal Random Forest Tree Model.
 
 ```{r RFFModel, eval=FALSE, include=TRUE}
 set.seed(123)
@@ -1408,7 +1408,7 @@ R2(rf_predict_ranger,test.data$price_usd)
 #[1] 0.9184761
 ```
 
-**The RMSE is 1879.884 we calculated our error rate as 1879.884/mean(test.data\$price_usd) \*100 = 28.19878.** This is the best error rate so far. Not surprisingly we have a great **R-Squared at 0.9184761**. The R2 tells us that around 91.8% of our prices can be explained by our model. These results are the best we have so far, but improvement may still be possible. We continue with KNN in order to achieve a better result(if possible).
+**The RMSE is 1879.884 we calculated our error rate as 1879.884/mean(test.data\$price_usd) \*100 = 28.19878.** This is the best error rate so far. Not surprisingly we have a great **R-Squared at 0.9184761**. The R2 tells us that around 91.8% of our prices can be explained by our model. These results are the best we have so far, but improvement may still be possible. We continue with KNN in order to achieve a better result (if possible).
 
 ### KNN Model
 
@@ -1479,4 +1479,4 @@ Given the RMSE being 3693.127 we calculated our error rate as 3693.127/mean(test
 | Random Forest Tree Regression           | **1879.884** | **28.19878** | **0.9184761** |
 | KNN(K Nearest Neighbor)                 | **3693.127** | **55.39793** | **0.6802895** |
 
-Note: Some vehicles do not occur often due to a limit in the data collected and for that reason prediction made on vehicles(specifically models) that are not common ought to be taken with the limitations of the models in mind.
+Note: Some vehicles do not occur often due to a limit in the data collected and for that reason prediction made on vehicles (specifically models) that are not common ought to be taken with the limitations of the models in mind.
