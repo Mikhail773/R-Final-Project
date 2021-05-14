@@ -1393,6 +1393,8 @@ random_forest_ranger$finalModel
 
 ![](images/plot(random_forest_ranger)_568_395.png)
 
+Taking a look at the Random Forest Tree model we can see that the prediction between the variables Variance and ExtraTrees is extremely close. From the graph it looks as though the models worst prediction is between twenty five and two hundred and fifty for the Randomly Selected Predictors. However, the prediction between that range is still quite good, and overall the prediction is almost perfect. Just by looking at this graph it is easily the best prediction model we have done out of all the ML methods.
+
 Once the Random Forest Tree is made we wish to gauge the accuracy of the model. To accomplish this we use the predict function to predict values of our vehicle prices. Afterwords, we will compare these values to the actual prices of the test dataset to find the accuracy of the model.
 
 ```{r RFFModelPredict, eval=FALSE, include=TRUE}
