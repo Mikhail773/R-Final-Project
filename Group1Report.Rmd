@@ -36,6 +36,8 @@ Vehicles are essential to transportation as a society and one of the main method
 | Random Forest Tree Regression | **1879.884** | **28.19878** | **0.9184761** |
 | KNN(K Nearest Neighbor)       | **3693.127** | **55.39793** | **0.6802895** |
 
+: Vehicle Price Prediction Model Comparisons
+
 Lastly we employed used two different models to test whether the vehicle owner was willing to exchange his vehicle. The two models that were used were the decision tree and logistic classification. Both of these trees were very similar, however the decision tree was determined to perform slightly better as an exploratory and predictive model.
 
 The reason for this being the case is because of these values.
@@ -904,7 +906,7 @@ Our prediction error rate is lower than for other attributes (60.12396%) which c
 In an attempt to create a good exploratory model for exchangeability we will deploy a Decision tree. The model will be running the train function with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate). These settings should prune our tree and ensured an optimal decision tree.
 
 ```{r DTExploratoryRegressionExchangeability, eval=FALSE, include=TRUE}
-## Using Decision Tree to create an exploratory model for exchangeability
+set.seed(123)
 model_DT_Exchangeable <-  train(is_exchangeable ~ . -model_name, data = train.data, method = "rpart",
                                 trControl = trainControl("cv",number = 10),
                                 preProcess = c("center","scale"),
@@ -919,7 +921,7 @@ accuracy
 error <- mean(train.data$is_exchangeable != predictionsDTExploratory)
 error
 # [1] 0.3060198
-confusionMatrix(train.data$is_exchangeable, predictionsDTExploratory)
+confusionMatrix(train.data$is_exchangeable, predictionsDTExploratory, positive = "TRUE")
 ```
 
 The Decision Tree had an overall accuracy of around 69.4%. Meaning that the explanatory power is equal to 69.4%. The misclassification rate was 30.6%
@@ -1116,6 +1118,21 @@ plot.roc(res.rocLR, print.auc = TRUE, print.thres = "best")
 ![](images/LRPredictiveBestRoc.png)
 
 In this graph the AUC is 0.648 which is a good AUC for the model. This model does predict exchangeability with success. The best threshold with the highest sum sensitivity and specificity is 0.356 and we get a specificity of 0.647 and a sensitivity of 0.580. The Logistic Regression Model also produces a good predictive model.
+
++-------------------------------------------------+-----------+-----------+-------------+-------------+---------------------------+-----------+
+| Models                                          | Accuracy  | Error     | Sensitivity | Specificity | Positive Prediction Value | AUC       |
++=================================================+===========+===========+=============+=============+===========================+===========+
+| Decision Tree Classification: Exploratory Model | 0.6939802 |           | 0.6349      | 0.7064      | 0.3116                    | 0.6571428 |
+|                                                 |           | 0.3060198 |             |             |                           |           |
++-------------------------------------------------+-----------+-----------+-------------+-------------+---------------------------+-----------+
+| Logistic Classification: Exploratory Model      | 0.6624371 | 0.3375629 | 0.58457     | 0.67010     | 0.14850                   | 0.6505955 |
++-------------------------------------------------+-----------+-----------+-------------+-------------+---------------------------+-----------+
+| Decision Tree Classification: Prediction Model  | 0.6871661 | 0.3128339 | 0.6062      | 0.7039      | 0.2980                    | 0.6525616 |
++-------------------------------------------------+-----------+-----------+-------------+-------------+---------------------------+-----------+
+| Logistic Classification: Prediction Model       | 0.6650163 | 0.3349837 | 0.58041     | 0.67329     | 0.14808                   | 0.6480223 |
++-------------------------------------------------+-----------+-----------+-------------+-------------+---------------------------+-----------+
+
+: Car Exchangeability Model Comparisons
 
 ## Model Results and Comparisons
 
@@ -1478,5 +1495,7 @@ Given the RMSE being 3693.127 we calculated our error rate as 3693.127/mean(test
 | Decision Tree Regression                | **3245.413** | **48.68209** | **0.7529956** |
 | Random Forest Tree Regression           | **1879.884** | **28.19878** | **0.9184761** |
 | KNN(K Nearest Neighbor)                 | **3693.127** | **55.39793** | **0.6802895** |
+
+: Vehicle Price Prediction Model Comparisons
 
 Note: Some vehicles do not occur often due to a limit in the data collected and for that reason prediction made on vehicles (specifically models) that are not common ought to be taken with the limitations of the models in mind.
