@@ -558,16 +558,16 @@ The R2 is 0.1774 which indicates that a low proportion of prices in the data can
 
 **Justification:**
 
-In order to gain an intuitive understanding of the question we sought to use a scatter plot to see the relationship between price and number of photos.
+In order to gain an intuitive understanding of the question, we sought to use a scatter plot to see the relationship between price and number of photos.
 
 ```{r NumPhotosPrice, fig.height = 10, fig.width = 10}
 #Scatter plot: Number of photos and price
 ggplot(cars_edited, aes( x =number_of_photos, y=price_usd)) + geom_hex() + stat_smooth(color = "red") 
 ```
 
-When we look at this graph we can see that although there exists a line. Nevertheless, the data had a significant amount of variation and further testing would need to be done to get a result. It does seem that there will be a very little(if any) correlation between price and number of photos.
+When we look at this graph we can see that although there exists a line. Nevertheless, the data had a significant amount of variation and further testing would need to be done to get a result. It does seem that there will be a very little (if any) correlation between price and number of photos.
 
-Since we are investigating the relationship between 2 continuous variables we will be using the correlation test.
+Since we are investigating the relationship between two continuous variables we will be using the correlation test.
 
 The hypotheses are as follows:
 
@@ -584,7 +584,7 @@ cor.test(cars_edited$number_of_photos, cars_edited$price_usd)
 
 Since the p-value is less than 0.05 we can conclude that Price and Number of Photos are significantly correlated with a correlation coefficient of 0.3161726 and p-value of \< 2.2e-16
 
-Next we aim to investigate how good of an indicator of price the number of vehicle photos is. We shall employ linear regression, check the percentage of accuracy of that line, and graph the linear regression line to provide us with a useful visual.
+Next we aim to investigate how good of an indicator the number of vehicle photos is on price . We shall employ linear regression, check the percentage of accuracy of that line, and graph the linear regression line to provide us with a useful visual.
 
 ```{r NumPhotosPriceLMandPlot, fig.height = 10, fig.width = 10}
 #Getting the formula for linear regression
@@ -611,7 +611,7 @@ sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
 # Our prediction error rate is extremely high (91.82279%) which explains the low correlation
 ```
 
-The R2 is 0.1004 which indicates that a low proportion of prices in the data can be explained by the model. In other words, number of photos is not a good indicator of price(more attributes are needed in a model). Also, the percentage error is 91.82279 which is very high. This confirms how poor a model would be if it solely used number of photos to predict price.
+The R2 is 0.1004 which indicates that a low proportion of prices in the data can be explained by the model. In other words, number of photos is not a good indicator of price (more attributes are needed in a model). Also, the percentage error is 91.82279 which is very high. This confirms how poor a model would be if it solely used number of photos to predict price.
 
 **We can conclude there is a low negative correlation between price and odometer.** Our linear regression model tells us that to create an accurate model we will need to consider more attributes.
 
@@ -623,16 +623,16 @@ The R2 is 0.1004 which indicates that a low proportion of prices in the data can
 
 **Justification:**
 
-Graphs used: Scatter plot How these graphs helped us solve the problem: Using a scatter plot for this question again allowed us to see the relationship between the two variables. With that we can come up with a solution to the question.
+Using a scatter plot for this question allowed us to see the relationship between the two variables. With that we can come up with a solution to the question.
 
-To begin answering this questions it was natural to use scatterplot (using 2 continuous attributes) to gain an intuitive understanding of any possible relationship.
+To begin answering this question it was natural to use scatter plot (using 2 continuous attributes) to gain an intuitive understanding of any possible relationship.
 
 ```{r upCounterPlot, fig.height = 10, fig.width = 10}
 #Regression analysis
 ggplot(cars_edited, aes( x =up_counter, y=price_usd)) + geom_hex() + stat_smooth(color = "red")
 ```
 
-Looking at the Scatterplot we see a possible positive correlation although the variability of the data makes it hard for us to affirm this prediction. To continue we will use the correlation test(since we are dealing with continuous attributes) to check for a correlation between number of up counts and price of a vehicle.
+Looking at the Scatter plot we see a possible positive correlation although the variability of the data makes it hard for us to affirm this prediction. To continue we will use the correlation test (since we are dealing with continuous attributes) to check for a correlation between number of up counts and price of a vehicle.
 
 The hypotheses for the correlation test are the following:
 
@@ -651,7 +651,7 @@ Since the p-value is less than 0.05 we can conclude that Price and number of up 
 
 However, although they are correlated we do see that the correlation coefficient is very close to 0. Meaning that the correlation is almost entirely negligible. If one were to attempt to use this as a predictor of price the results would be poor.
 
-Nevertheless,we will use linear regression to see how poor of an indicator number of up counts really is. We will check the percentage of accuracy of the linear regression line, and graph the linear regression line to provide useful insights.
+Nevertheless, we will use linear regression to see how poor of an indicator number of up counts really is. We will check the percentage of accuracy of the linear regression line, and graph the linear regression line to provide useful insights.
 
 ```{r UpCounterLM/Accuracy/Plot, fig.height = 10, fig.width = 10}
 # Create LM
@@ -670,7 +670,7 @@ sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
 ggplot (cars_edited, aes(x=up_counter, y=price_usd)) + geom_point() + stat_smooth(method=lm)
 ```
 
-The R2 is 0.003311 which indicates that a low proportion of prices in the data can be explained by the model. In other words, number of up counts is a very poor indicator of price(we need more attributes in the model). Also, the percentage error is 96.69137 which is ludicrously high. This confirms how poor a model would be if it solely used number of up counts to predict price.
+The R2 is 0.003311 which indicates that a low proportion of prices in the data can be explained by the model. In other words, number of up counts is a very poor indicator of price (we need more attributes in the model). Also, the percentage error is 96.69137 which is ludicrously high. This confirms how poor a model would be if it solely used number of up counts to predict price.
 
 **We can conclude there is a negligible positive correlation between price and number of up counts.**
 
@@ -682,14 +682,14 @@ The R2 is 0.003311 which indicates that a low proportion of prices in the data c
 
 **Justification**:
 
-To begin this question it was important to have a working knowledge of how body type and engine type related to one another. Initially a Mosaic plot felt like the right graph to show relationships, but the quantity of categories made a balloon plot much easy to read. The spacious nature of the balloon plot greatly aided in gaining insights from the data and pushed further investigation.
+To begin this question it was important to have a working knowledge of how body type and engine type related to one another. Initially a Mosaic plot felt like the right graph to show relationships, but the quantity of categories made a balloon plot much easier to read. The spacious nature of the balloon plot greatly aided in gaining insights from the data and pushed further investigation.
 
 ```{r EngBodyBalloonPlot, fig.height = 10, fig.width = 10}
 # Balloon Plot
 ggplot(cars_edited, aes(body_type, engine_type)) + geom_count()
 ```
 
-Based on this Balloon plot we can see that several combinations of body types and engine types do not exist. Furthermore, there seems to be higher quantities of hatchbacks with gasoline engines and sedans with gasoline engines. Nevertheless, visualization does not suffice in proving any relationship. We shall proceed with a Chi-Square test for more information. The reason for a Chi-Square test is that we are attempting to analyze the frequency table of two categorical variables(engine type and body type).
+Based on this Balloon plot we can see that several combinations of body types and engine types do not exist. Furthermore, there seems to be higher quantities of hatchbacks with gasoline engines and sedans with gasoline engines. Nevertheless, visualization does not suffice in proving any relationship. We shall proceed with a Chi-Square test for more information. The reason for a Chi-Square test is that we are attempting to analyze the frequency table of two categorical variables (engine type and body type).
 
 The hypotheses for the Chi-Square test are as follows:
 
@@ -716,9 +716,9 @@ prop.table(engine_body.data)*100
 
 From the table we can clearly see that Hatchback and Gasoline as well as Sedan and Gasoline are the most common combinations of the two variables as we suspected from the balloon plot.
 
-We continue by attempting to solve that second part of the question. That is, what is the impact of Engine Type and Body Type on the selling price?
+We continue by attempting to solve that second part of the question. That is, **what is the impact of Engine Type and Body Type on the selling price?**
 
-The most effective method of solving this question is with the use of the Two-Way Anova. The reason for the use of this test is because we are attempting to evaluate the simultaneous effect of two grouping variables(engine and body type) on a response variable(price).
+The most effective method of solving this question is with the use of the Two-Way Anova. The reason for the use of this test is because we are attempting to evaluate the simultaneous effect of two grouping variables (engine and body type) on a response variable (price).
 
 The hypotheses for the Two-Way Anova test are:
 
@@ -750,7 +750,7 @@ TukeyHSD(body_engine_type_on_price.aov)
 
 The Tukey Test results can be evaluated to gain more detailed information on the relationship between price and Engine/Body Type.
 
-**These tests confirm our that Engine Type and Body Type significantly impact the selling price of a vehicle.**
+**These tests confirm that our Engine Type and Body Type significantly impact the selling price of a vehicle.**
 
 ------------------------------------------------------------------------
 
