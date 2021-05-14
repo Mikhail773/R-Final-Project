@@ -30,7 +30,7 @@ Vehicles are essential to transportation as a society and one of the main method
 | Machine-Learning Methods      |     RMSE     |  Error Rate  |      R-Square |
 |:------------------------------|:------------:|:------------:|--------------:|
 | Multiple Linear Regression    | **4470.274** | **67.57975** | **0.5190641** |
-| SVR Linear                    | **3257.887** | **48.86921** | **0.7772176** |
+| SVR Linear                    | **3257.453** | **48.8627**  |  **0.777241** |
 | SVR Radial                    | **4752.231** | **71.28478** | **0.5937837** |
 | Decision Tree Regression      | **3245.413** | **48.68209** | **0.7529956** |
 | Random Forest Tree Regression | **1879.884** | **28.19878** | **0.9184761** |
@@ -1122,8 +1122,7 @@ In this graph the AUC is 0.648 which is a good AUC for the model. This model doe
 +-------------------------------------------------+-----------+-----------+-------------+-------------+---------------------------+-----------+
 | Models                                          | Accuracy  | Error     | Sensitivity | Specificity | Positive Prediction Value | AUC       |
 +=================================================+===========+===========+=============+=============+===========================+===========+
-| Decision Tree Classification: Exploratory Model | 0.6939802 |           | 0.6349      | 0.7064      | 0.3116                    | 0.6571428 |
-|                                                 |           | 0.3060198 |             |             |                           |           |
+| Decision Tree Classification: Exploratory Model | 0.6939802 | 0.3060198 | 0.6349      | 0.7064      | 0.3116                    | 0.6571428 |
 +-------------------------------------------------+-----------+-----------+-------------+-------------+---------------------------+-----------+
 | Logistic Classification: Exploratory Model      | 0.6624371 | 0.3375629 | 0.58457     | 0.67010     | 0.14850                   | 0.6505955 |
 +-------------------------------------------------+-----------+-----------+-------------+-------------+---------------------------+-----------+
@@ -1492,7 +1491,7 @@ Given the RMSE being 3693.127 we calculated our error rate as 3693.127/mean(test
 | Machine-Learning Methods                |     RMSE     |  Error Rate  |      R-Square |
 |:----------------------------------------|:------------:|:------------:|--------------:|
 | Multiple Linear Regression (Continuous) | **4470.274** | **67.57975** | **0.5190641** |
-| SVR Linear                              | **3257.887** | **48.86921** | **0.7772176** |
+| SVR Linear                              | **3257.453** | **48.8627**  |  **0.777241** |
 | SVR Radial                              | **4752.231** | **71.28478** | **0.5937837** |
 | Decision Tree Regression                | **3245.413** | **48.68209** | **0.7529956** |
 | Random Forest Tree Regression           | **1879.884** | **28.19878** | **0.9184761** |
