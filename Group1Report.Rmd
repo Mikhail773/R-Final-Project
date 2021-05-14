@@ -3,9 +3,6 @@ title: "Cars Analysis and Modeling"
 author: "Group 1"
 date: "5/05/2021"
 output: html_document
-editor_options: 
-  markdown: 
-    wrap: 72
 ---
 
 ```{r setup, include=FALSE}
@@ -24,281 +21,132 @@ library(pROC) # Calculate roc
 library(vctrs)
 ```
 
-# Abstract: Description of the project and the findings
+# Abstract: Description of the Project and the Findings
 
-The dataset in question is of used cars in a popular catalog from the
-country of Belarus. This dataset will be cleaned and analyzed to answer
-several questions about the effect that certain variables have on the
-price point at which cars are sold at. Ultimately, Multiple Linear
-Regression Models, SVR, Decision Tree Regression, Random Forest
-Regression, and KNN will all be used to predict the market price of a
-used car in Belarus given the attributes found in the dataset. The
-accuracy of these models were analyzed and performance tested for
-real-world application with the help of a training and testing dataset.
-Afterwords, the models were compared to find the most effective model
-for predicting the price of a used car in Belarus. Also, a Decision Tree
-and a Logistic Regression Model will be used to create an exploratory
-and predictive model for the exchangeability of a vehicle in the
-Belarus.
+Vehicles are essential to transportation as a society and one of the main methods of obtaining a vehicle is through the purchase of a previously owned vehicle. As is the case with many nations worldwide Belarus has an extensive used vehicle market and the dataset in question is of used cars in a popular catalog from the country of Belarus. This dataset will be cleaned and analyzed to answer several questions and accomplish our main two goals. Multiple Linear Regression, SVR, Decision Tree Regression, Random Forest Regression, and KNN will all be used to predict the market price of a used car in Belarus given the attributes found in the dataset. Also, a Decision Tree and a Logistic Regression Model were used to create an exploratory and predictive model for the exchangeability of a vehicle in the Belarus. The accuracy of these models were analyzed and performance tested for real-world application with the help of a training and testing dataset.
 
-**OUR FINDINGS:** What we have found is that the Random forest tree had
-the best R2 value and error rate, meaning it had the best predictions.
-The two worst prediction models were the Multiple Linear Regression, and
-SVR Radial. Here is the list of of all of our results from each of our
-models. The lower the error rate the better, and the higher the R2 value
-the better the correlation the model has with the data.
+**OUR FINDINGS:** What we have found is that the Random forest tree had the best R2 value and error rate, meaning it had the best predictions. The two worst prediction models were the Multiple Linear Regression, and SVR Radial. Here is the list of of all of our results from each of our models. The lower the error rate the better, and the higher the R2 value the better the correlation the model has with the data.
 
-+----------------------------+------------+------------+-------------+
-| Machine-Learning Methods   | RMSE       | Error Rate | R-Square    |
-+:===========================+:==========:+:==========:+============:+
-| Multiple Linear Regression | **         | **         | **          |
-|                            | 4573.511** | 68.60393** | 0.5095891** |
-+----------------------------+------------+------------+-------------+
-| SVR Linear                 | **         | **         | **          |
-|                            | 3257.887** | 48.86921** | 0.7772176** |
-+----------------------------+------------+------------+-------------+
-| SVR Polynomial             |            |            |             |
-+----------------------------+------------+------------+-------------+
-| SVR Radial                 | **         | **         | **          |
-|                            | 4752.231** | 71.28478** | 0.5937837** |
-+----------------------------+------------+------------+-------------+
-| Decision Tree Regression   | **         | **         | **          |
-|                            | 3245.413** | 48.68209** | 0.7529956** |
-+----------------------------+------------+------------+-------------+
-| Random Forest Tree         | **         | **         | **          |
-| Regression                 | 1879.884** | 28.19878** | 0.9184761** |
-+----------------------------+------------+------------+-------------+
-| KNN(K Nearest Neighbor)    | **         | **         | **          |
-|                            | 3693.127** | 55.39793** | 0.6802895** |
-+----------------------------+------------+------------+-------------+
+| Machine-Learning Methods      |     RMSE     |  Error Rate  |      R-Square |
+|:------------------------------|:------------:|:------------:|--------------:|
+| Multiple Linear Regression    | **4470.274** | **67.57975** | **0.5190641** |
+| SVR Linear                    | **3257.887** | **48.86921** | **0.7772176** |
+| SVR Radial                    | **4752.231** | **71.28478** | **0.5937837** |
+| Decision Tree Regression      | **3245.413** | **48.68209** | **0.7529956** |
+| Random Forest Tree Regression | **1879.884** | **28.19878** | **0.9184761** |
+| KNN(K Nearest Neighbor)       | **3693.127** | **55.39793** | **0.6802895** |
 
-Lastly we have the results from the exchangeability predictive models.
-We have two different models to test the vehicle exchangeability, these
-two models are the decision tree and logistic regression. Both of these
-trees were very similar, however the decision tree was slightly better
-in predicting. exchangeability.
+Lastly we employed used two different models to test whether the vehicle owner was willing to exchange his vehicle. The two models that were used were the decision tree and logistic classification. Both of these trees were very similar, however the decision tree was determined to perform slightly better as an exploratory and predictive model.
 
 The reason for this being the case is because of these values.
 
-**Decision tree:**
+Decision tree: AUC: 0.653 Accuracy: 0.6872 Sensitivity: 0.7039 Specificity: 0.6062
 
-AUC: 0.653
+Logistic regression: AUC: 0.644 Accuracy: 0.6648 Sensitivity: 0.6846 Specificity: 0.6445
 
-Accuracy: 0.6872
+The AUC, accuracy, sensitivity, and specificity are higher in the decision tree. All of these values allow us to conclude that the Decision Tree produces a better predictive model.
 
-Sensitivity: 0.7039
+# Introduction:
 
-Specificity: 0.6062
+## Focus Problems
 
-**Logistic regression:**
+There are several objectives that will be the focal point of the research done on the used cars dataset. The main scope of this project is to create an effective predictive model for the price of a used in Vehicle in Belarus. As well as creating a predictive model for vehicle prices an exploratory and predictive model will be created for the likelihood of a vehicle owner being willing to exchange their vehicle. Several questions will be answered in the process of creating models and in an attempt to gain a further understanding of the overall dataset.
 
-AUC: 0.644
+## Problem Motivations
 
-Accuracy: 0.6648
+The popularity of the used vehicle market and personal experience in buying a vehicle led to initial intrigue in the used dataset. Furthermore, having a project member who was born in Eastern Europe led to added interest in how the vehicle market may look as opposed to the market in America. Also, personal experience with vehicle owners offering vehicle exchanges motivated the desire to create an exploratory and predictive model for the willingness of an owner to offer an exchange.
 
-Sensitivity: 0.6846
+## Problem Solving Methodology
 
-Specificity: 0.6445
-
-The AUC, accuracy, sensitivity, and specificity are higher in the
-decision tree. All of these values provide a better prediction when
-higher. Thus the decision tree is a better prediction.
-
-# Introduction: Overview of the problems/goals and how they will be solved
-
-There are several objectives that will be the focal point of the
-research done on the used cars dataset. First and foremost, we will be
-attempted to create a predictive model for the price of a used car given
-the attributes in the dataset. Since cars are such a big investment we
-all wondered what affected the price on cars. This is what sparked our
-initial questions and goals. Solving our proposed questions and goals we
-hope to gain insights in what affects car prices which would leave us
-with more knowledge we can use later in life. To solve our questions and
-answer our goal we are going to use R to make graphs to answer our
-questions. We will make sure to use different statistical analyses to
-make sure our graphs are confirmed to be accurate.
+To solve our questions and answer our goal we are going to use R to make graphs to answer our questions. We will make sure to use different statistical analyses to make sure our graphs are confirmed to be accurate.
 
 # Initial Questions
 
-The main goal is to create a predictive model based on insights gained
-from analyzing the impact of variables on the selling price of a
-vehicle. The goal was chosen for its applicability and general interest
-of which attributes impact price of a used car. Secondly, a model to
-predict whether a vehicle would be exchangeable or not will be created
-using a Decision Tree. In addition, there will be several questions that
-will be answered concerning the dataset. These questions aid in solving
-the main goal and are important insights to be gleaned from the dataset.
-The questions that will be answered about the dataset are as follows:
+The main goal is to create a predictive model based on insights gained from analyzing the impact of variables on the selling price of a vehicle. The goal was chosen for its applicability and general interest of which attributes impact price of a used car. Secondly, exploratory and predictive models to predict whether a vehicle would be exchangeable or not will be created using a Decision Tree and Logistic Classification will be used and analyzed for accuracy. In addition, there will be several questions that will be answered concerning the dataset. These questions aid in solving the main goal and are important insights to be gleaned from the dataset. The questions that will be answered about the dataset are as follows:
 
 -   What impact does a region have on price?
--   What is the distribution of manufacturers and whether manufacturers
-    have a significant impact on the asking price of a vehicle?
+-   What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
 -   What is the relationship between odometer and price?
 -   Does the number of photos a vehicle has impact the selling price?
--   Does the number of times a vehicle has been upped in the catalog to
-    raise its position impact the selling price?
--   Relationship between Engine Type and Body Type? What is the impact
-    of Engine Type and Body Type on the selling price?
--   What is the most popular model and whether we can conclude that the
-    popularity of a model has a direct impact on the price of a vehicle?
--   What is the average age of each vehicle manufacturer and whether the
-    manufacturer changes how the production year impacts the selling
-    price?
+-   Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
+-   Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
+-   What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
+-   What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the selling price?
 
 # Dataset: Source, Description, Cleaning, and other things related to the dataset
 
 ## Dataset Source
 
-Kaggle dataset: <https://www.kaggle.com/lepchenkov/usedcarscatalog> The
-dataset that was chosen was obtained from Kaggle and was scraped by an
-individual named Kirill Lepchenkov with the help of an associate named
-Vasily Kachalko who aided in parsing the data. This will be utilized to
-understand the effect certain characteristics have on the price point at
-which cars in Belarus are sold at. Analyzing cars that are for sale is
-beneficial in gaining an understanding on what contributes to how a used
-car would be priced and would allow for predicting the market price of a
-used car in Belarus.
+Kaggle dataset: <https://www.kaggle.com/lepchenkov/usedcarscatalog%22%20/> The dataset that was chosen was obtained from Kaggle and was scraped by an individual named Kirill Lepchenkov with the help of an associate named Vasily Kachalko who aided in parsing the data. This will be utilized to understand the effect certain characteristics have on the price point at which cars in Belarus are sold at. Analyzing cars that are for sale is beneficial in gaining an understanding on what contributes to how a used car would be priced and would allow for predicting the market price of a used car in Belarus.
 
 ## Dataset Description
 
-This dataset has 30 attributes with 38,531 samples. Of these attributes
-there is a mixture of Categorical (Nominal) as well as Numerical
-(Interval, Ratio) data. The attributes included in the dataset are
-Manufacturer Name, Model Name, Transmission Type, Color, Odometer Value,
-Year Produced, Engine Fuel, Engine Has Gas(Boolean), Engine Type, Engine
-Capacity, Body Type, Has Warranty(Boolean), (State) Condition of the
-Vehicle, Drivetrain Type, Price in USD, Exchangeability (Boolean),
-Location Region, Number of Photos, Number of Up Counts, Features
-{0,1,2,3,4,5,6,7,8,9}, and Duration Listed.
+This dataset has 30 attributes with 38,531 samples. Of these attributes there is a mixture of Categorical (Nominal) as well as Numerical (Interval, Ratio) data. The attributes included in the dataset are Manufacturer Name, Model Name, Transmission Type, Color, Odometer Value, Year Produced, Engine Fuel, Engine Has Gas(Boolean), Engine Type, Engine Capacity, Body Type, Has Warranty(Boolean), (State) Condition of the Vehicle, Drivetrain Type, Price in USD, Exchangeability (Boolean), Location Region, Number of Photos, Number of Up Counts, Features {0,1,2,3,4,5,6,7,8,9}, and Duration Listed.
 
 ## Data Cleaning
 
-To clean the dataset it was vital to open the csv file and investigate
-the types of attributes and samples that were given. To get a quick
-glance of the data we first open the csv file as follows:
+To clean the dataset it was vital to open the csv file and investigate the types of attributes and samples that were given. To get a quick glance of the data we first open the csv file as follows:
 
 ```{r ReadCars}
 cars <- read_csv("cars.csv")
 
 head(cars, 20)
-
 ```
 
-Afterwords, it was crucial to obtain a quick summary of our dataset in
-order to investigate the steps needed to clean the dataset. This was
-done with the following line of code:
+Afterwords, it was crucial to obtain a quick summary of our dataset in order to investigate the steps needed to clean the dataset. This was done with the following line of code:
 
 ```{r CarsSummary, fig.height = 15, fig.width = 20 }
 summary(cars)
 ```
 
-From the summary we clearly see that engine_has_gas, has_warranty, and
-state have very little variability and for that reason they will be
-removed from the dataset. Furthermore, upon researching the features
-attribute it was uncovered that the data had severe
-inconsistencies(according to the creator) and for that reason will be
-removed. Therefore, we run the select command in order to remove these
-attributes.
+From the summary we clearly see that engine_has_gas, has_warranty, and state have very little variability and for that reason they will be removed from the dataset. Furthermore, upon researching the features attribute it was uncovered that the data had severe inconsistencies(according to the creator) and for that reason will be removed. Therefore, we run the select command in order to remove these attributes.
 
 ```{r FilterAttributes}
 cars_edited <- dplyr::select(cars, -8 & -(12:13) & -(20:29))
 head(cars_edited, 20)
 ```
 
-Now to proceed with cleaning and analyzation we need a more robust
-knowledge of our dataset. For this reason it is vital to understand the
-type of data for each attribute. Therefore, we must create a table to
-organize all our attributes.
+Now to proceed with cleaning and analyzation we need a more robust knowledge of our dataset. For this reason it is vital to understand the type of data for each attribute. Therefore, we must create a table to organize all our attributes.
 
-+---+--------+---------------------------------------------------+-----+
-| C | D      | Value/(Units)                                     | D   |
-| o | etails |                                                   | ata |
-| l |        |                                                   | T   |
-| u |        |                                                   | ype |
-| m |        |                                                   |     |
-| n |        |                                                   |     |
-+:==+:======:+:=================================================:+====:+
-| A | Manufa | Name of vehicle manufacturer                      | N   |
-|   | cturer |                                                   | omi |
-|   | Name   |                                                   | nal |
-+---+--------+---------------------------------------------------+-----+
-| B | Model  | Name of vehicle model                             | N   |
-|   | Name   |                                                   | omi |
-|   |        |                                                   | nal |
-+---+--------+---------------------------------------------------+-----+
-| C | Transm | Type of the transmission                          | N   |
-|   | ission |                                                   | omi |
-|   |        |                                                   | nal |
-+---+--------+---------------------------------------------------+-----+
-| D | Color  | Vehicle body color                                | N   |
-|   |        |                                                   | omi |
-|   |        |                                                   | nal |
-+---+--------+---------------------------------------------------+-----+
-| E | Od     | Vehicle odometer value in km                      | C   |
-|   | ometer |                                                   | ont |
-|   | Value  |                                                   | inu |
-|   |        |                                                   | ous |
-+---+--------+---------------------------------------------------+-----+
-| F | Year   | The year the car was produced                     | C   |
-|   | Pr     |                                                   | ont |
-|   | oduced |                                                   | inu |
-|   |        |                                                   | ous |
-+---+--------+---------------------------------------------------+-----+
-| G | Engine | Fuel type of the engine                           | N   |
-|   | Fuel   |                                                   | omi |
-|   |        |                                                   | nal |
-+---+--------+---------------------------------------------------+-----+
-| I | Engine | Vehicle engine type                               | N   |
-|   | Type   |                                                   | omi |
-|   |        |                                                   | nal |
-+---+--------+---------------------------------------------------+-----+
-| J | Engine | The capacity of the engine in liters              | N   |
-|   | Ca     |                                                   | omi |
-|   | pacity |                                                   | nal |
-+---+--------+---------------------------------------------------+-----+
-| K | Body   | Type of the body (hatchback, sedan, etc.)         | N   |
-|   | Type   |                                                   | omi |
-|   |        |                                                   | nal |
-+---+--------+---------------------------------------------------+-----+
-| M | Driv   | Front/rear/all drivetrain                         | N   |
-|   | etrain |                                                   | omi |
-|   |        |                                                   | nal |
-+---+--------+---------------------------------------------------+-----+
-| N | Price  | Price of a cars as listed in the catalog in USD   | C   |
-|   | USD    |                                                   | ont |
-|   |        |                                                   | inu |
-|   |        |                                                   | ous |
-+---+--------+---------------------------------------------------+-----+
-| O | Exchan | If True the owner of the car is ready to exchange | N   |
-|   | geable | this car to other cars with little or no          | omi |
-|   |        | additional payment                                | nal |
-+---+--------+---------------------------------------------------+-----+
-| P | Lo     | The region in Belarus where the car is listed for | N   |
-|   | cation | sale                                              | omi |
-|   | Region |                                                   | nal |
-+---+--------+---------------------------------------------------+-----+
-| Q | Number | Number of photos the cas has                      | Con |
-|   | of     |                                                   | tin |
-|   | Photos |                                                   | ous |
-+---+--------+---------------------------------------------------+-----+
-| R | Up     | How many times the sample has been upped in the   | C   |
-|   | C      | catalog to raise its position                     | ont |
-|   | ounter |                                                   | inu |
-|   |        |                                                   | ous |
-+---+--------+---------------------------------------------------+-----+
-| S | Du     | Number of days the car is listed in the catalog   | C   |
-|   | ration |                                                   | ont |
-|   | Listed |                                                   | inu |
-|   |        |                                                   | ous |
-+---+--------+---------------------------------------------------+-----+
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| Column | Details           | Value/(Units)                                                                                                 | Data Type  |
++:=======+:=================:+:=============================================================================================================:+===========:+
+| A      | Manufacturer Name | Name of vehicle manufacturer                                                                                  | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| B      | Model Name        | Name of vehicle model                                                                                         | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| C      | Transmission      | Type of the transmission                                                                                      | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| D      | Color             | Vehicle body color                                                                                            | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| E      | Odometer Value    | Vehicle odometer value in km                                                                                  | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| F      | Year Produced     | The year the car was produced                                                                                 | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| G      | Engine Fuel       | Fuel type of the engine                                                                                       | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| I      | Engine Type       | Vehicle engine type                                                                                           | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| J      | Engine Capacity   | The capacity of the engine in liters                                                                          | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| K      | Body Type         | Type of the body (hatchback, sedan, etc.)                                                                     | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| M      | Drivetrain        | Front/rear/all drivetrain                                                                                     | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| N      | Price USD         | Price of a cars as listed in the catalog in USD                                                               | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| O      | Exchangeable      | If True the owner of the car is ready to exchange this car to other cars with little or no additional payment | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| P      | Location Region   | The region in Belarus where the car is listed for sale                                                        | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| Q      | Number of Photos  | Number of photos the cas has                                                                                  | Continous  |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| R      | Up Counter        | How many times the sample has been upped in the catalog to raise its position                                 | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| S      | Duration Listed   | Number of days the car is listed in the catalog                                                               | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
 
-From summary we notice that there exists 10 NA's in the attribute
-engine-capacity. Our understanding of vehicles informs us that
-engine-capacity is a categorical data-type and as such NA is crucial to
-our understanding of the data. The NA values serve as a distinguishment
-for the Electric Vehicles in the data. For the sake of future
-analyzation it will be useful to replace our NA values with an arbitrary
-number. We choose to change NA values to -1. Thus we do the following:
+From summary we notice that there exists 10 NA's in the attribute engine-capacity. Our understanding of vehicles informs us that engine-capacity is a categorical data-type and as such NA is crucial to our understanding of the data. The NA values serve as a distinguishment for the Electric Vehicles in the data. For the sake of future analyzation it will be useful to replace our NA values with an arbitrary number. We choose to change NA values to -1. Thus we do the following:
 
 ```{r HandlingNAValues}
 summary(cars_edited$engine_capacity)
@@ -306,9 +154,7 @@ cars_edited <- cars_edited %>% mutate(engine_capacity = coalesce(engine_capacity
 summary(cars_edited$engine_capacity)
 ```
 
-Once the unnecessary attributes were filtered and the NA's were
-accounted for it important to investigate for duplicate samples. The
-code for doing this procedure was as follows:
+Once the unnecessary attributes were filtered and the NA's were accounted for it important to investigate for duplicate samples. The code for doing this procedure was as follows:
 
 ```{r HandlingDuplicateData}
 count(cars_edited)
@@ -318,30 +164,15 @@ cars_edited <- cars_edited %>% distinct()
 count(cars_edited)
 ```
 
-Duplicate entries were identified and removed from the dataset. 41 such
-duplicate entries existed.
+Duplicate entries were identified and removed from the dataset. 41 such duplicate entries existed.
 
 ## Dataset Outliers
 
-To determine what to do with the outliers we identified the outliers for
-each continuous variable and created a separate dataset with no
-outliers. In order to gauge the impact of our outliers we will have to
-run our analytics through the dataset with the outliers and the dataset
-without the outliers.
+To determine what to do with the outliers we identified the outliers for each continuous variable and created a separate dataset with no outliers. In order to gauge the impact of our outliers we will have to run our analytics through the dataset with the outliers and the dataset without the outliers.
 
 ## Dataset Training and Testing
 
-For the purpose of effectively analyzing the real-world performance of
-the models that will be used to solve the question we split the dataset
-into a "Training" dataset and a "Testing dataset. The "Training" set
-comprised of a random selection of 80% of our dataset and the "Testing"
-was the rest of the samples not included in the "Training" dataset(20%).
-The reason for the split was the necessity to be able to access how
-accurately the models were able to predict the price of a vehicle given
-a separate portion of samples in the dataset. By testing our models
-against data not in our training set we can effectively see how well the
-model holds up with the addition of new vehicles we wish to predict.
-This was done as following:
+For the purpose of effectively analyzing the real-world performance of the models that will be used to solve the question we split the dataset into a "Training" dataset and a "Testing dataset. The "Training" set comprised of a random selection of 80% of our dataset and the "Testing" was the rest of the samples not included in the "Training" dataset(20%). The reason for the split was the necessity to be able to access how accurately the models were able to predict the price of a vehicle given a separate portion of samples in the dataset. By testing our models against data not in our training set we can effectively see how well the model holds up with the addition of new vehicles we wish to predict. This was done as following:
 
 ```{r TrainingandTestingDataset}
 set.seed(123)
@@ -354,18 +185,12 @@ test.data <- cars_edited[-training.samples,]
 
 ## Visualizations used to analyze data
 
-In an attempt to gain a robust knowledge of our dataset several
-visualizations were used. Visualization of our data was done in two
-sections. Initially each attribute was graphed in order to gain a
-general understanding of how the samples are distributed for each
-attribute. This was done with the help of Bar Graphs, Histograms,
-Boxplots, the count function, and pie graphs.
+In an attempt to gain a robust knowledge of our dataset several visualizations were used. Visualization of our data was done in two sections. Initially each attribute was graphed in order to gain a general understanding of how the samples are distributed for each attribute. This was done with the help of Bar Graphs, Histograms, Boxplots, the count function, and pie graphs.
 
 ```{r, ManDistrib, fig.height = 12, fig.width = 8}
 # 1)What is the distribution of manufacturers?
 ggplot(cars_edited, aes(y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name)) + geom_text(stat='count', aes(label=..count..), hjust=1)
 # We can see a large difference in the amount cars for each manufacturers. Volkswagen, Opel, BMW, Audio, AvtoVAZ, Ford, Renault, and Mercedes-Benz are the majot manufacturers.
-
 ```
 
 ```{r TransmissionDistrib, fig.height = 10, fig.width = 10}
@@ -441,7 +266,6 @@ pie(exchangeableCounted$n, labels = percentexchangeable, main = "Exchangeability
 legend("right", c("False", "True"), cex = 0.8,
        fill = rainbow(nrow(exchangeableCounted)))
 # Exchangeability is more common than anticipated. It will be interesting to see if pricier or cheaper cars consent to exchanges
-
 ```
 
 ```{r RegionDistrib, fig.height = 10, fig.width = 10}
@@ -477,11 +301,7 @@ ggplot(cars_edited) + geom_boxplot(mapping = aes(duration_listed))
 ggplot(cars_edited) + geom_histogram(aes(duration_listed))
 ```
 
-Once a general understanding of each attribute was gained we began to
-visualize various combinations of attributions. These visualizations
-were vital in seeing different relationships among our samples. The
-visualizations that were used were Balloon Plots, Scatterplots,
-frequency polygons, dplyr::summarize, and Boxplots.
+Once a general understanding of each attribute was gained we began to visualize various combinations of attributions. These visualizations were vital in seeing different relationships among our samples. The visualizations that were used were Balloon Plot, Scatterplot, frequency polygons, dplyr::summarize, and Boxplots.
 
 ```{r ManufByRegion, fig.height = 10, fig.width = 10}
 # 1) Graph to show the amount of cars(by manufacturer name) in a region BALLOON PLOT
@@ -525,62 +345,23 @@ ggplot(cars_edited) + geom_point(mapping = aes(x = number_of_photos, y = price_u
 cars_edited %>% group_by(manufacturer_name) %>% summarize(mean(price_usd))
 ```
 
-**To find an optimal model to predict whether a vehicle is exchangeable
-we utilized both a Decision Tree and Logistic Regression.**
+**To find an optimal model to predict whether a vehicle is exchangeable we utilized both a Decision Tree and Logistic Regression.**
 
-Logistic Regression: This is a very popular and powerful classification
-technique. Since we are dealing with a binary response variable the
-logistic regression is an optimal model to use.
+Logistic Regression: This is a very popular and powerful classification technique. Since we are dealing with a binary response variable the logistic regression is an optimal model to use.
 
-Decision Tree: Although the logistic regression model is extremely
-powerful we will still run the Decision Tree in an attempt to create a
-more accurate model. Due to the robust and simple nature of the decision
-tree it was important to use this model to predict exchangeability. This
-model should be able to handle any outliers in our data and provide an
-effective predictive model.
+Decision Tree: Although the logistic regression model is extremely powerful we will still run the Decision Tree in an attempt to create a more accurate model. Due to the robust and simple nature of the decision tree it was important to use this model to predict exchangeability. This model should be able to handle any outliers in our data and provide an effective predictive model.
 
-**Several machine learning techniques were used in an attempt to create
-the most accurate prediction model for our main goal. The models used in
-the project were as follows:**
+**Several machine learning techniques were used in an attempt to create the most accurate prediction model for our main goal. The models used in the project were as follows:**
 
-Multiple Linear Regression: This was used for the sake of gauging the
-impact of the continuous attributes on the price of the vehicle. This
-model is simple to understand and involves less computing power than
-more advance models which led to our decision to utilize this ML method
-as our first model.
+Multiple Linear Regression: This was used for the sake of gauging the impact of the continuous attributes on the price of the vehicle. This model is simple to understand and involves less computing power than more advance models which led to our decision to utilize this ML method as our first model.
 
-SVR: Used to see if there is a model that can handle every attribute and
-adjust the model according to its impact on price. Although this model
-involves much more computing power we believed that the robust nature of
-this model lends itself to a high level of accuracy. This models
-effectiveness with categorical data, and ability to work with both
-linear and non-linear boundaries makes it a prime model for our dataset.
-Furthermore, in order to optimize our SVR model we will use linear,
-polynomial, and radial kernel transformations and compare the results
-from the models that we generate.
+SVR: Used to see if there is a model that can handle every attribute and adjust the model according to its impact on price. Although this model involves much more computing power we believed that the robust nature of this model lends itself to a high level of accuracy. This models effectiveness with categorical data, and ability to work with both linear and non-linear boundaries makes it a prime model for our dataset. Furthermore, in order to optimize our SVR model we will use linear, polynomial, and radial kernel transformations and compare the results from the models that we generate.
 
-Decision Tree (Partition): Used for predictive modeling. Since it is
-incredibly robust and relies on very few assumptions we believed it
-would be able to handle possible outliers in our data and work around
-the size of our dataset to produce an optimal model. Its simpler nature
-also makes it a model that would be preferred over other models(such as
-Random Forest Regression or KNN).
+Decision Tree (Partition): Used for predictive modeling. Since it is incredibly robust and relies on very few assumptions we believed it would be able to handle possible outliers in our data and work around the size of our dataset to produce an optimal model. Its simpler nature also makes it a model that would be preferred over other models(such as Random Forest Regression or KNN).
 
-Random Forest Regression: Albeit, Random Forest Regression is more
-complicated than a Decision Tree since it leverages multiple decision
-trees it is still a crucial model for our dataset. The reason for using
-this model is for the sake of seeing if we can create an even more
-accurate model. If we find the accuracy is marginally better it may be
-preferred to use a Decision Tree since its easier to compute.
-Nevertheless, the Random Forest Regression is a wonderful tool in
-creating a predictive model and worth testing out for the sake of
-optimization.
+Random Forest Regression: Albeit, Random Forest Regression is more complicated than a Decision Tree since it leverages multiple decision trees it is still a crucial model for our dataset. The reason for using this model is for the sake of seeing if we can create an even more accurate model. If we find the accuracy is marginally better it may be preferred to use a Decision Tree since its easier to compute. Nevertheless, the Random Forest Regression is a wonderful tool in creating a predictive model and worth testing out for the sake of optimization.
 
-KNN:K Nearest Neighbor was chosen due to its popularity and simplicity.
-KNN is able to handle our Categorical as well as Continuous attributes
-and for that reason it is a good model to be used to predict price. It
-will be vital to compare this model with the other models to investigate
-how useful of a model it is for our dataset.
+KNN:K Nearest Neighbor was chosen due to its popularity and simplicity. KNN is able to handle our Categorical as well as Continuous attributes and for that reason it is a good model to be used to predict price. It will be vital to compare this model with the other models to investigate how useful of a model it is for our dataset.
 
 # Final outcomes and Analysis
 
@@ -588,17 +369,11 @@ how useful of a model it is for our dataset.
 
 #### **Q1:** What impact does a region have on price?
 
-**A: Although the region does impact price the extent of this impact
-would have to be assessed in a model that includes more attributes. The
-reason for this is because correlation does not necessitate causation.
-In other words, more attributes may be at play and to get a better
-understanding of the impact of region on price it will be vital to
-access the role region has in the overall models.**
+**A: Although the region does impact price the extent of this impact would have to be assessed in a model that includes more attributes. The reason for this is because correlation does not necessitate causation. In other words, more attributes may be at play and to get a better understanding of the impact of region on price it will be vital to access the role region has in the overall models.**
 
 **Justification:**
 
-To answer this question we decided to use a bar chart in order to see
-the average prices per region in comparison with each other.
+To answer this question we decided to use a bar chart in order to see the average prices per region in comparison with each other.
 
 ```{r regionPrice, fig.height = 8, fig.width = 10, echo=FALSE}
 #Aggregating the data of price to region to get the mean of prices
@@ -608,19 +383,9 @@ regionPriceDF_averages <- summarise(regionPriceDF, average_price_usd = mean(pric
 ggplot(regionPriceDF_averages,aes(x= location_region, y = average_price_usd)) + geom_bar(stat = "identity") 
 ```
 
-Looking at the graph we can predict that region may play a part in
-price. We derive this prediction from the observation that although most
-regions have similar vehicle price averages Minsk has a significantly
-higher average. However, we can't conclude that with just this graph, we
-need to confirm this by an appropriate test. The test used to see if
-region did in fact have a significant impact of price was the One-Way
-Anova Test. Anova was used because the region attribute consists of
-several categories and we wished to see its impact on a single
-continuous variable.
+Looking at the graph we can predict that region may play a part in price. We derive this prediction from the observation that although most regions have similar vehicle price averages Minsk has a significantly higher average. However, we can't conclude that with just this graph, we need to confirm this by an appropriate test. The test used to see if region did in fact have a significant impact of price was the One-Way Anova Test. Anova was used because the region attribute consists of several categories and we wished to see its impact on a single continuous variable.
 
-Prior to doing the One-Way Anova test we first performed some data
-transformation to gain a better understanding of the differences between
-the region prices.
+Prior to doing the One-Way Anova test we first performed some data transformation to gain a better understanding of the differences between the region prices.
 
 ```{r SummarizeRegion}
 group_by(regionPriceDF, regionPriceDF$location_region) %>%
@@ -631,9 +396,7 @@ group_by(regionPriceDF, regionPriceDF$location_region) %>%
   )
 ```
 
-Once again quick inspection tells us that Minsk has a significantly
-different price and a much larger count. To affirm our suspicions from
-the graph and summarize we now perform the Anova test.
+Once again quick inspection tells us that Minsk has a significantly different price and a much larger count. To affirm our suspicions from the graph and summarize we now perform the Anova test.
 
 The hypotheses for the test are as follows:
 
@@ -641,8 +404,7 @@ H~0~ = The means of the different groups are the same
 
 H~a~ = At least one sample mean is not equal to the others
 
-Furthermore, we will use 0.05 as our significance level. The result of
-the anova test was the following:
+Furthermore, we will use 0.05 as our significance level. The result of the anova test was the following:
 
 ```{r AnovaRegion}
 # Compute the analysis of variance
@@ -652,58 +414,37 @@ res.aov <- aov(regionPriceDF$price_usd ~ regionPriceDF$location_region,
 summary(res.aov)
 ```
 
-Looking at the results of the one-way anova we can confirm our
-prediction. The p-value was less than 0.05(\<2e-16) and so we conclude
-that there are significant differences between the regions.
+Looking at the results of the one-way anova we can confirm our prediction. The p-value was less than 0.05(\<2e-16) and so we conclude that there are significant differences between the regions.
 
-We continue our investigation of the problem at hand by using Tukey HSD
-to do multiple pairwise-comparisons between the means of our groups.
+We continue our investigation of the problem at hand by using Tukey HSD to do multiple pairwise-comparisons between the means of our groups.
 
 ```{r RegionTukeyTest}
 # Tukey Test
 TukeyHSD(res.aov)
 ```
 
-**Analyzing the results we can conclude that the differences in average
-price between Minsk and every other region is statistically significant.
-The data set region does have an impact on vehicle price.**
+**Analyzing the results we can conclude that the differences in average price between Minsk and every other region is statistically significant. The data set region does have an impact on vehicle price.**
 
 ------------------------------------------------------------------------
 
 #### **Q2:** What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
 
-**A: We can confirm that there is a relationship between the
-manufacturer and asking price. The relationship seems to be one of the
-larger factor for asking price, but is not significant enough to predict
-price on its own.**
+**A: We can confirm that there is a relationship between the manufacturer and asking price. The relationship seems to be one of the larger factor for asking price, but is not significant enough to predict price on its own.**
 
 **Justification:**
 
-Two bar graphs were used in solving this question. First a bar graph was
-used to plot the distribution of vehicles for each manufacturer. Then
-another bar graph was used as a means of quickly inspecting how average
-price ranged between different manufacturers. As useful as these graph
-were in understanding the relationship between price and manufacturer it
-proved to be insufficient in proving a result. In order to prove that
-there existed a significant relationship between manufacturer and asking
-price of a car One-Way Anova was utilized. Once again were were dealing
-with a categorical data with several categories which lends the problem
-nicely to this sort of test.
+Two bar graphs were used in solving this question. First a bar graph was used to plot the distribution of vehicles for each manufacturer. Then another bar graph was used as a means of quickly inspecting how average price ranged between different manufacturers. As useful as these graph were in understanding the relationship between price and manufacturer it proved to be insufficient in proving a result. In order to prove that there existed a significant relationship between manufacturer and asking price of a car One-Way Anova was utilized. Once again were were dealing with a categorical data with several categories which lends the problem nicely to this sort of test.
 
-First a bar graph was used to effectively plot the distribution of
-vehicles for each manufacturer.
+First a bar graph was used to effectively plot the distribution of vehicles for each manufacturer.
 
 ```{r manufacturerVsCount, fig.height = 9, fig.width = 12}
 # 1)What is the distribution of manufacturers?
 ggplot(cars_edited, aes(y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name)) + geom_text(stat='count', aes(label=..count..), hjust=1)
 ```
 
-Once the distribution of the Manufacturers was plotted we turned our
-attention onto the second part of the question: Whether manufacturers
-have a significant impact on the asking price of a vehicle?
+Once the distribution of the Manufacturers was plotted we turned our attention onto the second part of the question: Whether manufacturers have a significant impact on the asking price of a vehicle?
 
-Another bar graph was used as a means of quickly inspecting how average
-price ranged between different manufacturers.
+Another bar graph was used as a means of quickly inspecting how average price ranged between different manufacturers.
 
 ```{r manufacturerVsPrice, fig.height = 9, fig.width = 12}
 manuPriceDF <- group_by(cars_edited, manufacturer_name)
@@ -711,12 +452,7 @@ manuPriceDF_averages <- summarise(manuPriceDF, average_price_usd = mean(price_us
 ggplot(manuPriceDF_averages, aes(x = average_price_usd, y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name),stat="identity") + geom_text(aes(label =  paste0("$",round(average_price_usd)), hjust = 1))
 ```
 
-Looking at the bar graph we can predict that the manufacturer of a
-vehicle has an impact on asking price. Nevertheless, observation is not
-sufficient evidence and so we proceed by testing this claim. Once again
-we are dealing with categorical data and we wish to compare the means of
-the prices for the Manufacturers. Naturally we chose the One-Way Anova
-test to test our claim.
+Looking at the bar graph we can predict that the manufacturer of a vehicle has an impact on asking price. Nevertheless, observation is not sufficient evidence and so we proceed by testing this claim. Once again we are dealing with categorical data and we wish to compare the means of the prices for the Manufacturers. Naturally we chose the One-Way Anova test to test our claim.
 
 The hypotheses for the test are as follows:
 
@@ -724,8 +460,7 @@ H~0~ = The mean prices of the different groups are the same
 
 H~a~ = At least one sample mean price is not equal to the others
 
-Furthermore, we will use 0.05 as our significance level. The result of
-the anova test was the following:
+Furthermore, we will use 0.05 as our significance level. The result of the anova test was the following:
 
 ```{r ManufSummaryAndAnova}
 manuSumm <- group_by(manuPriceDF, manuPriceDF$manufacturer_name) %>%
@@ -742,26 +477,19 @@ res.aovTwo <- aov(manuPriceDF$price_usd ~ manuPriceDF$manufacturer_name,
 summary(res.aovTwo)
 ```
 
-Investigating the results of the one-way anova we can confirm our claim.
-The p-value was less than 0.05(\<2e-16) and so we conclude that there
-are significant differences between the manufacturers.
+Investigating the results of the one-way anova we can confirm our claim. The p-value was less than 0.05(\<2e-16) and so we conclude that there are significant differences between the manufacturers.
 
-We continue with the Tukey HSD to do multiple pairwise-comparisons
-between the means of our groups. This will allow us to see exactly which
-manufacturers significantly differ in asking price.
+We continue with the Tukey HSD to do multiple pairwise-comparisons between the means of our groups. This will allow us to see exactly which manufacturers significantly differ in asking price.
 
 ```{r ManufTukey, eval=FALSE, include=TRUE}
-# Result ommitted for brevity sake}
+# Result ommitted for brevity sake
 # Tukey Test
 TukeyHSD(res.aovTwo)
 ```
 
-With the results see that numerous manufacturers are statistically
-different and we can use this data to list every statistically different
-manufacturer.
+With the results see that numerous manufacturers are statistically different and we can use this data to list every statistically different manufacturer.
 
-**We can confirm that there is a relationship between the manufacturer
-and asking price.**
+**We can confirm that there is a relationship between the manufacturer and asking price.**
 
 ------------------------------------------------------------------------
 
@@ -771,227 +499,159 @@ and asking price.**
 
 **Justification:**
 
-Initially a Scatter plot was used to quickly inspect for possible
-relationships between price and odometer.
+Initially a Scatter plot was used to quickly inspect for possible relationships between price and odometer.
 
 ```{r OdometerPrice, echo=FALSE}
 ggplot (cars_edited, aes( x =odometer_value, y=price_usd)) + geom_point() + stat_smooth()
 ```
 
-When we investigate this graph we initially notice that the line of best
-fit seems to be going down as the odometer value increases.
-Nevertheless, the data had a significant amount of variation and further
-testing would need to be done to confirm our results.
+When we investigate this graph we initially notice that the line of best fit seems to be going down as the odometer value increases. Nevertheless, the data had a significant amount of variation and further testing would need to be done to confirm our results.
 
-Since we are investigating the relationship between 2 continuous
-variables we begin by using a correlation test.
+Since we are investigating the relationship between 2 continuous variables we begin by using a correlation test.
 
 The hypotheses for the test are as follows:
 
-H~0~ =There does not exist a correlation between Odometer Value and
-Vehicle Price
+H~0~ =There does not exist a correlation between Odometer Value and Vehicle Price
 
-H~a~ = There does exist a correlation between Odometer Value and Vehicle
-Price
+H~a~ = There does exist a correlation between Odometer Value and Vehicle Price
 
-Furthermore, we will use 0.05 as our significance level. The result of
-the correlation test was the following:
+Furthermore, we will use 0.05 as our significance level. The result of the correlation test was the following:
 
 ```{r OdometerPriceCor}
 #Getting cor value
 cor.test(cars_edited$odometer_value, cars_edited$price_usd)
 ```
 
-Since the p-value is less than 0.05 we can conclude that Price and
-Odometer are significantly correlated with a correlation coefficient of
--0.4201039 and p-value of \< 2.2e-16
+Since the p-value is less than 0.05 we can conclude that Price and Odometer are significantly correlated with a correlation coefficient of -0.4201039 and p-value of \< 2.2e-16
 
-We continue with our question by investigating how good of an indicator
-of price odometer is. To do this we will use linear regression, and
-check the percentage of accuracy of that line. Afterwords, we will graph
-the linear regression line to provide us with a useful visual.
+We continue with our question by investigating how good of an indicator of price odometer is. To do this we will use linear regression, and check the percentage of accuracy of that line. Afterwords, we will graph the linear regression line to provide us with a useful visual.
 
-```{r odometerLm, echo=FALSE}
+```{r odometerLm}
+set.seed(123)
 odometer_on_price <- lm (price_usd ~ odometer_value, data = cars_edited)
 
 ggplot (cars_edited, aes(x=odometer_value, y=price_usd)) + geom_point() + stat_smooth(method=lm)
 ```
 
-Once the linear regression model is created and graphed we proceed to
-check the R2 to see the proportion of the prices that can be explained
-by the model, the variability of the beta coefficients, and the
-percentage error.
+Once the linear regression model is created and graphed we proceed to check the R2 to see the proportion of the prices that can be explained by the model, the variability of the beta coefficients, and the percentage error.
 
 ```{r OdometerPriceAccuracy}
 summary(odometer_on_price)
 confint(odometer_on_price)
 #                       2.5 %        97.5 %
-#(Intercept)     1.145654e+04  1.169971e+04
-#odometer_value -2.028451e-02 -1.942748e-02
+#(Intercept)     1.147053e+04  1.171322e+04
+#odometer_value -2.032581e-02 -1.947015e-02
 
 sigma(odometer_on_price)*100/mean(cars_edited$price_usd)
-#[1] 87.89188
+# [1] 87.80444
 ```
 
-The R2 is 0.1765 which indicates that a low proportion of prices in the
-data can be explained by the model. Furthermore, the percentage error is
-87.89188 which confirms how poor a model would be if it solely used
-odometer to predict price.
+The R2 is 0.1774 which indicates that a low proportion of prices in the data can be explained by the model. Furthermore, the percentage error is 87.80444 which confirms how poor a model would be if it solely used odometer to predict price.
 
-**We can conclude that the higher the odometer the lower the price of
-the vehicle will be.** Nevertheless, our linear regression model informs
-us that in order to create an accurate model we will need to consider
-more attributes.
+**We can conclude that the higher the odometer the lower the price of the vehicle will be.** Nevertheless, our linear regression model informs us that in order to create an accurate model we will need to consider more attributes.
 
 ------------------------------------------------------------------------
 
 #### **Q4:** Does the number of photos a vehicle has impact the selling price?
 
-**A: There exists a low positive correlation between number of photos a
-vehicle has and the selling price.**
+**A: There exists a low positive correlation between number of photos a vehicle has and the selling price.**
 
 **Justification:**
 
-In order to gain an intuitive understanding of the question we sought to
-use a scatter plot to see the relationship between price and number of
-photos.
+In order to gain an intuitive understanding of the question we sought to use a scatter plot to see the relationship between price and number of photos.
 
 ```{r NumPhotosPrice, fig.height = 10, fig.width = 10}
 #Scatter plot: Number of photos and price
 ggplot(cars_edited, aes( x =number_of_photos, y=price_usd)) + geom_hex() + stat_smooth(color = "red") 
 ```
 
-When we look at this graph we can see that although there exists a line.
-Nevertheless, the data had a significant amount of variation and further
-testing would need to be done to get a result. It does seem that there
-will be a very little(if any) correlation between price and number of
-photos.
+When we look at this graph we can see that although there exists a line. Nevertheless, the data had a significant amount of variation and further testing would need to be done to get a result. It does seem that there will be a very little(if any) correlation between price and number of photos.
 
-Since we are investigating the relationship between 2 continuous
-variables we will be using the correlation test.
+Since we are investigating the relationship between 2 continuous variables we will be using the correlation test.
 
 The hypotheses are as follows:
 
-H~0~ =There does not exist a correlation between Number of Photos and
-Vehicle Price
+H~0~ =There does not exist a correlation between Number of Photos and Vehicle Price
 
-H~a~ = There does exist a correlation between Number of Photos and
-Vehicle Price
+H~a~ = There does exist a correlation between Number of Photos and Vehicle Price
 
-We will use 0.05 as our significance level. The result of the
-correlation test was the following:
+We will use 0.05 as our significance level. The result of the correlation test was the following:
 
 ```{r NumPhotosPriceCor}
 #getting the cor value
 cor.test(cars_edited$number_of_photos, cars_edited$price_usd)
 ```
 
-Since the p-value is less than 0.05 we can conclude that Price and
-Number of Photos are significantly correlated with a correlation
-coefficient of 0.3161726 and p-value of \< 2.2e-16
+Since the p-value is less than 0.05 we can conclude that Price and Number of Photos are significantly correlated with a correlation coefficient of 0.3161726 and p-value of \< 2.2e-16
 
-Next we aim to investigate how good of an indicator of price the number
-of vehicle photos is. We shall employ linear regression, check the
-percentage of accuracy of that line, and graph the linear regression
-line to provide us with a useful visual.
+Next we aim to investigate how good of an indicator of price the number of vehicle photos is. We shall employ linear regression, check the percentage of accuracy of that line, and graph the linear regression line to provide us with a useful visual.
 
 ```{r NumPhotosPriceLMandPlot, fig.height = 10, fig.width = 10}
 #Getting the formula for linear regression
+set.seed(123)
 number_of_photos_on_price <- lm (price_usd ~ number_of_photos, data = cars_edited)
 
 #Scatter plot: Number of photos and price with linear regression line
 ggplot (cars_edited, aes(x=number_of_photos, y=price_usd)) + geom_point() + stat_smooth(method=lm)
 ```
 
-Although the linear regression model is created and graphed there
-remains information and insights to be gleaned. We proceed to check the
-R2 to see the proportion of the prices that can be explained by the
-model, the variability of the beta coefficients, and the percentage
-error.
+Although the linear regression model is created and graphed there remains information and insights to be gleaned. We proceed to check the R2 to see the proportion of the prices that can be explained by the model, the variability of the beta coefficients, and the percentage error.
 
 ```{r NumPhotosPriceAccuracy}
 summary(number_of_photos_on_price)
 
-# R^2 is very low(0.09994) which tells us that number of photos is not a good indicator of price. 
+# R^2 is very low(0.1004) which tells us that number of photos is not a good indicator of price. 
 # We can suspect that several more variables are in play.
 
 confint(number_of_photos_on_price)
-#                    2.5 %    97.5 %
-#(Intercept)      3304.283 3532.2680
-#number_of_photos  323.305  343.2882
+#                     2.5 %    97.5 %
+#(Intercept)      3300.5010 3528.5452
+#number_of_photos  324.2843  344.2673
 sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
 # Our prediction error rate is extremely high (91.82279%) which explains the low correlation
 ```
 
-The R2 is 0.09994 which indicates that a low proportion of prices in the
-data can be explained by the model. In other words, number of photos is
-not a good indicator of price(more attributes are needed in a model).
-Also, the percentage error is 91.88472 which is very high. This confirms
-how poor a model would be if it solely used number of photos to predict
-price.
+The R2 is 0.1004 which indicates that a low proportion of prices in the data can be explained by the model. In other words, number of photos is not a good indicator of price(more attributes are needed in a model). Also, the percentage error is 91.82279 which is very high. This confirms how poor a model would be if it solely used number of photos to predict price.
 
-**We can conclude there is a low negative correlation between price and
-odometer.** Our linear regression model tells us that to create an
-accurate model we will need to consider more attributes.
+**We can conclude there is a low negative correlation between price and odometer.** Our linear regression model tells us that to create an accurate model we will need to consider more attributes.
 
 ------------------------------------------------------------------------
 
 #### **Q5:** Does the number of times a vehicle has been upped in the catalog to raise its position impact the selling price?
 
-**A:** **The number of times a vehicle has been upped has a negligible
-impact on the selling price.**
+**A:** **The number of times a vehicle has been upped has a negligible impact on the selling price.**
 
 **Justification:**
 
-Graphs used: Scatter plot How these graphs helped us solve the problem:
-Using a scatter plot for this question again allowed us to see the
-relationship between the two variables. With that we can come up with a
-solution to the question.
+Graphs used: Scatter plot How these graphs helped us solve the problem: Using a scatter plot for this question again allowed us to see the relationship between the two variables. With that we can come up with a solution to the question.
 
-To begin answering this questions it was natural to use scatterplot
-(using 2 continuous attributes) to gain an intuitive understanding of
-any possible relationship.
+To begin answering this questions it was natural to use scatterplot (using 2 continuous attributes) to gain an intuitive understanding of any possible relationship.
 
 ```{r upCounterPlot, fig.height = 10, fig.width = 10}
 #Regression analysis
 ggplot(cars_edited, aes( x =up_counter, y=price_usd)) + geom_hex() + stat_smooth(color = "red")
 ```
 
-Looking at the Scatterplot we see a possible positive correlation
-although the variability of the data makes it hard for us to affirm this
-prediction. To continue we will use the correlation test(since we are
-dealing with continuous attributes) to check for a correlation between
-number of up counts and price of a vehicle.
+Looking at the Scatterplot we see a possible positive correlation although the variability of the data makes it hard for us to affirm this prediction. To continue we will use the correlation test(since we are dealing with continuous attributes) to check for a correlation between number of up counts and price of a vehicle.
 
 The hypotheses for the correlation test are the following:
 
-H~0~ =There does not exist a correlation between number of up counts and
-vehicle price
+H~0~ =There does not exist a correlation between number of up counts and vehicle price
 
-H~a~ = There does exist a correlation between number of up counts and
-vehicle price
+H~a~ = There does exist a correlation between number of up counts and vehicle price
 
-We will use 0.05 as our significance level. The results are the
-following:
+We will use 0.05 as our significance level. The results are the following:
 
 ```{r upCountCor}
 #Correlation
 cor.test(cars_edited$up_counter, cars_edited$price_usd)
 ```
 
-Since the p-value is less than 0.05 we can conclude that Price and
-number of up counts are correlated with a correlation coefficient of
-0.05777007 and p-value of \< 2.2e-16.
+Since the p-value is less than 0.05 we can conclude that Price and number of up counts are correlated with a correlation coefficient of 0.05777007 and p-value of \< 2.2e-16.
 
-However, although they are correlated we do see that the correlation
-coefficient is very close to 0. Meaning that the correlation is almost
-entirely negligible. If one were to attempt to use this as a predictor
-of price the results would be poor.
+However, although they are correlated we do see that the correlation coefficient is very close to 0. Meaning that the correlation is almost entirely negligible. If one were to attempt to use this as a predictor of price the results would be poor.
 
-Nevertheless,we will use linear regression to see how poor of an
-indicator number of up counts really is. We will check the percentage of
-accuracy of the linear regression line, and graph the linear regression
-line to provide useful insights.
+Nevertheless,we will use linear regression to see how poor of an indicator number of up counts really is. We will check the percentage of accuracy of the linear regression line, and graph the linear regression line to provide useful insights.
 
 ```{r UpCounterLM/Accuracy/Plot, fig.height = 10, fig.width = 10}
 # Create LM
@@ -1010,47 +670,26 @@ sigma(up_counter_on_price)*100/mean(cars_edited$price_usd)
 ggplot (cars_edited, aes(x=up_counter, y=price_usd)) + geom_point() + stat_smooth(method=lm)
 ```
 
-The R2 is 0.003311 which indicates that a low proportion of prices in
-the data can be explained by the model. In other words, number of up
-counts is a very poor indicator of price(we need more attributes in the
-model). Also, the percentage error is 96.69137 which is ludicrously
-high. This confirms how poor a model would be if it solely used number
-of up counts to predict price.
+The R2 is 0.003311 which indicates that a low proportion of prices in the data can be explained by the model. In other words, number of up counts is a very poor indicator of price(we need more attributes in the model). Also, the percentage error is 96.69137 which is ludicrously high. This confirms how poor a model would be if it solely used number of up counts to predict price.
 
-**We can conclude there is a negligible positive correlation between
-price and number of up counts.**
+**We can conclude there is a negligible positive correlation between price and number of up counts.**
 
 ------------------------------------------------------------------------
 
 #### **Q6:** Relationship between Engine Type and Body Type? What is the impact of Engine Type and Body Type on the selling price?
 
-**A: Sedan and Gasoline is the most common followed by Gasoline and
-Hatchback. Engine Type and Body Type do have an impact on the selling
-price, but the extend of this impact will need to be investigated in our
-overall model.**
+**A: Sedan and Gasoline is the most common followed by Gasoline and Hatchback. Engine Type and Body Type do have an impact on the selling price, but the extend of this impact will need to be investigated in our overall model.**
 
 **Justification**:
 
-To begin this question it was important to have a working knowledge of
-how body type and engine type related to one another. Initially a Mosaic
-plot felt like the right graph to show relationships, but the quantity
-of categories made a balloon plot much easy to read. The spacious nature
-of the balloon plot greatly aided in gaining insights from the data and
-pushed further investigation.
+To begin this question it was important to have a working knowledge of how body type and engine type related to one another. Initially a Mosaic plot felt like the right graph to show relationships, but the quantity of categories made a balloon plot much easy to read. The spacious nature of the balloon plot greatly aided in gaining insights from the data and pushed further investigation.
 
 ```{r EngBodyBalloonPlot, fig.height = 10, fig.width = 10}
 # Balloon Plot
 ggplot(cars_edited, aes(body_type, engine_type)) + geom_count()
 ```
 
-Based on this Balloon plot we can see that several combinations of body
-types and engine types do not exist. Furthermore, there seems to be
-higher quantities of hatchbacks with gasoline engines and sedans with
-gasoline engines. Nevertheless, visualization does not suffice in
-proving any relationship. We shall proceed with a Chi-Square test for
-more information. The reason for a Chi-Square test is that we are
-attempting to analyze the frequency table of two categorical
-variables(engine type and body type).
+Based on this Balloon plot we can see that several combinations of body types and engine types do not exist. Furthermore, there seems to be higher quantities of hatchbacks with gasoline engines and sedans with gasoline engines. Nevertheless, visualization does not suffice in proving any relationship. We shall proceed with a Chi-Square test for more information. The reason for a Chi-Square test is that we are attempting to analyze the frequency table of two categorical variables(engine type and body type).
 
 The hypotheses for the Chi-Square test are as follows:
 
@@ -1058,8 +697,7 @@ H~0~ = Engine Type and Body Type are independent
 
 H~a~ = Engine Type and Body Type are dependent
 
-The test will be performed with 0.05 as our significance level. The
-results are the following:
+The test will be performed with 0.05 as our significance level. The results are the following:
 
 ```{r EngineBodyChiSquare}
 #Chi-Square Test
@@ -1067,52 +705,35 @@ engine_body.data <- table(cars_edited$body_type, cars_edited$engine_type)
 chisq.test(engine_body.data)
 ```
 
-The result of the Chi-Square Test tells us that Engine Type and Body
-Type are dependent.
+The result of the Chi-Square Test tells us that Engine Type and Body Type are dependent.
 
-We continue with a proportion table to give us an easy way of seeing the
-distribution of engine type and body type.
+We continue with a proportion table to give us an easy way of seeing the distribution of engine type and body type.
 
 ```{r EngineBodyPropTable}
 # Table
 prop.table(engine_body.data)*100
 ```
 
-From the table we can clearly see that Hatchback and Gasoline as well as
-Sedan and Gasoline are the most common combinations of the two variables
-as we suspected from the balloon plot.
+From the table we can clearly see that Hatchback and Gasoline as well as Sedan and Gasoline are the most common combinations of the two variables as we suspected from the balloon plot.
 
-We continue by attempting to solve that second part of the question.
-That is, what is the impact of Engine Type and Body Type on the selling
-price?
+We continue by attempting to solve that second part of the question. That is, what is the impact of Engine Type and Body Type on the selling price?
 
-The most effective method of solving this question is with the use of
-the Two-Way Anova. The reason for the use of this test is because we are
-attempting to evaluate the simultaneous effect of two grouping
-variables(engine and body type) on a response variable(price).
+The most effective method of solving this question is with the use of the Two-Way Anova. The reason for the use of this test is because we are attempting to evaluate the simultaneous effect of two grouping variables(engine and body type) on a response variable(price).
 
 The hypotheses for the Two-Way Anova test are:
 
-H~o~ = 1. There is no difference in the means of Engine Type 2. There is
-no difference in the means of Body Type. 3. There is no interaction
-between engine and body type
+H~o~ = 1. There is no difference in the means of Engine Type 2. There is no difference in the means of Body Type. 3. There is no interaction between engine and body type
 
-Ha = For cases 1 and 2 the means are not equal and for case 3 there is
-an interaction between Engine and Body Type.
+Ha = For cases 1 and 2 the means are not equal and for case 3 there is an interaction between Engine and Body Type.
 
 ```{r EngineBodyAnova}
 body_engine_type_on_price.aov <- aov(price_usd ~ engine_type * body_type, data = cars_edited)
 summary(body_engine_type_on_price.aov)
 ```
 
-Since the p-value is less than 0.05 for all three cases we can confirm
-that there is a difference in the means of Engine Type, the means of
-Body Type, and there is an interaction between Engine and Body Type.
+Since the p-value is less than 0.05 for all three cases we can confirm that there is a difference in the means of Engine Type, the means of Body Type, and there is an interaction between Engine and Body Type.
 
-To conclude our investigation we will run the Tukey Honest Significant
-Differences in order to perform the multiple pairwise-comparisons
-between the means of groups to determine which groups are different and
-how they differ.
+To conclude our investigation we will run the Tukey Honest Significant Differences in order to perform the multiple pairwise-comparisons between the means of groups to determine which groups are different and how they differ.
 
 ```{r EngineBodyTukey, eval=FALSE, include=TRUE}
 # Result ommitted for brevity sake}
@@ -1127,26 +748,19 @@ TukeyHSD(body_engine_type_on_price.aov)
 ## gasoline-electric -11227.891 -15412.002 -7043.779 0e+00
 ```
 
-The Tukey Test results can be evaluated to gain more detailed
-information on the relationship between price and Engine/Body Type.
+The Tukey Test results can be evaluated to gain more detailed information on the relationship between price and Engine/Body Type.
 
-**These tests confirm our that Engine Type and Body Type significantly
-impact the selling price of a vehicle.**
+**These tests confirm our that Engine Type and Body Type significantly impact the selling price of a vehicle.**
 
 ------------------------------------------------------------------------
 
 #### **Q7:** What is the most popular model and whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
 
-**A**: **The most popular is the Passat. Furthermore, The popularity of
-a vehicle does seem to have an impact on the average_price of a vehicle.
-However, more attributes would be needed to predict price.**
+**A**: **The most popular is the Passat. Furthermore, The popularity of a vehicle does seem to have an impact on the average_price of a vehicle. However, more attributes would be needed to predict price.**
 
 **Justification:**
 
-The nature of the first part of the question informs us that we can
-figure out the most popular model without a graph. To find the most
-popular model we performed a count on every model and printed out the
-result.
+The nature of the first part of the question informs us that we can figure out the most popular model without a graph. To find the most popular model we performed a count on every model and printed out the result.
 
 ```{r ModelCount, fig.height = 10, fig.width = 10}
 # Finding out model popularity
@@ -1154,16 +768,11 @@ models_counted <- cars_edited %>% count(model_name)
 models_counted %>% arrange(desc(n))
 ```
 
-**From the table it is clear that the most popular model is the
-Passat.**
+**From the table it is clear that the most popular model is the Passat.**
 
-Now we go on to solve the next part of the question: Whether we can
-conclude that the popularity of a model has a direct impact on the price
-of a vehicle?
+Now we go on to solve the next part of the question: Whether we can conclude that the popularity of a model has a direct impact on the price of a vehicle?
 
-Since we are using a categorical factor and attempting to find its
-impact on a continuous response variable we will deploy the One-Way
-Anova Test.
+Since we are using a categorical factor and attempting to find its impact on a continuous response variable we will deploy the One-Way Anova Test.
 
 The hypotheses for the One-Way Anova test are:
 
@@ -1181,12 +790,9 @@ model_price <- aov(price_usd ~ model_name, data = cars_edited)
 summary(model_price)
 ```
 
-Since the p-value is less than 0.05 we can conclude that the model name
-does have a significant impact on the price of a vehicle.
+Since the p-value is less than 0.05 we can conclude that the model name does have a significant impact on the price of a vehicle.
 
-We continue our investigation by attempting to see how effective model
-name is in predicting the price of a vehicle. In order to do this we
-will use a Simple Linear Regression model as follows:
+We continue our investigation by attempting to see how effective model name is in predicting the price of a vehicle. In order to do this we will use a Simple Linear Regression model as follows:
 
 ```{r modelPriceRegression}
 #Taking the linear regression
@@ -1202,14 +808,9 @@ summary(modelPrice)
 ## F-statistic: 53.54 on 1117 and 37372 DF,  p-value: < 2.2e-16
 ```
 
-The R2 is 0.6039 which indicates that a relatively large proportion of
-prices in the data can be explained by the model. Although more
-attributes will aid in predicting prices we can confirm that there is
-significant usefulness in using the model name attribute in our future
-models.
+The R2 is 0.6039 which indicates that a relatively large proportion of prices in the data can be explained by the model. Although more attributes will aid in predicting prices we can confirm that there is significant usefulness in using the model name attribute in our future models.
 
-We continue by assessing the error of our model to get a better picture
-of the models accuracy.
+We continue by assessing the error of our model to get a better picture of the models accuracy.
 
 ```{r ModelConf, eval=FALSE, include=TRUE}
 # Result ommitted for brevity sake
@@ -1220,41 +821,28 @@ confint(modelPrice)
 sigma(modelPrice)*100/mean(cars_edited$price_usd)
 ```
 
-Our prediction error rate is lower than for other attributes (60.95455%)
-which confirms to us that model name is a better predictor of price.
-Nevertheless, a prediction error of 60.95455% tells us that for
-prediction we will need more attributes.
+Our prediction error rate is lower than for other attributes (60.95455%) which confirms to us that model name is a better predictor of price. Nevertheless, a prediction error of 60.95455% tells us that for prediction we will need more attributes.
 
-**This analysis concludes that the popularity of a vehicle does seem to
-have an impact on the average_price of a vehicle. However, more
-attributes would be needed to predict price.**
+**This analysis concludes that the popularity of a vehicle does seem to have an impact on the average_price of a vehicle. However, more attributes would be needed to predict price.**
 
 ------------------------------------------------------------------------
 
 #### **Q8:** What is the average age of each vehicle manufacturer and whether the manufacturer changes how the production year impacts the price?
 
-**A: The average age of each manufacturer can be found using some data
-transformation. Furthermore, the manufacturer does influence how
-production year changes the price of a vehicle.**
+**A: The average age of each manufacturer can be found using some data transformation. Furthermore, the manufacturer does influence how production year changes the price of a vehicle.**
 
 **Justification:**
 
-Prior to working on this question it would be useful to have some sort
-of visual understanding of our data. To accomplish this we will use a
-scatter plat with facet wrap to show the distribution of years for each
-manufacturer.
+Prior to working on this question it would be useful to have some sort of visual understanding of our data. To accomplish this we will use a scatter plat with facet wrap to show the distribution of years for each manufacturer.
 
 ```{r ScatterPlotFacetHex, fig.height = 10, fig.width = 20}
 #Scatter plot: Year produced by price and colored by manufacturer name
 ggplot(cars_edited, aes(x = year_produced, y = price_usd)) + geom_hex() + facet_wrap(~ manufacturer_name)
 ```
 
-Upon looking at the graph it is clear that visualization is not the way
-to solve this question. Nevertheless, the graphs seem to follow a
-similar pattern; more newer cars exist and they are more expensive.
+Upon looking at the graph it is clear that visualization is not the way to solve this question. Nevertheless, the graphs seem to follow a similar pattern; more newer cars exist and they are more expensive.
 
-To solve for the average age of each manufacturer we will perform a data
-transformation as follows:
+To solve for the average age of each manufacturer we will perform a data transformation as follows:
 
 ```{r ManufYearsSummary}
 #Group cars by manufacturer name
@@ -1266,27 +854,19 @@ manufacturer_year_averages <- summarise(manufacturer_year, average = mean(year_p
 manufacturer_year_averages %>% arrange(desc(average))
 ```
 
-Observing the results of the summary it is clear that the manufacturers
-with the newest car averages are Lifan, Buick, Geely, and LADA.
+Observing the results of the summary it is clear that the manufacturers with the newest car averages are Lifan, Buick, Geely, and LADA.
 
-Next we continue with the second part of the question: Whether the
-manufacturer changes how the production year impacts the price?
+Next we continue with the second part of the question: Whether the manufacturer changes how the production year impacts the price?
 
-To solve this question we will be using the Two-Way Anova. The Two-Way
-Anova is used because we are attempting to evaluate the simultaneous
-effect of Manufacturer and Year Produced on price.
+To solve this question we will be using the Two-Way Anova. The Two-Way Anova is used because we are attempting to evaluate the simultaneous effect of Manufacturer and Year Produced on price.
 
 The hypotheses for the Two-Way Anova test are:
 
-H~o~ = 1. There is no difference in the means of Manufacturer. There is
-no difference in the means of Year Produced. 3. There is no interaction
-between Manufacturer and Year Produced
+H~o~ = 1. There is no difference in the means of Manufacturer. There is no difference in the means of Year Produced. 3. There is no interaction between Manufacturer and Year Produced
 
-Ha = For cases 1 and 2 the means are not equal and for case 3 there is
-an interaction between Manufacturer and Year Produced.
+Ha = For cases 1 and 2 the means are not equal and for case 3 there is an interaction between Manufacturer and Year Produced.
 
-For this test we will be using 0.05 as our level of significance. The
-results are thus:
+For this test we will be using 0.05 as our level of significance. The results are thus:
 
 ```{r ManufYearAnova}
 # Do an anova test to see if year produced significantly impacts price of a vehicle
@@ -1294,16 +874,9 @@ manufacturer_price <- aov(price_usd ~ manufacturer_name * year_produced, data = 
 summary(manufacturer_price)
 ```
 
-In our results we can see that the p-value \< 0.05 for each of our 3
-cases. In other words, there is a difference in the means of
-Manufacturer, the means of Year Produced, and there is an interaction
-between Manufacturer and Year Produced. **The manufacturer does change
-how the production year affects the selling price.**
+In our results we can see that the p-value \< 0.05 for each of our 3 cases. In other words, there is a difference in the means of Manufacturer, the means of Year Produced, and there is an interaction between Manufacturer and Year Produced. **The manufacturer does change how the production year affects the selling price.**
 
-Now that we know that Manufacturer and Year Produced impact the price of
-our vehicle it important to see how well of a model we can produce given
-these two attributes. To do this we will use the Multiple Linear
-Regression Model.
+Now that we know that Manufacturer and Year Produced impact the price of our vehicle it important to see how well of a model we can produce given these two attributes. To do this we will use the Multiple Linear Regression Model.
 
 ```{r ManufYearLM}
 #Taking the linear regression
@@ -1313,11 +886,7 @@ ManufyearPrice <- lm (price_usd ~ manufacturer_name + year_produced, data = cars
 summary(ManufyearPrice)
 ```
 
-The R2 is 0.6152 which indicates that a relatively large proportion of
-prices in the data can be explained by the model. Although more
-attributes will aid in predicting prices we can confirm that there is
-significant usefulness in using Manufacturer and Year Produced in our
-future models.
+The R2 is 0.6152 which indicates that a relatively large proportion of prices in the data can be explained by the model. Although more attributes will aid in predicting prices we can confirm that there is significant usefulness in using Manufacturer and Year Produced in our future models.
 
 To continue our investigation we assess the prediction rate as follows:
 
@@ -1326,78 +895,51 @@ confint(ManufyearPrice)
 sigma(ManufyearPrice)*100/mean(cars_edited$price_usd)
 ```
 
-Our prediction error rate is lower than for other attributes (60.12396%)
-which confirms to us that year produced and Manufacturer are decent
-predictors of price. A prediction error of 60.12396% tells us that for
-prediction we will need more attributes than just year produced and
-Manufacturer. **We conclude that Manufacturer and Year Produced do
-impact price and that the manufacturer does change how the production
-year affects the selling price.**
+Our prediction error rate is lower than for other attributes (60.12396%) which confirms to us that year produced and Manufacturer are decent predictors of price. A prediction error of 60.12396% tells us that for prediction we will need more attributes than just year produced and Manufacturer. **We conclude that Manufacturer and Year Produced do impact price and that the manufacturer does change how the production year affects the selling price.**
 
-## Predicting Exchangeability
+## Exchangeability Exploratory and Predictive Model
 
-#### Predicting Exchangeability using a Decision Tree
+#### Exploring Exchangeability using a Decision Tree
 
-In an attempt to predict exchangeability we will deploy a Decision tree.
-The model will be running the train function with 10-fold
-cross-validation and a tune-length of 10(number of cp values to
-evaluate)l. These settings should prune our tree and ensured an optimal
-decision tree to predict exchangeability.
+In an attempt to create a good exploratory model for exchangeability we will deploy a Decision tree. The model will be running the train function with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate)l. These settings should prune our tree and ensured an optimal decision tree.
 
-```{r DTRegressionExchangeability, eval=FALSE, include=TRUE}
-### DT Regression
-model_DT_Train <- train(is_exchangeable ~ ., data = train.data, method = "rpart",
-                        trControl = trainControl("cv",number = 10),
-                        preProcess = c("center","scale"),
-                        tuneLength = 10)
-
-predictionDT <- predict(model_DT_Train, test.data)
+```{r DTExploratoryRegressionExchangeability, eval=FALSE, include=TRUE}
+## Using Decision Tree to create an exploratory model for exchangeability
+model_DT_Exchangeable <-  train(is_exchangeable ~ . -model_name, data = train.data, method = "rpart",
+                                trControl = trainControl("cv",number = 10),
+                                preProcess = c("center","scale"),
+                                tuneLength = 10)
+# Exploratory
+predictionsDTExploratory <- predict(model_DT_Exchangeable, train.data)
 
 # Check accuracy, error, and confusion matrix
-accuracy <- mean(test.data$is_exchangeable == predictionDT)
+accuracy <- mean(train.data$is_exchangeable == predictionsDTExploratory)
 accuracy
-# [1] 0.6871661
-error <- mean(test.data$is_exchangeable != predictionDT)
+# [1] 0.6939802
+error <- mean(train.data$is_exchangeable != predictionsDTExploratory)
 error
-# [1] 0.3128339
-confusionMatrix(test.data$is_exchangeable, predictionDT)
+# [1] 0.3060198
+confusionMatrix(train.data$is_exchangeable, predictionsDTExploratory)
 ```
 
-The accuracy above tells us that the Decision Tree correctly predicted
-\~69% of the individuals who agreed to exchangeing their vehicles. This
-is better than random guessing. The misclassification error rate is
-\~31%.
+The Decision Tree had an overall accuracy of around 69.4%. Meaning that the explanatory power is equal to 69.4%. The misclassification rate was 30.6%
 
-![](images/DTExchangeability%20CMpng.PNG)
+![](images/DTCMExplorative.PNG)
 
-Sensitivity is \~70%, that is the proportion of individuals who were
-correctly identified to being willing to take part in an exchangement
-for their vehicle.
+The Accuracy for when we have an exchangeability of "TRUE" is \~63.5%(sensitivity)
 
-The specificity of the model is around 61% which is the proportion of
-individuals who were correctly identified to not being willing to take
-part in an exchangement for their vehicle.
+The Accuracy for when we have an exchangeability of "False" is \~70.6%(sensitivity)
 
-The model precision or proportion of positive predicted value is \~ 90%
+The model precision of the proportion of positive predicted value is 31.16%.
 
-```{r DTRegressionExchangeabilityRoc, eval=FALSE, include=TRUE}
-#Compute roc
-predictionsDTProb <- predict(model_DT_Exchangeable, test.data, type = "prob")
-res.roc <- roc(test.data$is_exchangeable ~ predictionsDTProb[,2])
+```{r DTExploratoryROCExchangeability, eval=FALSE, include=TRUE}
+# Compute roc
+predictionsDTExploratoryProb <- predict(model_DT_Exchangeable, train.data, type = "prob")
+res.roc <- roc(train.data$is_exchangeable ~ predictionsDTExploratoryProb[,2])
 plot.roc(res.roc, print.auc = TRUE)
 as.numeric(res.roc$auc)
-#[1] 0.6525616
-```
+# [1] 0.6571428
 
-![](images/DTExchangeableRocCurve.png)
-
-In this graph the AUC is 0.653, which i relatively good. Remember that a
-classifier that performs no better than chance is expected to have an
-AUC of 0.5 when evaluated on an independent test set not used to train
-the model. Meaning, that this model does in fact predict exchangeability
-with some success.
-
-```{r DTRegressionExchangeabilityBestRoc, eval=FALSE, include=TRUE}
 # Get the probability threshold for specificity = 0.5
 rocModelDT.data <- data_frame(
   thresholds = res.roc$thresholds,
@@ -1408,12 +950,123 @@ rocModelDT.data %>% filter(specificity >= 0.5)
 plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 ```
 
-![](images/DTExchangeabilityBestROC.png)
+![](images/DTExploratoryplot.Bestroc.png)
+
+The AUC is above 0.5 which tells us that this is good exploratory model. The best threshold with the highest sum sensitivity and specificity is 0.357 and we get a specificity of 0.818 and a sensitivity of 0.419.
+
+#### Predicting Exchangeability using a Decision Tree
+
+In an attempt to analyze the predictive power of our model we used the testing dataset.
+
+```{r DTPredictiveExchangeability, eval=FALSE, include=TRUE}
+# Predictive Model
+predictionsDT <- predict(model_DT_Exchangeable, test.data)
+
+# Check accuracy, error, and confusion matrix
+accuracy <- mean(test.data$is_exchangeable == predictionsDT)
+accuracy
+# [1] 0.6871661
+error <- mean(test.data$is_exchangeable != predictionsDT)
+error
+# [1] 0.3128339
+confusionMatrix(test.data$is_exchangeable, predictionsDT)
+```
+
+The accuracy above tells us that the Decision Tree correctly predicted \~69% of the individuals who agreed to exchanging their vehicles. This is better than random guessing. The misclassification error rate is \~31%.
+
+![](images/DTCMPredictive.PNG)
+
+Sensitivity is \~60.6%, that is the proportion of individuals who were correctly identified to being willing to take part in an exchangement for their vehicle.
+
+The specificity of the model is around 70.4% which is the proportion of individuals who were correctly identified to not being willing to take part in an exchangement for their vehicle.
+
+The model precision or proportion of positive predicted value is \~ 29.8%
+
+```{r DTPredictionExchangeabilityRoc, eval=FALSE, include=TRUE}
+#Compute roc
+predictionsDTProb <- predict(model_DT_Exchangeable, test.data, type = "prob")
+res.roc <- roc(test.data$is_exchangeable ~ predictionsDTProb[,2])
+plot.roc(res.roc, print.auc = TRUE)
+as.numeric(res.roc$auc)
+# [1] 0.6525616
+
+# Get the probability threshold for specificity = 0.5
+rocModelDT.data <- data_frame(
+  thresholds = res.roc$thresholds,
+  sensitivity = res.roc$sensitivities,
+  specificity = res.roc$specificities
+)
+rocModelDT.data %>% filter(specificity >= 0.5)
+plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
+```
+
+![](images/DTPredictiveBestRoc.png)
+
+In this graph the AUC is 0.653, which i relatively good. Remember that a classifier that performs no better than chance is expected to have an AUC of 0.5 when evaluated on an independent test set not used to train the model. Meaning, that this model does in fact predict exchangeability with some success. The best threshold with the highest sum sensitivity and specificity is 0.332 and we get a specificity of 0.772 and a sensitivity of 0.457. Ultimately, we learn that the Decision Tree Classification produces a good predictive model for exchangeability of a vehicle.
+
+#### Exploring Exchangeability using Logistic Classification
+
+We attempted to create a more accurate exploratory model for exchangeability by using Logistic Classification. The model will be running the train function with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate)l. These settings should optimal model.
+
+```{r LRExploratoryClassificationExchangeability, eval=FALSE, include=TRUE}
+## Using Logistic Classfication to create an exploratory model for exchangeability
+set.seed(123)
+model_LR_Exchangeable <-  train( is_exchangeable ~ . -model_name, data = train.data, method = "glm", family = "binomial",
+                                 trControl = trainControl("cv", number =10),
+                                 preProcess = c("center", "scale"),
+                                 tuneLength = 10
+)
+
+# Exploratory
+predictionsLRExploratory <- predict(model_LR_Exchangeable, train.data)
+
+# Check accuracy, error, and confusion matrix
+accuracy <- mean(train.data$is_exchangeable == predictionsLRExploratory)
+accuracy
+# [1] 0.6624371		  
+error <- mean(train.data$is_exchangeable != predictionsLRExploratory)
+error
+# [1] 0.3375629 	  
+confusionMatrix(train.data$is_exchangeable, predictionsLRExploratory)
+```
+
+The accuracy above tells us that the Logistic Classification correctly predicted \~66% of the individuals who agreed to exchanging their vehicles. This is better than random guessing. The misclassification error rate is \~33.76%.
+
+![](images/LRCMExploratory.png)
+
+Sensitivity is \~58.46%, that is the proportion of individuals who were correctly identified to being willing to take part in an exchangement for their vehicle.
+
+The specificity of the model is around 67% which is the proportion of individuals who were correctly identified to not being willing to take part in an exchangement for their vehicle.
+
+The model precision or proportion of positive predicted value is \~ 14.85%
+
+```{r LRExploratoryExchangeabilityRoc, eval=FALSE, include=TRUE}
+# Compute roc
+predictionsLRExploratoryProb <- predict(model_LR_Exchangeable, train.data, type = "prob")
+res.roc <- roc(train.data$is_exchangeable ~ predictionsLRExploratoryProb[,2])
+plot.roc(res.roc, print.auc = TRUE)
+as.numeric(res.roc$auc)
+# [1] 0.6505955
+
+# Get the probability threshold for specificity = 0.5
+rocModelLRExploratory.data <- data_frame(
+  thresholds = res.roc$thresholds,
+  sensitivity = res.roc$sensitivities,
+  specificity = res.roc$specificities
+)
+rocModelLRExploratory.data %>% filter(specificity >= 0.5)
+plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
+```
+
+![](images/LRExplorataryBestRoc.png)
+
+In this graph the AUC is 0.651, which i relatively good and quite similar to the AUC from the Decsion Tree model. Since the classifier is better that 0.5 we can comfortable say that this is a good exploratory model. The best threshold with the highest sum sensitivity and specificity is 0.356 and we get a specificity of 0.640 and a sensitivity of 0.580. The Logistic Regression Model also produces a good exploratory model.
 
 #### Predicting Exchangeability using Logistic Regression
 
-```{r LRRegressionExchangeability, eval=FALSE, include=TRUE}
+```{r LRExchangeability, eval=FALSE, include=TRUE}
 ## Using Logistic Regression to predict exchangeability
+set.seed(123)
 model_LR_Exchangeable <-  train( is_exchangeable ~ ., data = train.data, method = "glm", family = "binomial",
                                  trControl = trainControl("cv", number =10),
                                  preProcess = c("center", "scale"),
@@ -1424,44 +1077,32 @@ predictionsLR <- predict(model_LR_Exchangeable, test.data)
 # Check accuracy, error, and confusion matrix
 accuracy <- mean(test.data$is_exchangeable == predictionsLR)
 accuracy
-# [1] 0.6647557
+# [1] 0.6650163
 error <- mean(test.data$is_exchangeable != predictionsLR)
 error
-# [1] 0.3352443
+# [1] 0.3349837
 confusionMatrix(test.data$is_exchangeable, predictionsLR)
 ```
 
-The accuracy above tells us that the Logistic Regression Model correctly
-predicted \~66.5% of the individuals who agreed to exchangeing their
-vehicles. This is better than random guessing. The missclassification
-error rate is \~33.5%. This is not as good as the Decision Tree model.
+The accuracy above tells us that the Logistic Classification correctly predicted \~66.5% of the individuals who agreed to exchanging their vehicles. This is a good accuracy for a predictive model. The misclassification error rate is \~33.5%.
 
-![](images/LRExchangeabilityCM2.png)
+![](images/LRCMPredictive.png)
 
-Sensitivity is \~68.5% , that is the proportion of individuals who were
-correctly identified to being willing to take part in an exchangement
-for their vehicle.
+Sensitivity is \~58% , that is the proportion of individuals who were correctly identified to being willing to take part in an exchangement for their vehicle.
 
-The specificity of the model is around 54.5% which is the proportion of
-individuals who were correctly identified to not being willing to take
-part in an exchangement for their vehicle.
+The specificity of the model is around 67.3% which is the proportion of individuals who were correctly identified to not being willing to take part in an exchangement for their vehicle.
 
-The model precision or proportion of positive predicted value is \~ 90%
+The model precision or proportion of positive predicted value is \~14.8%
 
-```{r LRRegressionExchangeabilityRoc, eval=FALSE, include=TRUE}
+```{r LRPredictionExchangeabilityRoc, eval=FALSE, include=TRUE}
 #Compute roc
 predictionsLRProb <- predict(model_LR_Exchangeable, test.data, type = "prob")
 res.rocLR <- roc(test.data$is_exchangeable ~ predictionsLRProb[,2])
 plot.roc(res.rocLR, print.auc = TRUE)
 as.numeric(res.rocLR$auc)
-# [1] 0.6443938
-```
+# [1] 0.6480223
 
-![](images/LRExchangeabilityRoc.png) In this graph the AUC is 0.644,
-which i relatively good. That is, this model does in fact predict
-exchangeability with some success.
 
-```{r LRRegressionExchangeabilityBestRoc, eval=FALSE, include=TRUE}
 # Get the probability threshold for specificity = 0.5
 rocModelLR.data <- data_frame(
   thresholds = res.rocLR$thresholds,
@@ -1472,113 +1113,67 @@ rocModelLR.data %>% filter(specificity >= 0.5)
 plot.roc(res.rocLR, print.auc = TRUE, print.thres = "best")
 ```
 
-![](images/LRExchangeabilityBestRoc.png)
+![](images/LRPredictiveBestRoc.png)
 
-Upon comparing the models Decision Tree and Logistic Regression we can
-see that the Decision Tree has a better AUC, Specificity, and
-Sensitivity, but a slightly worse model precision. Nevertheless, overall
-the Decision Tree is a better model in predicting exchangeability.
+In this graph the AUC is 0.648 is a good AUC from a model. This model does predict exchangeability with success. The best threshold with the highest sum sensitivity and specificity is 0.356 and we get a specificity of 0.647 and a sensitivity of 0.580. The Logistic Regression Model also produces a good predictive model.
 
 ## Model Results and Comparisons
 
-In an attempt to create the most accurate and significant predictive
-model we created 6 different models which had a wide range of accuracy.
+In an attempt to create the most accurate and significant predictive model we created 6 different models which had a wide range of accuracy.
 
 ### Linear Regression Model
 
-Firstly, we created a Multiple Linear Regression Model which utilized
-the attributes in our dataset that had continuous data and optimized the
-model. The code for this looks as follows:
+Firstly, we created a Multiple Linear Regression Model which utilized the attributes in our dataset(except model_names) and optimized the model. The code for this looks as follows:
 
 ```{r LinearRegressionModel}
-LMCont <- lm(price_usd ~ odometer_value
-             + year_produced
-             + number_of_photos
-             + duration_listed
-             + up_counter
-             , data = train.data)
-
-vif(LMCont)
-#  odometer_value    year_produced number_of_photos 
-#1.311552         1.375432         1.088560 
-#duration_listed       up_counter 
-#1.985559         1.995992 
-
-step.LMConts <- LMCont %>% stepAIC(trace = FALSE)
+set.seed(123)
+LM <- lm(price_usd ~ odometer_value
+         + year_produced
+         + number_of_photos
+         + duration_listed
+         + up_counter, data = train.data)
+step.LM <- LM %>% stepAIC(trace = FALSE)
 ```
 
-```{r LMContInformation}
-vif(step.LMConts)
-#odometer_value    year_produced number_of_photos 
-#1.311552         1.375432         1.088560 
-#duration_listed       up_counter 
-#1.985559         1.995992 
-## Changes nothing
-summary(step.LMConts)
-
-coef(step.LMConts)
-#(Intercept)   odometer_value    year_produced 
-#-9.916423e+05    -4.419525e-03     4.981272e+02 
-#number_of_photos  duration_listed       up_counter 
-#1.481601e+02     2.241819e+00     2.252599e+00 
-confint(step.LMConts)
-#                2.5 %        97.5 %
-#(Intercept)      -1.005960e+06 -9.773249e+05
-#odometer_value   -4.833614e-03 -4.005436e-03
-#year_produced     4.909951e+02  5.052594e+02
-#number_of_photos  1.398282e+02  1.564919e+02
-#duration_listed   1.625863e+00  2.857775e+00
-#up_counter        6.685618e-01  3.836636e+00
+```{r LMVIF}
+vif(step.LM)
 ```
 
-Using vif we notice that Step-Wise regression doesn't eliminate any of
-our variables. Furthermore, we are able to find the coefficients(to be
-used in calculations we may want to do), and the confidence intervals
-for each coefficient(gives us some indication of accuracy).
+The VIF tells us that there isn't significant multi-collinearity between any of the categorical attributes.
 
-Now that the model is created and optimized it is vital to check the
-accuracy of the model. To do this we will employed our test.data to test
-how accurately the Linear Regression model can predict the price of a
-vehicle.
+Now that the model is created and optimized it is vital to check the accuracy of the model. To do this we will employed our test.data to test how accurately the Linear Regression model can predict the price of a vehicle.
+
+```{r LMSummary}
+summary(step.LM)
+coef(step.LM)
+confint(step.LM)
+```
+
+The information above is crucial for calculating values and having a general idea for the stability of our coefficients.
 
 ```{r LMTesting}
-# Predict using Multiple Linear Regression Model
-LMContPrediction <- predict(step.LMConts, test.data)
+LMPrediction <- predict(step.LM, test.data)
 
 # Prediction error, rmse
-RMSE(LMContPrediction,test.data$price_usd)
-#[1] 4573.511
+RMSE(LMPrediction,test.data$price_usd)
+
 # Compute R-square
-R2(LMContPrediction,test.data$price_usd) ## R^2 for test/train is 50.95891%
-#[1] 0.5095891
+R2(LMPrediction,test.data$price_usd)
 ```
 
-From the code above we see that our **rmse is 4573.511 which represents
-an error rate of 4573.511/mean(test.data\$price_usd) = 68.60393** which
-is not good at all. Meanwhile, the **R2 is 0.5095891**, meaning that the
-observed and predicted outcome values are not very correlated, which is
-not good. These results are not surprising and inform us that the price
-of a vehicle in Belarus is dependent on more attributes than simply our
-continuous attributes. We shall proceed with more robust models in order
-to achieve a better result.
+From the code above we see that our **rmse is 4470.274 which represents an error rate of 4470.274/mean(test.data\$price_usd) = 67.57975** which is not good at all. Meanwhile, the **R-Squared is 0.5190641**, meaning that the observed and predicted outcome values are not very correlated, which is not good. These results are not surprising and inform us that the price of a vehicle in Belarus is dependent on more attributes than simply our continuous attributes. We shall proceed with more robust models in order to achieve a better result.
 
-note: A logarithmic transformation was done on the price and achieved an
-even worse result. Given the poor quality of this model we continued
-with SVR in an attempt to get a more robust and accurate predictive
-model.
+note: A logarithmic transformation was done on the price and achieved an even worse result. Given the poor quality of this model we continued with SVR in an attempt to get a more robust and accurate predictive model.
 
 ### SVR Model
 
-SVR is an extremely robust model which would be able to handle our
-categorical data. These models would almost certainly achieve a better
-result that the Linear Regression Model. 3 SVR models were calculated
-with varying accuracies. The different methods used with SVR were
-linear, polynomial, and radial.
+SVR is an extremely robust model which would be able to handle our categorical data. These models would almost certainly achieve a better result that the Linear Regression Model. 3 SVR models were calculated with varying accuracies. The different methods used with SVR were linear, polynomial, and radial.
 
 Linear was the first SVR model to be run and the code was as follows:
 
 ```{r SVRLinearModel, eval=FALSE, include=TRUE}
 # Create SVR Model using Linear Method
+set.seed(123)
 modelSVRLinTrain <- train( price_usd ~ ., data = train.data, method = "svmLinear",
                            trControl = trainControl("cv", number =10),
                            preProcess = c("center", "scale"),
@@ -1593,10 +1188,7 @@ modelSVRLinTrain$bestTune
 #1 1
 ```
 
-We were able to find that the **bestTune was 1** which informs us what
-the best tuning parameter C that maximizes our accuracy. We proceed with
-using the model to predict our prices and comparing them to the actual
-testing prices to gauge accuracy of the model.
+We were able to find that the **bestTune was 1** which informs us what the best tuning parameter C that maximizes our accuracy. We proceed with using the model to predict our prices and comparing them to the actual testing prices to gauge accuracy of the model.
 
 ```{r SVRLinearModelAccuracy, eval=FALSE, include=TRUE}
 # Predict using SVR Model with Linear Method
@@ -1611,20 +1203,13 @@ R2(modelSVRLinTrainPrediction,test.data$price_usd)
 #[1] 0.7772176
 ```
 
-Observing RMSE(**3257.887**) we are able to see how concentrated the
-data is around our model. **Calculating our error rate we see
-3257.887/mean(test.data\$price_usd) \*100 = 48.86921** is not great, but
-significantly better than our Linear Regression Model. Also, a **R2 of
-0.7772176** is a significant increase in accuracy as well. We know that
-around 77.7% of our prices can be explained by our model. Nevertheless,
-we continue to find better models:
+Observing RMSE(**3257.887**) we are able to see how concentrated the data is around our model. **Calculating our error rate we see 3257.887/mean(test.data\$price_usd) \*100 = 48.86921** is not great, but significantly better than our Linear Regression Model. Also, a **R-Squared of 0.7772176** is a significant increase in accuracy as well. We know that around 77.7% of our prices can be explained by our model. Nevertheless, we continue to find better models:
 
-The next model to be computed is the SVR model using the polynomial
-method:
+The next model to be computed is the SVR model using the polynomial method:
 
 ```{r SVRPolyModel, eval=FALSE, include=TRUE}
 # Create SVR Model using Polynomial Method
-Method
+set.seed(123)
 modelSVRPolyTrain <- train(price_usd ~ ., data = train.data, method = "svmPoly",
                            trControl = trainControl("cv", number =10),
                            preProcess = c("center", "scale"),
@@ -1635,10 +1220,7 @@ summary(modelSVRPolyTrain)
 modelSVRPolyTrain$bestTune
 ```
 
-**We were able to find that the bestTune was 1 which informs us what the
-best tuning parameter C that maximizes our accuracy. We proceed with
-using the model to predict our prices and comparing them to the actual
-testing prices to gauge accuracy of the model.**
+**We were able to find that the bestTune was 1 which informs us what the best tuning parameter C that maximizes our accuracy. We proceed with using the model to predict our prices and comparing them to the actual testing prices to gauge accuracy of the model.**
 
 ```{r SVRPolyModelAccuracy, eval=FALSE, include=TRUE}
 # Predict using SVR Model with Linear Method
@@ -1651,18 +1233,13 @@ RMSE(modelSVRPolyTrainPrediction,test.data$price_usd)
 R2(modelSVRPolyTrainPrediction,test.data$price_usd)
 ```
 
-**Observing RMSE we are able to see how concentrated the data is around
-our model. Calculating our error rate we see
-3257.887/mean(test.data\$price_usd) \*100 = 48.86921 is not great, but
-significantly better than our Linear Regression Model. Also, a R2 of
-0.7772176 is a significant increase in accuracy as well. We know that
-around 77.7% of our prices can be explained by our model. Nevertheless,
-we continue to find better models:**
+**Observing RMSE we are able to see how concentrated the data is around our model. Calculating our error rate we see 3257.887/mean(test.data\$price_usd) \*100 = 48.86921 is not great, but significantly better than our Linear Regression Model. Also, a R-Squared of 0.7772176 is a significant increase in accuracy as well. We know that around 77.7% of our prices can be explained by our model. Nevertheless, we continue to find better models:**
 
 Lastly, the radial method was used with the SVR model:
 
 ```{r SVRRadialModel, eval=FALSE, include=TRUE}
 # Create SVR Model using Radial Method
+set.seed(123)
 modelSVRRadialTrain <- train(price_usd ~ ., data = train.data, method = "svmRadial",
                              trControl = trainControl("cv", number =10),
                              preProcess = c("center", "scale"),
@@ -1677,10 +1254,7 @@ modelSVRRadialTrain$bestTune
 #10 0.001556481 128	
 ```
 
-**BestTune was 128** which tells us what the best tuning parameter C
-that maximizes our accuracy is 128. We then used our model to predict
-prices of vehicles and compared those prices to the actual testing
-prices in order to assess the accuracy of the model.
+**BestTune was 128** which tells us what the best tuning parameter C that maximizes our accuracy is 128. We then used our model to predict prices of vehicles and compared those prices to the actual testing prices in order to assess the accuracy of the model.
 
 ```{r SVRRadialModelAccuracy, eval=FALSE, include=TRUE}
 # Predict using SVR Model with Radial Method
@@ -1693,33 +1267,18 @@ RMSE(modelSVRRadialTrainPrediction,test.data$price_usd)
 # Compute R-square
 R2(modelSVRRadialTrainPrediction,test.data$price_usd)
 #[1] 0.5937837
-
 ```
 
-**From the RMSE(4752.231) we calculated our error rate as
-4752.231/mean(test.data\$price_usd) \*100 = 71.28478.** This is even
-worse than the results we had from the Linear Regression Model. Not
-surprisingly our R2 was also quite poor. **The R2 was 0.5937837** which
-again is not a good value. We know that around 59.4% of our prices can
-be explained by our model. These results convince us that radial basis
-functions are not the optimal function to be used with SVR for our
-model.
+**From the RMSE(4752.231) we calculated our error rate as 4752.231/mean(test.data\$price_usd) \*100 = 71.28478.** This is even worse than the results we had from the Linear Regression Model. Not surprisingly our R2 was also quite poor. **The R-Squared was 0.5937837** which again is not a good value. We know that around 59.4% of our prices can be explained by our model. These results convince us that radial basis functions are not the optimal function to be used with SVR for our model.
 
-Even though the SVR model did much better as a whole than the Linear
-Regression Model it was vital to investigate more models in an attempt
-to create an even more accurate model. The Decision Tree was a perfect
-candidate since it is incredibly robust and relies on very few
-assumptions. Its simpler nature also makes it a model that would be
-preferred over other models (such as Random Forest Regression).
+Even though the SVR model did much better as a whole than the Linear Regression Model it was vital to investigate more models in an attempt to create an even more accurate model. The Decision Tree was a perfect candidate since it is incredibly robust and relies on very few assumptions. Its simpler nature also makes it a model that would be preferred over other models (such as Random Forest Regression).
 
 ### Decision Tree Regression Model
 
-We began our Decision Tree model by running train with 10-fold
-cross-validation and a tune-length of 10(number of cp values to
-evaluate) as with our SVR model. These settings pruned our tree and
-ensured an optimal decision tree.
+We began our Decision Tree model by running train with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate) as with our SVR model. These settings pruned our tree and ensured an optimal decision tree.
 
 ```{r DecisionTreeModel, eval=FALSE, include=TRUE}
+set.seed(123)
 model_DT_Train <- train(price_usd ~ ., data = train.data, method = "rpart",
                         trControl = trainControl("cv",number = 10),
                         preProcess = c("center","scale"),
@@ -1734,13 +1293,11 @@ model_DT_Train$bestTune
 plot(model_DT_Train)
 ```
 
-**Our value for bestTune was 0.01032955** which tells us what the best
-tuning parameter C that maximizes our accuracy is 0.01032955.
+**Our value for bestTune was 0.01032955** which tells us what the best tuning parameter C that maximizes our accuracy is 0.01032955.
 
 ![](images/plot(model_DT_Train)_1920_1080.png)
 
-Next we will plot the final model for the decision tree as well as the
-decision rules for our final model
+Next we will plot the final model for the decision tree as well as the decision rules for our final model
 
 ```{r DTPlot, eval=FALSE, include=TRUE}
 # Plot the final tree model
@@ -1755,9 +1312,7 @@ model_DT_Train$finalModel
 
 ![](images/plot(model_DT_Train$finalModel)Text4k.png)
 
-Once the Decision Tree is created and pruned we will then use it to
-predict values of our vehicle prices and analyze the accuracy of the
-model.
+Once the Decision Tree is created and pruned we will then use it to predict values of our vehicle prices and analyze the accuracy of the model.
 
 ```{r DTAccuracy, eval=FALSE, include=TRUE}
 #Decision rules in the model model_DT_Train$finalModel
@@ -1774,31 +1329,16 @@ R2(prediction_DT_Train,test.data$price_usd)
 #[1] 0.7529956
 ```
 
-**Given the RMSE being 3245.413 we calculated our error rate as
-3245.413/mean(test.data\$price_usd) \*100 = 48.68209.** This is better
-than the Linear Regression Model, as well as SVR with Linear and Radial
-Kernels. Not surprisingly we have a relatively good **R2 at 0.7529956**
-which is better than all but SVR with linear and polynomial kernels. The
-R2 tells us that around 75.3% of our prices can be explained by our
-model. These results are fairly good, but at this point more models
-could not hurt. There is no guarantee that other models would perform
-better, but experimentation is optimal in a search for a better model.
+**Given the RMSE being 3245.413 we calculated our error rate as 3245.413/mean(test.data\$price_usd) \*100 = 48.68209.** This is better than the Linear Regression Model, as well as SVR with Linear and Radial Kernels. Not surprisingly we have a relatively good **R-Squared at 0.7529956** which is better than all but SVR with Linear Kernel and Linear Regression. The R-Squared tells us that around 75.3% of our prices can be explained by our model. These results are fairly good, but at this point more models could not hurt. There is no guarantee that other models would perform better, but experimentation is optimal in a search for a better model.
 
-Given how well the Decision Tree model operated it would make sense to
-try the Random Forest Tree Model given that the Random Forest Regression
-is a more complicated application of the Decision Tree since it
-leverages multiple decision trees. In essence, one can expect a better
-result from the Random Forest Tree (the question lies in whether the
-improvement is worth the complexity in calculation)
+Given how well the Decision Tree model operated it would make sense to try the Random Forest Tree Model given that the Random Forest Regression is a more complicated application of the Decision Tree since it leverages multiple decision trees. In essence, one can expect a better result from the Random Forest Tree (the question lies in whether the improvement is worth the complexity in calculation)
 
 ### Random Forest Tree Model
 
-The Random Forest Tree model was run with 10-fold cross-validation and a
-tune-length of 10(number of cp values to evaluate for optimization) as
-with SVR and the Decision tree. These settings should ensure an optimal
-Random Forest Tree Model.
+The Random Forest Tree model was run with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate for optimization) as with SVR and the Decision tree. These settings should ensure an optimal Random Forest Tree Model.
 
 ```{r RFFModel, eval=FALSE, include=TRUE}
+set.seed(123)
 random_forest_ranger <- train(price_usd ~ . ,
                               data = train.data,
                               method = "ranger",
@@ -1849,16 +1389,11 @@ random_forest_ranger$finalModel
 #R squared (OOB):                  0.9233405 
 ```
 
-**Below is the plot for the random forest Tree. This plot shows the
-values for the model accuracy vs different values of the complexity
-parameter.**
+**Below is the plot for the random forest Tree. This plot shows the values for the model accuracy vs different values of the complexity parameter.**
 
 ![](images/plot(random_forest_ranger)_568_395.png)
 
-Once the Random Forest Tree is made we wish to gauge the accuracy of the
-model. To accomplish this we use the predict function to predict values
-of our vehicle prices. Afterwords, we will compare these values to the
-actual prices of the test dataset to find the accuracy of the model.
+Once the Random Forest Tree is made we wish to gauge the accuracy of the model. To accomplish this we use the predict function to predict values of our vehicle prices. Afterwords, we will compare these values to the actual prices of the test dataset to find the accuracy of the model.
 
 ```{r RFFModelPredict, eval=FALSE, include=TRUE}
 # Make predictions on the test data
@@ -1873,17 +1408,12 @@ R2(rf_predict_ranger,test.data$price_usd)
 #[1] 0.9184761
 ```
 
-**The RMSE is 1879.884 we calculated our error rate as
-1879.884/mean(test.data\$price_usd) \*100 = 28.19878.** This is the best
-error rate so far. Not surprisingly we have a great **R2 at 0.9184761**.
-The R2 tells us that around 91.8% of our prices can be explained by our
-model. These results are the best we have so far, but improvement may
-still be possible. We continue with KNN in order to achieve a better
-result(if possible).
+**The RMSE is 1879.884 we calculated our error rate as 1879.884/mean(test.data\$price_usd) \*100 = 28.19878.** This is the best error rate so far. Not surprisingly we have a great **R-Squared at 0.9184761**. The R2 tells us that around 91.8% of our prices can be explained by our model. These results are the best we have so far, but improvement may still be possible. We continue with KNN in order to achieve a better result(if possible).
 
 ### KNN Model
 
 ```{r KNNModel, eval=FALSE, include=TRUE}
+set.seed(123)
 model_knn <- train(
   price_usd ~., data = train.data, method = "knn",
   trControl = trainControl("cv", number = 10),
@@ -1908,11 +1438,9 @@ model_knn$bestTune
 #1 5
 ```
 
-**A bestTune of 5** tells us what the best tuning parameter C that
-maximizes our accuracy is 5.
+**A best k value was 5** tells us what the best tuning parameter K that maximizes our accuracy is 5.
 
-We continue our investigation of KNN by plotting the model accuracy of
-KNN relative to different values of k.
+We continue our investigation of KNN by plotting the model accuracy of KNN relative to different values of k.
 
 ```{r KNNPlot, eval=FALSE, include=TRUE}
 # Plot model accuracy vs different values of k
@@ -1921,11 +1449,7 @@ plot(model_knn)
 
 ![](images/plot(model_knn)_1920_1080.png)
 
-With optimization for our KNN model complete we now direct our attention
-to evaluating the accuracy of the model. This is done by using the model
-to predict prices from our test dataset. This ensures the model is
-tested on data that is not in the training and allows us to test the
-accuracy of the predictions against known values.
+With optimization for our KNN model complete we now direct our attention to evaluating the accuracy of the model. This is done by using the model to predict prices from our test dataset. This ensures the model is tested on data that is not in the training and allows us to test the accuracy of the predictions against known values.
 
 ```{r KNNPredictionsandAccuracy, eval=FALSE, include=TRUE}
 # Make predictions on the test data
@@ -1942,41 +1466,17 @@ R2(knn_predictions,test.data$price_usd)
 #[1] 0.6802895
 ```
 
-Given the RMSE being 3693.127 we calculated our error rate as
-3693.127/mean(test.data\$price_usd) \*100 = 55.39793. **This is better
-than the Linear Regression Model, as well as SVR with Linear and Radial
-Kernels. Not surprisingly we have a relatively good R2 at 0.6802895**
-which is better than all but SVR with linear and polynomial kernels. The
-R2 tells us that around 68.02% of our prices can be explained by our
-model.
+Given the RMSE being 3693.127 we calculated our error rate as 3693.127/mean(test.data\$price_usd) \*100 = 55.39793. **This is better than SVR with Radial Kernel, and puts it at our second lowest performing model. The R-Squared at 0.6802895** tells us that around 68.02% of our prices can be explained by our model.
 
 ## Results obtained using different ML methods
 
-+----------------------------+------------+------------+-------------+
-| Machine-Learning Methods   | RMSE       | Error Rate | R-Square    |
-+:===========================+:==========:+:==========:+============:+
-| Multiple Linear Regression | **         | **         | **          |
-|                            | 4573.511** | 68.60393** | 0.5095891** |
-+----------------------------+------------+------------+-------------+
-| SVR Linear                 | **         | **         | **          |
-|                            | 3257.887** | 48.86921** | 0.7772176** |
-+----------------------------+------------+------------+-------------+
-| SVR Polynomial             |            |            |             |
-+----------------------------+------------+------------+-------------+
-| SVR Radial                 | **         | **         | **          |
-|                            | 4752.231** | 71.28478** | 0.5937837** |
-+----------------------------+------------+------------+-------------+
-| Decision Tree Regression   | **         | **         | **          |
-|                            | 3245.413** | 48.68209** | 0.7529956** |
-+----------------------------+------------+------------+-------------+
-| Random Forest Tree         | **         | **         | **          |
-| Regression                 | 1879.884** | 28.19878** | 0.9184761** |
-+----------------------------+------------+------------+-------------+
-| KNN(K Nearest Neighbor)    | **         | **         | **          |
-|                            | 3693.127** | 55.39793** | 0.6802895** |
-+----------------------------+------------+------------+-------------+
+| Machine-Learning Methods                |     RMSE     |  Error Rate  |      R-Square |
+|:----------------------------------------|:------------:|:------------:|--------------:|
+| Multiple Linear Regression (Continuous) | **4470.274** | **67.57975** | **0.5190641** |
+| SVR Linear                              | **3257.887** | **48.86921** | **0.7772176** |
+| SVR Radial                              | **4752.231** | **71.28478** | **0.5937837** |
+| Decision Tree Regression                | **3245.413** | **48.68209** | **0.7529956** |
+| Random Forest Tree Regression           | **1879.884** | **28.19878** | **0.9184761** |
+| KNN(K Nearest Neighbor)                 | **3693.127** | **55.39793** | **0.6802895** |
 
-Note: Some vehicles do not occur often due to a limit in the data
-collected and for that reason prediction made on vehicles(specifically
-models) that are not common ought to be taken with the limitations of
-the models in mind.
+Note: Some vehicles do not occur often due to a limit in the data collected and for that reason prediction made on vehicles(specifically models) that are not common ought to be taken with the limitations of the models in mind.
