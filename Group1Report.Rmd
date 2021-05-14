@@ -444,6 +444,8 @@ First a bar graph was used to effectively plot the distribution of vehicles for 
 ggplot(cars_edited, aes(y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name)) + geom_text(stat='count', aes(label=..count..), hjust=1)
 ```
 
+From this first bar graph we can see the distribution of all the cars based on manufacturer name. Volkswagen is the most popular car in the data set, and the least popular is tied with Lincoin, and Great Wall.
+
 Once the distribution of the Manufacturers was plotted we turned our attention onto the second part of the question: **Whether manufacturers have a significant impact on the asking price of a vehicle?**
 
 Another bar graph was used as a means of quickly inspecting how average price ranged between different manufacturers.
