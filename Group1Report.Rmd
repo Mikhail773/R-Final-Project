@@ -1313,6 +1313,8 @@ plot(model_DT_Train)
 
 ![](images/plot(model_DT_Train)_1920_1080.png)
 
+With this graph we can see that the optimal complexity parameter is around 0.1, as the RMSE value for the next point is way higher than the previous one.
+
 Next we will plot the final model for the decision tree as well as the decision rules for our final model.
 
 ```{r DTPlot, eval=FALSE, include=TRUE}
@@ -1327,6 +1329,8 @@ model_DT_Train$finalModel
 ```
 
 ![](images/plot(model_DT_Train$finalModel)Text4k.png)
+
+The Decision Tree here shows the decisions that our data can take in a tree like structure. The left of the tree is yes, and the right of the tree is no. With this in mind we can get final values based on what different attribute values are in the tree.
 
 Once the Decision Tree is created and pruned we will then use it to predict values of our vehicle prices and analyze the accuracy of the model.
 
