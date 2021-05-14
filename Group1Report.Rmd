@@ -108,25 +108,43 @@ head(cars_edited, 20)
 
 Now to proceed with cleaning and analyzation we need a more robust knowledge of our dataset. For this reason it is vital to understand the type of data for each attribute. Therefore, we must create a table to organize all our attributes.
 
-| Column |      Details      |                                                 Value/(Units)                                                 |  Data Type |
-|:-------|:-----------------:|:-------------------------------------------------------------------------------------------------------------:|-----------:|
-| A      | Manufacturer Name |                                         Name of vehicle manufacturer                                          |    Nominal |
-| B      |    Model Name     |                                             Name of vehicle model                                             |    Nominal |
-| C      |   Transmission    |                                           Type of the transmission                                            |    Nominal |
-| D      |       Color       |                                              Vehicle body color                                               |    Nominal |
-| E      |  Odometer Value   |                                         Vehicle odometer value in km                                          | Continuous |
-| F      |   Year Produced   |                                         The year the car was produced                                         | Continuous |
-| G      |    Engine Fuel    |                                            Fuel type of the engine                                            |    Nominal |
-| I      |    Engine Type    |                                              Vehicle engine type                                              |    Nominal |
-| J      |  Engine Capacity  |                                     The capacity of the engine in liters                                      |    Nominal |
-| K      |     Body Type     |                                   Type of the body (hatchback, sedan, etc.)                                   |    Nominal |
-| M      |    Drivetrain     |                                           Front/rear/all drivetrain                                           |    Nominal |
-| N      |     Price USD     |                                Price of a cars as listed in the catalog in USD                                | Continuous |
-| O      |   Exchangeable    | If True the owner of the car is ready to exchange this car to other cars with little or no additional payment |    Nominal |
-| P      |  Location Region  |                            The region in Belarus where the car is listed for sale                             |    Nominal |
-| Q      | Number of Photos  |                                         Number of photos the cas has                                          |  Continous |
-| R      |    Up Counter     |                 How many times the sample has been upped in the catalog to raise its position                 | Continuous |
-| S      |  Duration Listed  |                                Number of days the car is listed in the catalog                                | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| Column | Details           | Value/(Units)                                                                                                 | Data Type  |
++:=======+:=================:+:=============================================================================================================:+===========:+
+| A      | Manufacturer Name | Name of vehicle manufacturer                                                                                  | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| B      | Model Name        | Name of vehicle model                                                                                         | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| C      | Transmission      | Type of the transmission                                                                                      | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| D      | Color             | Vehicle body color                                                                                            | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| E      | Odometer Value    | Vehicle odometer value in km                                                                                  | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| F      | Year Produced     | The year the car was produced                                                                                 | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| G      | Engine Fuel       | Fuel type of the engine                                                                                       | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| I      | Engine Type       | Vehicle engine type                                                                                           | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| J      | Engine Capacity   | The capacity of the engine in liters                                                                          | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| K      | Body Type         | Type of the body (hatchback, sedan, etc.)                                                                     | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| M      | Drivetrain        | Front/rear/all drivetrain                                                                                     | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| N      | Price USD         | Price of a cars as listed in the catalog in USD                                                               | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| O      | Exchangeable      | If True the owner of the car is ready to exchange this car to other cars with little or no additional payment | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| P      | Location Region   | The region in Belarus where the car is listed for sale                                                        | Nominal    |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| Q      | Number of Photos  | Number of photos the cas has                                                                                  | Continous  |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| R      | Up Counter        | How many times the sample has been upped in the catalog to raise its position                                 | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
+| S      | Duration Listed   | Number of days the car is listed in the catalog                                                               | Continuous |
++--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
 
 From summary we notice that there exists 10 NA's in the attribute engine-capacity. Our understanding of vehicles informs us that engine-capacity is a categorical data-type and as such NA is crucial to our understanding of the data. The NA values serve as a distinguishment for the Electric Vehicles in the data. For the sake of future analyzation it will be useful to replace our NA values with an arbitrary number. We choose to change NA values to -1. Thus we do the following:
 
@@ -1178,11 +1196,11 @@ modelSVRLinTrainPrediction <- predict(modelSVRLinTrain, test.data)
 
 # Prediction error, rmse
 RMSE(modelSVRLinTrainPrediction,test.data$price_usd)
-#[1] 3257.887
+#[1] 3257.453
 
 # Compute R-square
 R2(modelSVRLinTrainPrediction,test.data$price_usd)
-#[1] 0.7772176
+#[1] 0.777241
 ```
 
 Observing RMSE(**3257.887**) we are able to see how concentrated the data is around our model. **Calculating our error rate we see 3257.887/mean(test.data\$price_usd) \*100 = 48.86921** is not great, but significantly better than our Linear Regression Model. Also, a **R-Squared of 0.7772176** is a significant increase in accuracy as well. We know that around 77.7% of our prices can be explained by our model. Nevertheless, we continue to find better models:

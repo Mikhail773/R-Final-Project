@@ -972,11 +972,11 @@ modelSVRLinTrainPrediction <- predict(modelSVRLinTrain, test.data)
 
 # Prediction error, rmse
 RMSE(modelSVRLinTrainPrediction,test.data$price_usd)
-#[1] 3257.887
+#[1] 3257.453
 
 # Compute R-square
 R2(modelSVRLinTrainPrediction,test.data$price_usd)
-#[1] 0.7772176
+#[1] 0.777241
 
 # Create SVR Model using Polynomial Method
 set.seed(123)
