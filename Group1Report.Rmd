@@ -64,7 +64,7 @@ The popularity of the used vehicle market and personal experience in buying a ve
 
 ## Problem Solving Methodology
 
-To solve our questions and answer our goal we are going to use R to make graphs to answer our questions. We will make sure to use different statistical analyses to make sure our graphs are confirmed to be accurate. The use of the Chi-Square Test, Anova Test, as well as the Correlation Test will be extensive to answer our questions. Furthermore, the dataset will be split into a training and testing set in order to verify the accuracies of the models that will be produced. Several models will be tested in order to achieve the most accurate result and these accuracies will be verified using RMSE, R-Squared, and error rate for regression models as well as accuracy, sensitivity, specificity, and AUC for the classification models.
+To solve our questions and answer our goal we are going to use R to make graphs to answer our questions. We will make sure to use different statistical analyses to make sure our graphs are confirmed to be accurate. The use of the Chi-Square Test, Anova Test, as well as the Correlation Test will be extensive to answer our questions. Furthermore, the dataset will be split into a training and testing set to verify the accuracies of the models that will be produced. Several models will be tested to achieve the most accurate result and these accuracies will be verified using RMSE, R-Squared, and error rate for regression models as well as accuracy, sensitivity, specificity, and AUC for the classification models.
 
 # Initial Questions
 
@@ -142,11 +142,11 @@ Now, to proceed with cleaning and analyzation we need a more robust knowledge of
 +--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
 | N      | Price USD         | Price of a cars as listed in the catalog in USD                                                               | Continuous |
 +--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
-| O      | Exchangeable      | If True the owner of the car is ready to exchange this car to other cars with little or no additional payment | Nominal    |
+| O      | Exchangeable      | If True, the owner of the car is ready to exchange this car to other cars with little or no additional payment | Nominal    |
 +--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
 | P      | Location Region   | The region in Belarus where the car is listed for sale                                                        | Nominal    |
 +--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
-| Q      | Number of Photos  | Number of photos the cas has                                                                                  | Continous  |
+| Q      | Number of Photos  | Number of photos the car has                                                                                  | Continuous |
 +--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
 | R      | Up Counter        | How many times the sample has been upped in the catalog to raise its position                                 | Continuous |
 +--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
@@ -175,7 +175,7 @@ Duplicate entries were identified and removed from the dataset. 41 such duplicat
 
 ## Dataset Outliers
 
-To determine what to do with the outliers we identified the outliers for each continuous variable and created a separate dataset with no outliers. Since there is no reason to believe this data is faulty we will leave these outliers in the dataset and proceed with the investigation. If we were to gauge the impact of our outliers we would have to run our analytics through the dataset with the outliers and the dataset without the outliers.
+To determine what to do with the outliers we identified the outliers for each continuous variable and created a separate dataset with no outliers. Since there is no reason to believe this data is faulty, we will leave these outliers in the dataset and proceed with the investigation. If we were to gauge the impact of our outliers, we would have to run our analytics through the dataset with the outliers and the dataset without the outliers.
 
 ## Dataset Training and Testing
 
@@ -199,7 +199,7 @@ To gain a robust knowledge of our dataset several visualizations were used. Visu
 ggplot(cars_edited, aes(y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name)) + geom_text(stat='count', aes(label=..count..), hjust=1)
 ```
 
-We can see a large difference in the amount cars for each manufacturers. Volkswagen, Opel, BMW, Audio, AvtoVAZ, Ford, Renault, and Mercedes-Benz are the majot manufacturers.
+We can see a large difference in the amount cars for each manufacturer. Volkswagen, Opel, BMW, Audio, AvtoVAZ, Ford, Renault, and Mercedes-Benz are the major manufacturers.
 
 ```{r TransmissionDistrib, fig.height = 10, fig.width = 10}
 # 2) A table to show unique car model names and quantity
@@ -214,7 +214,7 @@ legend("right", c("Automatic", "Mechanical"), cex = 0.8,
        fill = rainbow(length(transmissionCounted)))
 ```
 
-Mechanical is significantly more common than Automatic. This will definitely be an attribute to consider in our final model
+Mechanical is significantly more common than Automatic. This will be an attribute to consider in our final model
 
 ```{r ColorDistribution, fig.height = 10, fig.width = 10}
 # 4) Plotting cars by color and quantity
@@ -311,7 +311,7 @@ legend("right", c("Brest Region", "Gomel Region", "Grodno Region", "Minsk Region
        fill = rainbow(nrow(regionPriceDFCount)))
 ```
 
-Minsk accounts for a very large amount of vehicles (makes sense considering the population sizes) with even distributions everywhere else. The usefulness of the attribute may be less since Minsk is such a large portion of the data.
+Minsk accounts for a very large number of vehicles (makes sense considering the population sizes) with even distributions everywhere else. The usefulness of the attribute may be less since Minsk is such a large portion of the data.
 
 ```{r NumPhotosHistogram, fig.height = 10, fig.width = 10}
 # 15) Histogram Number of photos: Graph to see how the data is skewed
@@ -351,7 +351,7 @@ The histogram shows a skew in the duration listing for our dataset.
 Once a general understanding of each attribute was gained, we began to visualize various combinations of attributions. These visualizations were vital in seeing different relationships among our samples. The visualizations that were used were Balloon Plot, Scatterplot, frequency polygons, dplyr::summarize, and Boxplots.
 
 ```{r ManufByRegion, fig.height = 10, fig.width = 10}
-# 1) Graph to show the amount of cars(by manufacturer name) in a region BALLOON PLOT
+# 1) Graph to show the number of cars(by manufacturer name) in a region BALLOON PLOT
 ggplot(cars_edited, aes(location_region, manufacturer_name)) + geom_count()
 ```
 
@@ -383,7 +383,7 @@ This graph is incredibly diverse and indicates that there is a need for advanced
 ggplot(cars_edited, aes(year_produced, price_usd)) + geom_point(aes(color = body_type)) + geom_smooth()
 ```
 
-The quantity of samples make this graph hard to dissect. One would have to perform tests to see how body type relates to price.
+The quantity of samples makes this graph hard to dissect. One would have to perform tests to see how body type relates to price.
 
 ```{r BodyTypeAndPrice, fig.height = 10, fig.width = 10}
 # 6) Group by car body type and get its mean price
@@ -403,7 +403,7 @@ This graph tells us that given more time it may be useful to test our models wit
 ggplot(cars_edited) + geom_point(mapping = aes(x = body_type, y = price_usd, color = engine_fuel))
 ```
 
-This graph tells us that certain body types tend to come with engines for specific fuels. That being said the range for prices seem to be very scattered.
+This graph tells us that certain body types tend to come with engines for specific fuels. The range for prices seems to be very scattered.
 
 ```{r PriceByPhotos, fig.height = 10, fig.width = 10}
 # 9) Graph to show the price of a car according to its number of photos incl. engine fuel SCATTER PLOT
@@ -445,7 +445,7 @@ KNN:K Nearest Neighbor was chosen due to its popularity and simplicity. KNN can 
 
 **Justification:**
 
-To answer this question, we decided to firstuse a bar chart to see the average prices per region in comparison with each other.
+To answer this question, we decided to first use a bar chart to see the average prices per region in comparison with each other.
 
 ```{r RegionPrice, fig.height = 8, fig.width = 10, echo=FALSE}
 #Aggregating the data of price to region to get the mean of prices
@@ -552,7 +552,7 @@ Investigating the results of the one-way Anova we can confirm our claim. The p-v
 We continue with the Tukey HSD to do multiple pairwise-comparisons between the means of our groups. This will allow us to see exactly which manufacturers significantly differ in asking price.
 
 ```{r ManufTukey, eval=FALSE, include=TRUE}
-# Result ommitted for brevity sake
+# Result omitted for brevity's sake
 # Tukey Test
 TukeyHSD(res.aovTwo)
 ```
@@ -751,7 +751,7 @@ The R2 is 0.003311 which indicates that a low proportion of prices in the data c
 
 **Justification**:
 
-To begin this question it was important to have a working knowledge of how body type and engine type related to one another. Initially a Mosaic plot felt like the right graph to show relationships, but the quantity of categories made a balloon plot much easy to read. The spacious nature of the balloon plot greatly aided in gaining insights from the data and pushed further investigation.
+To begin this question, it was important to have a working knowledge of how body type and engine type related to one another. Initially a Mosaic plot felt like the right graph to show relationships, but the quantity of categories made a balloon plot much easy to read. The spacious nature of the balloon plot greatly aided in gaining insights from the data and pushed further investigation.
 
 ```{r EngBodyBalloonPlot, fig.height = 10, fig.width = 10}
 # Balloon Plot
@@ -805,7 +805,7 @@ Since the p-value is less than 0.05 for all three cases we can confirm that ther
 To conclude our investigation, we will run the Tukey Honest Significant Differences to perform the multiple pairwise-comparisons between the means of groups to determine which groups are different and how they differ.
 
 ```{r EngineBodyTukey, eval=FALSE, include=TRUE}
-# Result ommitted for brevity sake}
+# Result omitted for brevity's sake}
 #Tukey HSD
 TukeyHSD(body_engine_type_on_price.aov)
 ## Fit: aov(formula = price_usd ~ engine_type * body_type, data = cars_edited)
@@ -869,7 +869,7 @@ modelPrice <- lm (price_usd ~ model_name, data = cars_edited)
 ```
 
 ```{r modelPriceSummary, eval=FALSE, include=TRUE}
-# Result ommitted for brevity sake
+# Result omitted for brevity's sake
 # Making sure the linear regression line matches the model
 summary(modelPrice)
 ## Residual standard error: 4043 on 37372 degrees of freedom
@@ -882,7 +882,7 @@ The R2 is 0.6039 which indicates that a relatively large proportion of prices in
 We continue by assessing the error of our model to get a better picture of the model's accuracy.
 
 ```{r ModelConf, eval=FALSE, include=TRUE}
-# Result ommitted for brevity sake
+# Result omitted for brevity's sake
 confint(modelPrice)
 ```
 
@@ -1078,7 +1078,7 @@ In this graph the AUC is 0.653, which i relatively good. Remember that a classif
 We attempted to create a more accurate exploratory model for exchangeability by using Logistic Classification. The model will be running the train function with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate). These settings should produce an optimal model.
 
 ```{r LRExploratoryClassificationExchangeability, eval=FALSE, include=TRUE}
-## Using Logistic Classfication to create an exploratory model for exchangeability
+## Using Logistic Classification to create an exploratory model for exchangeability
 set.seed(123)
 model_LR_Exchangeable <-  train( is_exchangeable ~ . -model_name, data = train.data, method = "glm", family = "binomial",
                                  trControl = trainControl("cv", number =10),
@@ -1129,7 +1129,7 @@ plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
 ![](images/LRExplorataryBestRoc.png)
 
-In this graph the AUC is 0.651, which i relatively good and quite like the AUC from the Decision Tree model. Since the classifier is better that 0.5, we can comfortable say that this is a good exploratory model. The best threshold with the highest sum sensitivity and specificity is 0.356 and we get a specificity of 0.640 and a sensitivity of 0.580. The Logistic Regression Model also produces a good exploratory model.
+In this graph the AUC is 0.651, which i relatively good and quite like the AUC from the Decision Tree model. Since the classifier is better that 0.5, we can comfortably say that this is a good exploratory model. The best threshold with the highest sum sensitivity and specificity is 0.356 and we get a specificity of 0.640 and a sensitivity of 0.580. The Logistic Regression Model also produces a good exploratory model.
 
 #### Predicting Exchangeability using Logistic Regression
 
@@ -1220,7 +1220,7 @@ step.LM <- LM %>% stepAIC(trace = FALSE)
 vif(step.LM)
 ```
 
-The VIF tells us that there is not significant multi-collinearity between any of the continious attributes.
+The VIF tells us that there is not significant multi-collinearity between any of the continuous attributes.
 
 Now that the model is created and optimized it is vital to check the accuracy of the model. To do this we will employ our test.data to test how accurately the Linear Regression model can predict the price of a vehicle.
 
@@ -1284,7 +1284,7 @@ R2(modelSVRLinTrainPrediction,test.data$price_usd)
 #[1] 0.777241
 ```
 
-Observing RMSE(**3257.453**) we can see how concentrated the data is around our model. **Calculating our error rate we see 3257.453/mean(test.data\$price_usd) \*100 = 48.86270** is not great, but significantly better than our Linear Regression Model. Also, a **R-Squared of 0.7772410** is a significant increase in accuracy as well. We know that around 77.7% of our prices can be explained by our model. Nevertheless, we continue to find better models:
+Observing RMSE(**3257.453**) we can see how concentrated the data is around our model. **Calculating our error rate, we see 3257.453/mean(test.data\$price_usd) \*100 = 48.86270** is not great, but significantly better than our Linear Regression Model. Also, a **R-Squared of 0.7772410** is a significant increase in accuracy as well. We know that around 77.7% of our prices can be explained by our model. Nevertheless, we continue to find better models:
 
 The next model to be computed is the SVR model using the polynomial method: This model was not able to compute in time and would be a wonderful model to check given more time.
 
@@ -1472,7 +1472,7 @@ random_forest_ranger$finalModel
 
 ![](images/plot(random_forest_ranger)_568_395.png)
 
-Once the Random Forest Tree is made, we wish to gauge the accuracy of the model. To accomplish this we use the predict function to predict values of our vehicle prices. Afterwards, we will compare these values to the actual prices of the test dataset to find the accuracy of the model.
+Once the Random Forest Tree is made, we wish to gauge the accuracy of the model. To accomplish this, we use the predict function to predict values of our vehicle prices. Afterwards, we will compare these values to the actual prices of the test dataset to find the accuracy of the model.
 
 ```{r RFFModelPredict, eval=FALSE, include=TRUE}
 # Make predictions on the test data
@@ -1564,4 +1564,4 @@ Given the result of the KNN model one can conclude that more may have to be done
 
 ## Conclusion
 
-We have thoroughly and exhaustively analyzed our data set with the tools that we have learned to use through our Data Analytics course. We can conclude that the asking price of a vehicle depends on many variables. There are several correlations and trends that we have been able to identify. Some vehicles do not occur often due to a limit in the data collected and for that reason prediction made on vehicles (specifically models) that are not common ought to be taken with the limitations of the models in mind. More testing is needed to delve further into our questions and optimize our models. As is the case with data science as a whole, the process of managing data, finding new insights through analytics, and making conclusions will continue to occur. As we find answers, we find new questions to ask, and that is the core of data science.
+We have thoroughly and exhaustively analyzed our data set with the tools that we have learned to use through our Data Analytics course. We can conclude that the asking price of a vehicle depends on many variables. There are several correlations and trends that we have been able to identify. Some vehicles do not occur often due to a limit in the data collected and for that reason prediction made on vehicles (specifically models) that are not common ought to be taken with the limitations of the models in mind. More testing is needed to delve further into our questions and optimize our models. As is the case with data science, the process of managing data, finding new insights through analytics, and making conclusions will continue to occur. As we find answers, we find new questions to ask, and that is the core of data science.
