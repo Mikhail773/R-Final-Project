@@ -3,14 +3,14 @@
 # CSC 335 Project: Used Cars Market in Belarus
 #
 
-#Import all the library's we are using
+# Import all the library's we are using
 library(tidyverse)
 library(hexbin)
 library(e1071) #SVM
-library(car) #predict
-library(caret) #partiiton
-library(MASS) #stepwise
-library(kernlab) #SVM
+library(car) # predict
+library(caret) # partiiton
+library(MASS) # stepwise
+library(kernlab) # SVM
 library(rpart) # Decision Tree Regression
 library(randomForest) #  Random Forest Tree Regression
 library(ranger) # RFT more than 53 factors
@@ -21,10 +21,10 @@ library(vctrs)
 # Evaluate the data
 #
 
-#Read our dataset into the cars variable
+# Read our dataset into the cars variable
 cars <- read_csv("cars.csv")
 
-View(cars) #View the data
+View(cars) # View the data
 
 ###################################################################################################
 #
@@ -32,14 +32,14 @@ View(cars) #View the data
 # This prevented issues arising from locale settings and made working on the code easier as a group.
 #
 
-#Removing unnecessary columns from cars. Store that data in cars_edited
+# Removing unnecessary columns from cars. Store that data in cars_edited
 # -(19) is a column that shows the number of times a car has been upped. This column not descriptive and has been removed
 # -(20:29) are boolean columns for various features. There is no description of what these features are and for that reason they have been omitted.
 cars_edited <- cars %>% dplyr::select(-8 & -(12:13) & -(20:29))
 View(cars_edited) #View the data
 
 # This recoding was done on the csv file and saved permanently to avoid future locale issues.
-# #Recode foreign language into their English meaning (location_region)
+# Recode foreign language into their English meaning (location_region)
 # cars_edited <-
 #   cars_edited %>% mutate(
 #     location_region = recode(
@@ -141,7 +141,7 @@ test.data <- cars_edited[-training.samples,]
 # 2) A table to show unique car model names and quantity
 # 9) Table for Engine capacity
 
-# 1)What is the distribution of manufacturers?
+# 1) What is the distribution of manufacturers?
 ggplot(cars_edited, aes(y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name)) + geom_text(stat='count', aes(label=..count..), hjust=1)
 # We can see a large difference in the amount cars for each manufacturers. Volkswagen, Opel, BMW, Audio, AvtoVAZ, Ford, Renault, and Mercedes-Benz are the majot manufacturers.
 
@@ -280,7 +280,7 @@ ggplot(cars_edited, aes(color)) + geom_bar(aes(fill = location_region))
 ggplot(cars_edited, aes(odometer_value, price_usd)) + geom_point(aes(color = is_exchangeable)) + geom_smooth()
 # This graph is incredible diverse and indicates that there is a need for advanced models to access price relationships.
 
-# 5)Graph to show the price of a car according to it's year produced AND body type SCATTER PLOT
+# 5) Graph to show the price of a car according to it's year produced AND body type SCATTER PLOT
 ggplot(cars_edited, aes(year_produced, price_usd)) + geom_point(aes(color = body_type)) + geom_smooth()
 # There seems to be a parabolic relationship between year_produced and price_usd
 
@@ -1287,10 +1287,10 @@ cars_edited_without_outliers <-
   cars_edited_without_outliers[!cars_edited_without_outliers$duration_listed %in% my_list[[6]], ]
 View(cars_edited_without_outliers)
 
-#Summary of Attributes with Outliers
+# Summary of Attributes with Outliers
 summary(Cars_continuous)
 
-#Summary of Attributes_without Outliers
+# Summary of Attributes_without Outliers
 summary(cars_edited_without_outliers)
 ##############################################################################################################
 #
