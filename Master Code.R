@@ -564,7 +564,9 @@ sigma(ManufyearPrice)*100/mean(cars_edited$price_usd)
 # We will see if we can predict exchangeability given all the other attributes
 #
 ###################################################################################################
-## Using Decision Tree to create an exploratory model for exchangeability
+# 
+# Using Decision Tree to create an exploratory model for exchangeability
+#
 set.seed(123)
 model_DT_Exchangeable <-  train(is_exchangeable ~ . -model_name, data = train.data, method = "rpart",
                                 trControl = trainControl("cv",number = 10),
@@ -642,7 +644,10 @@ rocModelDT.data %>% filter(specificity >= 0.5)
 # 17        Inf  0.00000000   1.0000000
 plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
-############## Predictive Model DT
+######################
+#
+# Predictive Model DT
+#
 
 predictionsDT <- predict(model_DT_Exchangeable, test.data)
 
@@ -794,7 +799,11 @@ rocModelLRExploratory.data %>% filter(specificity >= 0.5)
 # More ommitted
 plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 
-############## Predictive Model LR
+######################
+#
+# Predictive Model LR
+#
+
 predictionsLR <- predict(model_LR_Exchangeable, test.data)
 # Check accuracy, error, and confusion matrix
 accuracy <- mean(test.data$is_exchangeable == predictionsLR)
@@ -949,6 +958,7 @@ R2(LogLMPrediction,test.data$price_usd)
 # Log transformation is less accurate
 
 ###################################################################################################
+# 
 # SVR Models
 #
 # Create SVR Model using Linear Method
@@ -1067,6 +1077,7 @@ R2(prediction_DT_Train,test.data$price_usd)
 #
 # Random Forest Model
 #
+
 set.seed(123)
 random_forest_ranger <- train(price_usd ~ . -model_name,
                               data = train.data,
@@ -1174,6 +1185,7 @@ R2(rf_predict_ranger,test.data$price_usd)
 #
 # KNN Model
 #
+
 set.seed(123)
 model_knn <- train(
   price_usd ~. -model_name, data = train.data, method = "knn",
