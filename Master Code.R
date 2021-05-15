@@ -1216,15 +1216,15 @@ plot(model_knn)
 # Make predictions on the test data
 knn_predictions <- model_knn %>% predict(test.data)
 head(knn_predictions)
-#[1] 9560.000 9000.000 4580.000 5648.494 8575.200 7720.000
+#[1] 9560.000 8540.000 3210.000 5648.494 8575.200 7720.000
 
 # Compute the prediction error RMSE
 RMSE(knn_predictions,test.data$price_usd)
-#[1] 3693.127
+#[1] 3693.939
 
 # Compute R-square
 R2(knn_predictions,test.data$price_usd)
-#[1] 0.6802895
+#[1] 0.680185
 
 ##############################################################################################################
 #
