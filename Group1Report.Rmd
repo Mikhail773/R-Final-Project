@@ -1528,7 +1528,7 @@ plot(model_knn)
 
 The plot below illustrates the relationship between RMSE and cp values. The cp value is chosen to minimize the RMSE and thus optimize the accuracy of the graph.
 
-![](images/plot(model_knn)_1920_1080.png)
+![](images/plot(model_knn_seed(123)_1920_1080.png)
 
 With optimization for our KNN model complete we now direct our attention to evaluating the accuracy of the model. This is done by using the model to predict prices from our test dataset. This ensures the model is tested on data that is not in the training and allows us to test the accuracy of the predictions against known values.
 
