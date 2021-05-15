@@ -1563,3 +1563,8 @@ Given the result of the KNN model one can conclude that more may have to be done
 | KNN(K Nearest Neighbor)                 | **3693.127** | **55.39793** | **0.6802895** |
 
 Note: Some vehicles do not occur often due to a limit in the data collected and for that reason prediction made on vehicles (specifically models) that are not common ought to be taken with the limitations of the models in mind.
+
+## Conclusion
+
+We have thoroughly and exhaustively analyzed our data set with the tools that R provides that we have learned to use through our Data Analytics course. We can conclude that the asking price of a vehicle depends on many variables and not just one. There are several correlations and trends that we have been able to identify yet without additional data for uncommon vehicles we are unable to test them fully. More testing is needed to delve further into our questions as we find answers, we find new questions to ask, and that is the core of what data science is.
+
