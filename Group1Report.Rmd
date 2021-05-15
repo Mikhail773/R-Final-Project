@@ -993,7 +993,7 @@ confusionMatrix(train.data$is_exchangeable, predictionsDTExploratory)
 
 The Decision Tree had an overall accuracy of around 69.4%. Meaning that the explanatory power is equal to 69.4%. The misclassification rate was 30.6%
 
-![](images/DTCMExplorative.PNG)
+![](images/Exchange%20QS/Decision%20Tree/DTCMExplorative.PNG)
 
 The Accuracy for when we have an exchangeability of "TRUE" is \~63.5%(sensitivity)
 
@@ -1019,7 +1019,7 @@ rocModelDT.data %>% filter(specificity >= 0.5)
 plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 ```
 
-![](images/DTExploratoryplot.Bestroc.png)
+![](images/Exchange%20QS/Decision%20Tree/DTExploratoryplot.Bestroc.png)
 
 The AUC is above 0.5 which tells us that this is good exploratory model. The best threshold with the highest sum sensitivity and specificity is 0.357 and we get a specificity of 0.818 and a sensitivity of 0.419.
 
@@ -1043,7 +1043,7 @@ confusionMatrix(test.data$is_exchangeable, predictionsDT)
 
 The accuracy above tells us that the Decision Tree correctly predicted \~69% of the individuals who agreed to exchanging their vehicles. This is better than random guessing. The misclassification error rate is \~31%.
 
-![](images/DTCMPredictive.PNG)
+![](images/Exchange%20QS/Decision%20Tree/DTCMPredictive.PNG)
 
 Sensitivity is \~60.6%, that is the proportion of individuals who were correctly identified to being willing to take part in an exchange for their vehicle.
 
@@ -1069,7 +1069,7 @@ rocModelDT.data %>% filter(specificity >= 0.5)
 plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 ```
 
-![](images/DTPredictiveBestRoc.png)
+![](images/Exchange%20QS/Decision%20Tree/DTPredictiveBestRoc.png)
 
 In this graph the AUC is 0.653, which i relatively good. Remember that a classifier that performs no better than chance is expected to have an AUC of 0.5 when evaluated on an independent test set not used to train the model. Meaning, that this model does in fact predict exchangeability with some success. The best threshold with the highest sum sensitivity and specificity is 0.332 and we get a specificity of 0.772 and a sensitivity of 0.457. Ultimately, we learn that the Decision Tree Classification produces a good predictive model for exchangeability of a vehicle.
 
@@ -1101,7 +1101,7 @@ confusionMatrix(train.data$is_exchangeable, predictionsLRExploratory)
 
 The accuracy above tells us that the Logistic Classification correctly predicted \~66% of the individuals who agreed to exchanging their vehicles. This is better than random guessing. The misclassification error rate is \~33.76%.
 
-![](images/LRCMExploratory.png)
+![](images/Exchange%20QS/Logistic/LRCMExploratory.png)
 
 Sensitivity is \~58.46%, that is the proportion of individuals who were correctly identified to being willing to take part in an exchange for their vehicle.
 
@@ -1127,7 +1127,7 @@ rocModelLRExploratory.data %>% filter(specificity >= 0.5)
 plot.roc(res.roc, print.auc = TRUE, print.thres = "best")
 ```
 
-![](images/LRExplorataryBestRoc.png)
+![](images/Exchange%20QS/Logistic/LRExplorataryBestRoc.png)
 
 In this graph the AUC is 0.651, which i relatively good and quite like the AUC from the Decision Tree model. Since the classifier is better that 0.5, we can comfortably say that this is a good exploratory model. The best threshold with the highest sum sensitivity and specificity is 0.356 and we get a specificity of 0.640 and a sensitivity of 0.580. The Logistic Regression Model also produces a good exploratory model.
 
@@ -1155,7 +1155,7 @@ confusionMatrix(test.data$is_exchangeable, predictionsLR)
 
 The accuracy above tells us that the Logistic Classification correctly predicted \~66.5% of the individuals who agreed to exchanging their vehicles. This is a good accuracy for a predictive model. The misclassification error rate is \~33.5%.
 
-![](images/LRCMPredictive.png)
+![](images/Exchange%20QS/Logistic/LRCMPredictive.png)
 
 Sensitivity is \~58% , that is the proportion of individuals who were correctly identified to being willing to take part in an exchange for their vehicle.
 
@@ -1182,7 +1182,7 @@ rocModelLR.data %>% filter(specificity >= 0.5)
 plot.roc(res.rocLR, print.auc = TRUE, print.thres = "best")
 ```
 
-![](images/LRPredictiveBestRoc.png)
+![](images/Exchange%20QS/Logistic/LRPredictiveBestRoc.png)
 
 In this graph the AUC is 0.648 is a good AUC from a model. This model does predict exchangeability with success. The best threshold with the highest sum sensitivity and specificity is 0.356 and we get a specificity of 0.647 and a sensitivity of 0.580. The Logistic Regression Model also produces a good predictive model.
 
@@ -1374,7 +1374,7 @@ plot(model_DT_Train)
 
 **Our value for bestTune was 0.01032955** which tells us what the best tuning parameter C that maximizes our accuracy is 0.01032955. The plot below shows the relationship between RMSE and the cp values. One can easily see that the cp value was chosen to minimize the value of the RMSE.
 
-![](images/plot(model_DT_Train)_1920_1080.png)
+![](images/Main%20Goal/Decision%20Tree/plot(model_DT_Train)_1920_1080.png)
 
 Next, we will plot the final model for the decision tree as well as the decision rules for our final model.
 
@@ -1389,7 +1389,7 @@ model_DT_Train$finalModel
 # See model_DT_TrainfinalModel-1.txt
 ```
 
-![](images/plot(model_DT_Train$finalModel)Text4k.png)
+![](images/Main%20Goal/Decision%20Tree/plot(model_DT_Train$finalModel)Text.png)
 
 Once the Decision Tree is created and pruned, we will then use it to predict values of our vehicle prices and analyze the accuracy of the model.
 
@@ -1470,7 +1470,7 @@ random_forest_ranger$finalModel
 
 **Below is the plot for the random forest Tree. This plot shows the values for the model accuracy vs different values of the complexity parameter.**
 
-![](images/plot(random_forest_ranger)_568_395.png)
+![](images/Main%20Goal/Random%20Forest/plot(random_forest_ranger)_568_395.png)
 
 Once the Random Forest Tree is made, we wish to gauge the accuracy of the model. To accomplish this, we use the predict function to predict values of our vehicle prices. Afterwards, we will compare these values to the actual prices of the test dataset to find the accuracy of the model.
 
@@ -1528,7 +1528,7 @@ plot(model_knn)
 
 The plot below illustrates the relationship between RMSE and cp values. The cp value is chosen to minimize the RMSE and thus optimize the accuracy of the graph.
 
-![](images/plot(model_knn_seed(123)_1920_1080.png)
+![](images/Main%20Goal/KNN/plot(model_knn_seed(123)_1920_1080.png)
 
 With optimization for our KNN model complete we now direct our attention to evaluating the accuracy of the model. This is done by using the model to predict prices from our test dataset. This ensures the model is tested on data that is not in the training and allows us to test the accuracy of the predictions against known values.
 
