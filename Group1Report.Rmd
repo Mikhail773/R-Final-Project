@@ -1551,7 +1551,7 @@ Given the RMSE being 3693.127 we calculated our error rate as 3693.127/mean(test
 
 Given the result of the KNN model one can conclude that more may have to be done to optimize the results of the model. Given more time it may be beneficial to scale the data and rerun the model to see if a better result could be achieved.
 
-## Results obtained using different ML methods
+## Results Obtained
 
 | Machine-Learning Methods                |     RMSE     |  Error Rate  |      R-Square |
 |:----------------------------------------|:------------:|:------------:|--------------:|
