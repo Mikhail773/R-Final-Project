@@ -214,21 +214,21 @@ legend("right", c("Automatic", "Mechanical"), cex = 0.8,
        fill = rainbow(length(transmissionCounted)))
 ```
 
-Mechanical is significantly more common than Automatic. This will be an attribute to consider in our final model
+Mechanical is significantly more common than Automatic. This will be an attribute to consider in our final model.
 
 ```{r ColorDistribution, fig.height = 10, fig.width = 10}
 # 4) Plotting cars by color and quantity
 ggplot(cars_edited, aes(x = color)) + geom_bar(stat = "count", aes(fill = color)) + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
 ```
 
-There is a lot of diversity in the colors and once again although there are categories with more values there exists a decent amount of variation
+There is a lot of diversity in the colors and once again although there are categories with more values there exists a decent amount of variation.
 
 ```{r OdometerDistribution, fig.height = 10, fig.width = 10}
 # 5) Histogram Odometer Value: Graph to see how the data is skewed
 ggplot(cars_edited, aes(odometer_value)) + geom_histogram()
 ```
 
-The data is left-skewed with what appears to be outliers at around 1,000,000 miles
+The data is left-skewed with what appears to be outliers at around 1,000,000 miles.
 
 ```{r YearProducedDistribution, fig.height = 10, fig.width = 10}
 # 6) Histogram Year produced: Graph to see how the data is skewed
@@ -242,7 +242,7 @@ The graph seems to almost be normally distributed minus what appears to be some 
 ggplot(cars_edited, aes(x = engine_fuel)) + geom_bar(stat = "count", aes(fill = engine_fuel)) + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
 ```
 
-There are only 2 major engine fuels (gasoline and diesel)
+There are only 2 major engine fuels (gasoline and diesel).
 
 ```{r EngineDistrib, fig.height = 10, fig.width = 10}
 # 8) Pie graph to show engine type Distribution (Electric, Diesel, Gasoline)
@@ -254,21 +254,21 @@ legend("right", c("diesel", "electric", "gasoline"), cex = 0.8,
        fill = rainbow(nrow(TypeCounted)))
 ```
 
-Not surprisingly gasoline and diesel are the 2 most common Engine Type considering the fuel distribution
+Not surprisingly gasoline and diesel are the 2 most common Engine Type considering the fuel distribution.
 
 ```{r CapacityDistribution , fig.height = 10, fig.width = 10}
 # 9) Table for Engine capacity
 cars_edited %>% count(engine_capacity)
 ```
 
-Engine Capacity seems to be left-skewed which may indicate outliers
+Engine Capacity seems to be left-skewed which may indicate outliers.
 
 ```{r BodyTypeDistribution , fig.height = 10, fig.width = 10}
 # 10) Bar graph Body type: count how many cars have the same body type
 ggplot(cars_edited, aes(x = body_type), stat = "count") + geom_bar() + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
 ```
 
-There is some diversity in body type and the diversity in categories may lend itself to useful data for a future model
+There is some diversity in body type and the diversity in categories may lend itself to useful data for a future model.
 
 ```{r DrivetrainDistribution , fig.height = 10, fig.width = 10}
 # 11) Graph Drivetrain distribution:
@@ -280,7 +280,7 @@ legend("right", c("all", "front", "rear"), cex = 0.8,
        fill = rainbow(nrow(drivetrainCounted)))
 ```
 
-Although most vehicles are front wheel drive there is enough all and real wheel drive to gather some promising insights
+Although most vehicles are front wheel drive there is enough all and real wheel drive to gather some promising insights.
 
 ```{r PriceDistribution , fig.height = 10, fig.width = 10}
 # 12) Number of cars with same price
@@ -299,7 +299,7 @@ legend("right", c("False", "True"), cex = 0.8,
        fill = rainbow(nrow(exchangeableCounted)))
 ```
 
-Exchangeability is more common than anticipated. It will be interesting to see if pricier or cheaper cars consent to exchanges
+Exchangeability is more common than anticipated. It will be interesting to see if pricier or cheaper cars consent to exchanges.
 
 ```{r RegionDistrib, fig.height = 10, fig.width = 10}
 # 14) Pie Graph Location region: Count the number of cars in a region
@@ -355,21 +355,21 @@ Once a general understanding of each attribute was gained, we began to visualize
 ggplot(cars_edited, aes(location_region, manufacturer_name)) + geom_count()
 ```
 
-Due to the quantity of categories a test will need to be done to gather significant data
+Due to the quantity of categories a test will need to be done to gather significant data.
 
 ```{r PriceByYear, fig.height = 10, fig.width = 10}
 # 2) Graph to show the price of a car according to its year produced SCATTER PLOT
 ggplot(cars_edited, aes(year_produced, price_usd)) + geom_point() + geom_smooth()
 ```
 
-There exists a parabolic relationship between year_produced and price_usd
+There exists a parabolic relationship between year_produced and price_usd.
 
 ```{r CarsByColor, fig.height = 10, fig.width = 10}
 # 3) Graph to show the number of cars in specific colors(10 red cars, 8 blue cars etc.) by region BAR GRAPH
 ggplot(cars_edited, aes(color)) + geom_bar(aes(fill = location_region))
 ```
 
-From looking at the bar graph there does not seem to be any significant differences in color distribution for locations
+From looking at the bar graph there does not seem to be any significant differences in color distribution for locations.
 
 ```{r CarsByOdometerandExchangeable, fig.height = 10, fig.width = 10}
 # 4) Graph to show the price of a car according to its millage(odometer) SCATTER PLOT
@@ -1376,7 +1376,7 @@ plot(model_DT_Train)
 
 ![](images/plot(model_DT_Train)_1920_1080.png)
 
-Next, we will plot the final model for the decision tree as well as the decision rules for our final model
+Next, we will plot the final model for the decision tree as well as the decision rules for our final model.
 
 ```{r DTPlot, eval=FALSE, include=TRUE}
 # Plot the final tree model
