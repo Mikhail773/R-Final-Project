@@ -21,9 +21,9 @@ library(pROC) # Calculate roc
 library(vctrs)
 ```
 
-# Abstract: Description of the Project and the Findings
+# Abstract:
 
-Vehicles are essential to transportation as a society, and one of the main methods of obtaining a vehicle is through the purchase of a previously owned vehicle. Belarus, as with many countries, has an extensive used vehicle market and precisely this market will be extensively studied. A popular used cars catalog from the country of Belarus will be cleaned and analyzed to answer several questions as well as accomplish our main two goals. Multiple Linear Regression, SVR, Decision Tree Regression, Random Forest Regression, and KNN will all be used to predict the market price of a used car in Belarus given the attributes found in the dataset. Also, a Decision Tree and a Logistic Regression Model will be used to create an exploratory and predictive model for the exchange preferences of a vehicle owner in Belarus. The accuracy of these models will be analyzed, and performance tested for real-world application with the help of a training and testing dataset.
+Vehicles are essential to transportation as a society, and one of the main methods of obtaining a vehicle is through the purchase of a previously owned vehicle. Belarus, as with many countries, has an extensive used vehicle market that will be extensively studied. A popular used cars catalog from the country of Belarus will be cleaned and analyzed to answer several questions as well as accomplish our main two goals. Multiple Linear Regression, SVR, Decision Tree Regression, Random Forest Regression, and KNN will all be used to predict the market price of a used car in Belarus given the attributes found in the dataset. Also, a Decision Tree and a Logistic Regression Model will be used to create an exploratory and predictive model for the exchange preferences of a vehicle owner in Belarus. The accuracy of these models will be analyzed, and performance tested for real-world application with the help of a training and testing dataset.
 
 **OUR FINDINGS:** We found that the Random forest tree had the best R-Squared value, lowest error rate, and lowest RMSE which tells us that this model technique is the best of all the models tested for making predictions from our dataset. The two worst prediction models were the Multiple Linear Regression, and SVR Radial. Below is a chart of all our results from each of our models. We note that a lower error rate is better, and the higher the R-Squared value the better the correlation the model has with the data.
 
@@ -56,19 +56,19 @@ The AUC, accuracy, sensitivity, and specificity are higher in the decision tree.
 
 ## Focus Problems
 
-There are several objectives that will be the focal point of the research done on the used cars dataset. The main scope of this project is to create an effective predictive model for the price of a used in Vehicle in Belarus. As well as creating a predictive model for vehicle prices an exploratory and predictive model will be created for the likelihood of a vehicle owner being willing to exchange their vehicle. Several questions will be answered in the process of creating models and to gain a further understanding of the overall dataset.
+There are several objectives that will be the focal point of the research done on the used cars dataset. The main scope of this project is to create an effective predictive model for the price of a used in Vehicle in Belarus. An exploratory and predictive model will be created for the likelihood of a vehicle owner being willing to exchange their vehicle. Several questions will be answered in the process of creating the following models and to gain a further understanding of the overall dataset.
 
 ## Problem Motivations
 
-The popularity of the used vehicle market and personal experience in buying a vehicle led to initial intrigue in the used dataset. Furthermore, having a project member who was born in Eastern Europe led to added interest in how the vehicle market may look as opposed to the market in America. Also, personal experience with vehicle owners offering vehicle exchanges motivated the desire to create an exploratory and predictive model for the willingness of an owner to offer an exchange.
+The popularity of the used vehicle market and personal experience in buying a vehicle led to initial intrigue in the used dataset. Furthermore, having a project member who was born in Eastern Europe led to added interest in how the vehicle market differs from the used car market in America. Interest in what factors contributed the most to a vehicles price, and the desire to successfully predict a vehicles price given those factors led to the desire to produce predictive models for price. Also, personal experience with vehicle owners offering vehicle exchanges motivated the desire to create an exploratory and predictive model for the willingness of an owner to offer an exchange.
 
 ## Problem Solving Methodology
 
-To solve our questions and answer our goal we are going to use R to make graphs to answer our questions. We will make sure to use different statistical analyses to make sure our graphs are confirmed to be accurate.
+To solve our questions and answer our goal we are going to use R to make graphs to answer our questions. We will make sure to use different statistical analyses to make sure our graphs are confirmed to be accurate. The use of the Chi-Square Test, Anova Test, as well as the Correlation Test will be extensive to answer our questions. Furthermore, the dataset will be split into a training and testing set in order to verify the accuracies of the models that will be produced. Several models will be tested in order to achieve the most accurate result and these accuracies will be verified using RMSE, R-Squared, and error rate for regression models as well as accuracy, sensitivity, specificity, and AUC for the classification models.
 
 # Initial Questions
 
-The main goal is to create a predictive model based on insights gained from analyzing the impact of variables on the selling price of a vehicle. The goal was chosen for its applicability and general interest of which attributes impact price of a used car. Secondly, exploratory, and predictive models to predict whether a vehicle would be exchangeable or not will be created using a Decision Tree and Logistic Classification will be used and analyzed for accuracy. In addition, there will be several questions that will be answered concerning the dataset. These questions aid in solving the main goal and are important insights to be gleaned from the dataset. The questions that will be answered about the dataset are as follows:
+The main goal is to create a predictive model based on insights gained from analyzing the impact of variables on the selling price of a vehicle. The goal was chosen for its applicability and general interest in which attributes impact price of a used car. Secondly, exploratory, and predictive models to gauge whether a vehicle would be exchangeable or not will be created using a Decision Tree and Logistic Classification. Both these models will be analyzed for accuracy, sensitivity, and specificity. In addition, there will be several questions that will be answered concerning the dataset. These questions aid in solving the main goal and are important insights to be gleaned from the dataset. The questions that will be answered about the dataset are as follows:
 
 -   What impact does a region have on price?
 -   What is the distribution of manufacturers and whether manufacturers have a significant impact on the asking price of a vehicle?
@@ -83,7 +83,9 @@ The main goal is to create a predictive model based on insights gained from anal
 
 ## Dataset Source
 
-Kaggle dataset: <https://www.kaggle.com/lepchenkov/usedcarscatalog%22%20/> The dataset that was chosen was obtained from Kaggle and was scraped by an individual named Kirill Lepchenkov with the help of an associate named Vasily Kachalko who aided in parsing the data. This will be utilized to understand the effect certain characteristics have on the price point at which cars in Belarus are sold at. Analyzing cars that are for sale is beneficial in gaining an understanding on what contributes to how a used car would be priced and would allow for predicting the market price of a used car in Belarus.
+Kaggle dataset: [Used Cars Catalog](https://www.kaggle.com/lepchenkov/usedcarscatalog){.uri}.
+
+The dataset that was chosen was obtained from Kaggle and was scraped by an individual named Kirill Lepchenkov with the help of an associate named Vasily Kachalko who aided in parsing the data. This dataset will be utilized to understand the effect certain characteristics have on the price point at which cars in Belarus are sold at. Analyzing cars that are for sale is beneficial in gaining an understanding on what contributes to how a used car would be priced and would allow for predicting the market price of a used car in Belarus.
 
 ## Dataset Description
 
@@ -95,24 +97,23 @@ To clean the dataset, it was vital to open the csv file and investigate the type
 
 ```{r ReadCars}
 cars <- read_csv("cars.csv")
-
 head(cars, 20)
 ```
 
-Afterwards, it was crucial to obtain a quick summary of our dataset to investigate the steps needed to clean the dataset. This was done with the following line of code:
+Afterwards, it was crucial to obtain a quick summary of our dataset to assess the steps needed to clean the dataset. This was done with the following line of code:
 
 ```{r CarsSummary, fig.height = 15, fig.width = 20 }
 summary(cars)
 ```
 
-From the summary we clearly see that engine_has_gas, has_warranty, and state have very little variability and for that reason they will be removed from the dataset. Furthermore, upon researching the features attribute it was uncovered that the data had severe inconsistencies (according to the creator) and for that reason will be removed. Therefore, we run the select command to remove these attributes.
+From the summary we clearly see that engine_has_gas, has_warranty, and state have very little variability and for that reason they will be removed from the dataset. Furthermore, upon researching the features attribute it was uncovered that the data had severe inconsistencies (according to the creator) and for that reason they will be removed. To accomplish this, we run the select command to remove these attributes.
 
 ```{r FilterAttributes}
 cars_edited <- dplyr::select(cars, -8 & -(12:13) & -(20:29))
 head(cars_edited, 20)
 ```
 
-Now to proceed with cleaning and analyzation we need a more robust knowledge of our dataset. For this reason, it is vital to understand the type of data for each attribute. Therefore, we must create a table to organize all our attributes.
+Now, to proceed with cleaning and analyzation we need a more robust knowledge of our dataset. For this reason, it is vital to understand the type of data for each attribute. Therefore, we create a table to organize all our attributes.
 
 +--------+-------------------+---------------------------------------------------------------------------------------------------------------+------------+
 | Column | Details           | Value/(Units)                                                                                                 | Data Type  |
@@ -160,7 +161,7 @@ cars_edited <- cars_edited %>% mutate(engine_capacity = coalesce(engine_capacity
 summary(cars_edited$engine_capacity)
 ```
 
-Once the unnecessary attributes were filtered and the NAs were accounted for it important to investigate for duplicate samples. The code for doing this procedure was as follows:
+Once the unnecessary attributes were filtered and the NAs were accounted for it is important to investigate for duplicate samples. The code for doing this procedure was as follows:
 
 ```{r HandlingDuplicateData}
 count(cars_edited)
@@ -174,11 +175,11 @@ Duplicate entries were identified and removed from the dataset. 41 such duplicat
 
 ## Dataset Outliers
 
-To determine what to do with the outliers we identified the outliers for each continuous variable and created a separate dataset with no outliers. To gauge the impact of our outliers we will have to run our analytics through the dataset with the outliers and the dataset without the outliers.
+To determine what to do with the outliers we identified the outliers for each continuous variable and created a separate dataset with no outliers. Since there is no reason to believe this data is faulty we will leave these outliers in the dataset and proceed with the investigation. If we were to gauge the impact of our outliers we would have to run our analytics through the dataset with the outliers and the dataset without the outliers.
 
 ## Dataset Training and Testing
 
-To effectively analyzing the real-world performance of the models that will be used to solve the question we split the dataset into a "Training" dataset and a "Testing dataset. The "Training" set comprised of a random selection of 80% of our dataset and the "Testing" was the rest of the samples not included in the "Training" dataset (20%). The reason for the split was the necessity to be able to access how accurately the models were able to predict the price of a vehicle given a separate portion of samples in the dataset. By testing our models against data not in our training set we can effectively see how well the model holds up with the addition of new vehicles we wish to predict. This was done as following:
+To effectively analyzing the real-world performance of the models we split the dataset into a "Training" dataset and a "Testing dataset. The "Training" set comprised of a random selection of 80% of our dataset and the "Testing" was the rest of the samples not included in the "Training" dataset (20%). The reason for the split was to be able to access how accurately the models were able to predict the price of a vehicle given a separate portion of samples in the dataset. By testing our models against data not in our training set we can effectively see how well the model holds up with the addition of new vehicles we wish to predict. This was done as following:
 
 ```{r TrainingandTestingDataset}
 set.seed(123)
@@ -191,13 +192,14 @@ test.data <- cars_edited[-training.samples,]
 
 ## Visualizations used to analyze data
 
-To gain a robust knowledge of our dataset several visualizations were used. Visualization of our data was done in two sections. Initially each attribute was graphed to gain a general understanding of how the samples are distributed for each attribute. This was done with the help of Bar Graphs, Histograms, Boxplots, the count function, and pie graphs.
+To gain a robust knowledge of our dataset several visualizations were used. Visualization of our data was done in two sections. Initially each attribute was graphed to gain a general understanding of how the samples are distributed for each attribute. This was done with the help of bar graphs, histograms, boxplots, the count function, and pie graphs.
 
 ```{r, ManDistrib, fig.height = 12, fig.width = 8}
-# 1)What is the distribution of manufacturers?
+# 1) What is the distribution of manufacturers?
 ggplot(cars_edited, aes(y = manufacturer_name)) + geom_bar(aes(fill = manufacturer_name)) + geom_text(stat='count', aes(label=..count..), hjust=1)
-# We can see a large difference in the amount cars for each manufacturers. Volkswagen, Opel, BMW, Audio, AvtoVAZ, Ford, Renault, and Mercedes-Benz are the majot manufacturers.
 ```
+
+We can see a large difference in the amount cars for each manufacturers. Volkswagen, Opel, BMW, Audio, AvtoVAZ, Ford, Renault, and Mercedes-Benz are the majot manufacturers.
 
 ```{r TransmissionDistrib, fig.height = 10, fig.width = 10}
 # 2) A table to show unique car model names and quantity
@@ -210,30 +212,39 @@ percentTransmission <- paste0(round(100*transmissionCounted$n/sum(transmissionCo
 pie(transmissionCounted$n, labels = percentTransmission, main = "Transmission Distribution", col = rainbow(nrow(transmissionCounted)))
 legend("right", c("Automatic", "Mechanical"), cex = 0.8,
        fill = rainbow(length(transmissionCounted)))
-# Mechanical is significantly more common than Automatic. This will definitely be an attribute to consider in our final model
 ```
 
-```{r Color/Odometer/Year Produced, fig.height = 10, fig.width = 10}
+Mechanical is significantly more common than Automatic. This will definitely be an attribute to consider in our final model
+
+```{r ColorDistribution, fig.height = 10, fig.width = 10}
 # 4) Plotting cars by color and quantity
 ggplot(cars_edited, aes(x = color)) + geom_bar(stat = "count", aes(fill = color)) + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
-# There is a lot of diversity in the colors and once again although there are categories with more values there is still a decent amount of variation
+```
 
+There is a lot of diversity in the colors and once again although there are categories with more values there exists a decent amount of variation
+
+```{r OdometerDistribution, fig.height = 10, fig.width = 10}
 # 5) Histogram Odometer Value: Graph to see how the data is skewed
 ggplot(cars_edited, aes(odometer_value)) + geom_histogram()
-# The data is left-skewed with what appears to be outliers as around 1,000,000 miles
+```
 
+The data is left-skewed with what appears to be outliers at around 1,000,000 miles
+
+```{r YearProducedDistribution, fig.height = 10, fig.width = 10}
 # 6) Histogram Year produced: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(aes(year_produced))
-# The graph seems to almost be normally distributed minus what appears to be some outliers on the older end of the years
 ```
+
+The graph seems to almost be normally distributed minus what appears to be some outliers in the earlier years.
 
 ```{r FuelDistrib, fig.height = 10, fig.width = 10}
 # 7) Graph to show what fuel distribution
 ggplot(cars_edited, aes(x = engine_fuel)) + geom_bar(stat = "count", aes(fill = engine_fuel)) + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
-# There are only 2 major engine fuels (gasoline and diesel)
 ```
 
-```{r EngineDistrib/Capacity/Body Type/Drivetrain/Price/ExchangebilityDistrib , fig.height = 10, fig.width = 10}
+There are only 2 major engine fuels (gasoline and diesel)
+
+```{r EngineDistrib, fig.height = 10, fig.width = 10}
 # 8) Pie graph to show engine type Distribution (Electric, Diesel, Gasoline)
 TypeGrouped <- group_by(cars_edited, engine_type)
 TypeCounted <- count(TypeGrouped) 
@@ -241,16 +252,25 @@ percentType <- paste0(round(100*TypeCounted$n/sum(TypeCounted$n), 2), "%")
 pie(TypeCounted$n, labels = percentType, main = "Engine Type Distribution", col = rainbow(nrow(TypeCounted)))
 legend("right", c("diesel", "electric", "gasoline"), cex = 0.8,
        fill = rainbow(nrow(TypeCounted)))
-# Not surprisingly gasoline and diesel are the 2 most common Engine Type considering the fuel distribution
+```
 
+Not surprisingly gasoline and diesel are the 2 most common Engine Type considering the fuel distribution
+
+```{r CapacityDistribution , fig.height = 10, fig.width = 10}
 # 9) Table for Engine capacity
 cars_edited %>% count(engine_capacity)
-# Engine Capacity seems to be left-skewed which may indicate outliers
+```
 
+Engine Capacity seems to be left-skewed which may indicate outliers
+
+```{r BodyTypeDistribution , fig.height = 10, fig.width = 10}
 # 10) Bar graph Body type: count how many cars have the same body type
 ggplot(cars_edited, aes(x = body_type), stat = "count") + geom_bar() + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -1)
-# There is some diversity in body type and the diversity in categories may lend itself to useful data for a future model
+```
 
+There is some diversity in body type and the diversity in categories may lend itself to useful data for a future model
+
+```{r DrivetrainDistribution , fig.height = 10, fig.width = 10}
 # 11) Graph Drivetrain distribution:
 drivetrainGrouped <- group_by(cars_edited, drivetrain)
 drivetrainCounted <- count(drivetrainGrouped) 
@@ -258,12 +278,18 @@ percentdrivetrain <- paste0(round(100*drivetrainCounted$n/sum(drivetrainCounted$
 pie(drivetrainCounted$n, labels = percentdrivetrain, main = "Drivetrain Distribution", col = rainbow(nrow(drivetrainCounted)))
 legend("right", c("all", "front", "rear"), cex = 0.8,
        fill = rainbow(nrow(drivetrainCounted)))
-# Although most vehicles are front wheel drive there is enough all and real wheel drive to gather some promising insights 
+```
 
+Although most vehicles are front wheel drive there is enough all and real wheel drive to gather some promising insights
+
+```{r PriceDistribution , fig.height = 10, fig.width = 10}
 # 12) Number of cars with same price
 ggplot(cars_edited, aes(x = price_usd), stat = "count") + geom_histogram()
-# This graph is extremely left-skewed. The sheer usefulness of price in our dataset will make this our main response attribute.
+```
 
+This graph is extremely left-skewed. The sheer usefulness of price in our dataset will make this our main response attribute.
+
+```{r ExchangebilityDistribution , fig.height = 10, fig.width = 10}
 # 13) Pie Graph exchangeability Distribution
 exchangeableGrouped <- group_by(cars_edited, is_exchangeable)
 exchangeableCounted <- count(exchangeableGrouped) 
@@ -271,8 +297,9 @@ percentexchangeable <- paste0(round(100*exchangeableCounted$n/sum(exchangeableCo
 pie(exchangeableCounted$n, labels = percentexchangeable, main = "Exchangeability Distribution", col = rainbow(nrow(exchangeableCounted)))
 legend("right", c("False", "True"), cex = 0.8,
        fill = rainbow(nrow(exchangeableCounted)))
-# Exchangeability is more common than anticipated. It will be interesting to see if pricier or cheaper cars consent to exchanges
 ```
+
+Exchangeability is more common than anticipated. It will be interesting to see if pricier or cheaper cars consent to exchanges
 
 ```{r RegionDistrib, fig.height = 10, fig.width = 10}
 # 14) Pie Graph Location region: Count the number of cars in a region
@@ -282,71 +309,110 @@ percentRegion <- paste0(round(100*regionPriceDFCount$n/sum(regionPriceDFCount$n)
 pie(regionPriceDFCount$n, labels = percentRegion, main = "Region Price Distribution", col = rainbow(nrow(regionPriceDFCount)))
 legend("right", c("Brest Region", "Gomel Region", "Grodno Region", "Minsk Region", "Mogilev Region", "Vitebsk Region"), cex = 0.8,
        fill = rainbow(nrow(regionPriceDFCount)))
-# Minsk accounts for a very large amount of vehicles (makes sense considering the population sizes) with even distributions everywhere else. 
-# The usefulness of the attribute may be less since Minsk is such a large portion of the data.
 ```
 
-```{r NumPhotos/UpCounter/Duration, fig.height = 10, fig.width = 10}
+Minsk accounts for a very large amount of vehicles (makes sense considering the population sizes) with even distributions everywhere else. The usefulness of the attribute may be less since Minsk is such a large portion of the data.
+
+```{r NumPhotosHistogram, fig.height = 10, fig.width = 10}
 # 15) Histogram Number of photos: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(mapping = aes(number_of_photos))
-# Graph is very left-skewed. I suspect photos may increase the value of a vehicle, but tests will need to be done on this
+```
 
+The graph is very left-skewed. I suspect photos may increase the value of a vehicle, but tests will need to be done to affirm this.
+
+```{r NumPhotosBoxplot, fig.height = 10, fig.width = 10}
 # 16) Box plot Number of photos: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_boxplot(mapping = aes(number_of_photos))
-# There are many outliers. With extra time we may be able to investigate the impact of these outliers on the data.
+```
 
+There are many outliers. With extra time we may be able to investigate the impact of these outliers on the data.
+
+```{r Up CounterHistogram, fig.height = 10, fig.width = 10}
 # 17) Histogram Up counter: investigating how our outliers look with our modifications
 ggplot(cars_edited) + geom_histogram(mapping = aes(up_counter))
-# Clearly an outlier exists since there is a large scale. 
+```
 
+Clearly an outlier exists since there is a large scale.
+
+```{r DurationBoxplot, fig.height = 10, fig.width = 10}
 # 18) Box plot Duration listed: investigating how our outliers look with our modifications
 ggplot(cars_edited) + geom_boxplot(mapping = aes(duration_listed))
-# There is a significant number of outliers. There is no evidence to conclude these should be eliminated.
+```
 
+There is a significant number of outliers. There is no evidence to conclude these should be eliminated.
+
+```{r DurationHistogram, fig.height = 10, fig.width = 10}
 # 19) Histogram Duration listed: Graph to see how the data is skewed
 ggplot(cars_edited) + geom_histogram(aes(duration_listed))
 ```
+
+The histogram shows a skew in the duration listing for our dataset.
 
 Once a general understanding of each attribute was gained, we began to visualize various combinations of attributions. These visualizations were vital in seeing different relationships among our samples. The visualizations that were used were Balloon Plot, Scatterplot, frequency polygons, dplyr::summarize, and Boxplots.
 
 ```{r ManufByRegion, fig.height = 10, fig.width = 10}
 # 1) Graph to show the amount of cars(by manufacturer name) in a region BALLOON PLOT
 ggplot(cars_edited, aes(location_region, manufacturer_name)) + geom_count()
-# Due to the quantity of categories a test will need to be done to gather significant data
 ```
 
-```{r CarsByYear/CarsByColor/PriceByYearAndType/BodyTypeAndPrice, fig.height = 10, fig.width = 10}
+Due to the quantity of categories a test will need to be done to gather significant data
+
+```{r PriceByYear, fig.height = 10, fig.width = 10}
 # 2) Graph to show the price of a car according to its year produced SCATTER PLOT
 ggplot(cars_edited, aes(year_produced, price_usd)) + geom_point() + geom_smooth()
-# There exists a parabolic relationship between year_produced and price_usd
+```
 
+There exists a parabolic relationship between year_produced and price_usd
+
+```{r CarsByColor, fig.height = 10, fig.width = 10}
 # 3) Graph to show the number of cars in specific colors(10 red cars, 8 blue cars etc.) by region BAR GRAPH
 ggplot(cars_edited, aes(color)) + geom_bar(aes(fill = location_region))
-# From looking at the bar graph there does not seem to be any significant differences in color distribution for locations
+```
 
+From looking at the bar graph there does not seem to be any significant differences in color distribution for locations
+
+```{r CarsByOdometerandExchangeable, fig.height = 10, fig.width = 10}
 # 4) Graph to show the price of a car according to its millage(odometer) SCATTER PLOT
 ggplot(cars_edited, aes(odometer_value, price_usd)) + geom_point(aes(color = is_exchangeable)) + geom_smooth()
-# This graph is incredibly diverse and indicates that there is a need for advanced models to access price relationships.
+```
 
+This graph is incredibly diverse and indicates that there is a need for advanced models to access price relationships.
+
+```{r PriceByYearAndType, fig.height = 10, fig.width = 10}
 # 5)Graph to show the price of a car according to its year produced AND body type SCATTER PLOT
 ggplot(cars_edited, aes(year_produced, price_usd)) + geom_point(aes(color = body_type)) + geom_smooth()
-# There seems to be a parabolic relationship between year_produced and price_usd
+```
 
+The quantity of samples make this graph hard to dissect. One would have to perform tests to see how body type relates to price.
+
+```{r BodyTypeAndPrice, fig.height = 10, fig.width = 10}
 # 6) Group by car body type and get its mean price
 group_by(cars_edited, body_type) %>% summarise(price_mean = mean(price_usd))
+```
 
+```{r BodyTypeAndPriceboxplot, fig.height = 10, fig.width = 10}
 # 7) Graph to show the outliers with body type and price BOX PLOT
 ggplot(cars_edited) + geom_boxplot(mapping = aes(x = reorder(body_type, price_usd), y =
                                                    price_usd))
 ```
 
-```{r BodyTypePriceAndEngineFuel/PriceByPhotos/ManufByMeanPrice, fig.height = 10, fig.width = 10}
+This graph tells us that given more time it may be useful to test our models without outliers.
+
+```{r BodyTypePriceAndEngineFuel, fig.height = 10, fig.width = 10}
 # 8) Graph to show the correlation between car body type, price, AND engine fuel
 ggplot(cars_edited) + geom_point(mapping = aes(x = body_type, y = price_usd, color = engine_fuel))
+```
 
+This graph tells us that certain body types tend to come with engines for specific fuels. That being said the range for prices seem to be very scattered.
+
+```{r PriceByPhotos, fig.height = 10, fig.width = 10}
 # 9) Graph to show the price of a car according to its number of photos incl. engine fuel SCATTER PLOT
 ggplot(cars_edited) + geom_point(mapping = aes(x = number_of_photos, y = price_usd, color = engine_fuel))
+```
 
+This graph leads us to believe that there very well may be no correlation between price and number of photos. Further investigation will be needed to affirm this theory.
+
+```{r ManufByMeanPrice, fig.height = 10, fig.width = 10}
 # 10) Group cars by manufacturer, and get its mean price
 cars_edited %>% group_by(manufacturer_name) %>% summarize(mean(price_usd))
 ```
