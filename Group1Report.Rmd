@@ -425,9 +425,9 @@ Decision Tree: Although the logistic regression model is extremely powerful, we 
 
 **Several machine learning techniques were used to create the most accurate prediction model for our main goal. The models used in the project were as follows:**
 
-Multiple Linear Regression: This was used for the sake of gauging the impact of the continuous attributes on the price of the vehicle. This model is simple to understand and involves less computing power than more advance models which led to our decision to utilize this ML method as our first model.
+Multiple Linear Regression: This was used for gauging the impact of the continuous attributes on the price of the vehicle. This model is simple to understand and involves less computing power than more advance models which led to our decision to utilize this ML method as our first model.
 
-SVR: Used to see if there is a model that can handle every attribute and adjust the model according to its impact on price. Although this model involves much more computing power, we believed that the robust nature of this model lends itself to a high level of accuracy. This models effectiveness with categorical data, and ability to work with both linear and non-linear boundaries makes it a prime model for our dataset. Furthermore, to optimize our SVR model we will use linear, polynomial, and radial kernel transformations and compare the results from the models that we generate.
+SVR: Used to see if there is a model that can handle every attribute and adjust the model according to its impact on price. Although this model involves much more computing power, we believed that the robust nature of this model would lead to a high level of accuracy. This models effectiveness with categorical data, and ability to work with both linear and non-linear boundaries makes it a prime model for our dataset. Furthermore, to optimize our SVR model we will use linear, polynomial, and radial kernel transformations and compare the results from the models that we generate.
 
 Decision Tree (Partition): Used for predictive modeling. Since it is incredibly robust and relies on very few assumptions, we believed it would be able to handle possible outliers in our data and work around the size of our dataset to produce an optimal model. Its simpler nature also makes it a model that would be preferred over other models (such as Random Forest Regression or KNN).
 
@@ -445,9 +445,9 @@ KNN:K Nearest Neighbor was chosen due to its popularity and simplicity. KNN can 
 
 **Justification:**
 
-To answer this question, we decided to use a bar chart to see the average prices per region in comparison with each other.
+To answer this question, we decided to firstuse a bar chart to see the average prices per region in comparison with each other.
 
-```{r regionPrice, fig.height = 8, fig.width = 10, echo=FALSE}
+```{r RegionPrice, fig.height = 8, fig.width = 10, echo=FALSE}
 #Aggregating the data of price to region to get the mean of prices
 #per region
 regionPriceDF <- group_by(cars_edited, location_region)
@@ -455,7 +455,7 @@ regionPriceDF_averages <- summarise(regionPriceDF, average_price_usd = mean(pric
 ggplot(regionPriceDF_averages,aes(x= location_region, y = average_price_usd)) + geom_bar(stat = "identity") 
 ```
 
-Looking at the graph, we can predict that region may play a part in price. We derive this prediction from the observation that although most regions have similar vehicle price averages Minsk has a significantly higher average. However, we cannot conclude that with just this graph, we need to confirm this by an appropriate test. The test used to see if region did in fact have a significant impact of price was the One-Way Anova Test. Anova was used because the region attribute consists of several categories and we wished to see its impact on a single continuous variable.
+Looking at the graph, we can predict that region may play a part in price. We derive this prediction from the observation that although most regions have similar vehicle price averages Minsk has a significantly higher average. However, we cannot make a conclusion with just this graph, we need to confirm this by an appropriate test. The test used to see if region did in fact have a significant impact of price was the One-Way Anova Test. Anova was used because the region attribute consists of several categories and we wished to see its impact on a single continuous variable.
 
 Prior to doing the One-Way Anova test we first performed some data transformation to gain a better understanding of the differences between the region prices.
 
@@ -504,8 +504,6 @@ TukeyHSD(res.aov)
 **A: We can confirm that there is a relationship between the manufacturer and asking price. The relationship seems to be one of the larger factors for asking price but is not significant enough to predict price on its own.**
 
 **Justification:**
-
-Two bar graphs were used in solving this question. First a bar graph was used to plot the distribution of vehicles for each manufacturer. Then another bar graph was used as a means of quickly inspecting how average price ranged between different manufacturers. As useful as these graphs were in understanding the relationship between price and manufacturer it proved to be insufficient in proving a result. To prove that there existed a significant relationship between manufacturer and asking price of a car One-Way Anova was utilized. Once again we were dealing with a categorical data with several categories which lends the problem nicely to this sort of test.
 
 First a bar graph was used to effectively plot the distribution of vehicles for each manufacturer.
 
@@ -618,7 +616,7 @@ sigma(odometer_on_price)*100/mean(cars_edited$price_usd)
 # [1] 87.80444
 ```
 
-The R2 is 0.1774 which indicates that a low proportion of prices in the data can be explained by the model. Furthermore, the percentage error is 87.80444 which confirms how poor a model would be if it solely used odometer to predict price.
+The R2 is 0.1774 which indicates that a low proportion of prices in the data can be explained by the model. Furthermore, the percentage error is 87.80444 which confirms how poor an exploratory model would be if it solely used odometer to predict price.
 
 **We can conclude that the higher the odometer the lower the price of the vehicle will be.** Nevertheless, our linear regression model informs us that to create an accurate model we will need to consider more attributes.
 
@@ -683,7 +681,7 @@ sigma(number_of_photos_on_price)*100/mean(cars_edited$price_usd)
 # Our prediction error rate is extremely high (91.82279%) which explains the low correlation
 ```
 
-The R2 is 0.1004 which indicates that a low proportion of prices in the data can be explained by the model. In other words, number of photos is not a good indicator of price (more attributes are needed in a model). Also, the percentage error is 91.82279 which is very high. This confirms how poor a model would be if it solely used number of photos to predict price.
+The R2 is 0.1004 which indicates that a low proportion of prices in the data can be explained by the model. In other words, number of photos is not a good indicator of price (more attributes are needed in a model). Also, the percentage error is 91.82279 which is very high. This confirms how poor an exploratory model would be if it solely used number of photos to predict price.
 
 **We can conclude there is a low negative correlation between price and odometer.** Our linear regression model tells us that to create an accurate model we will need to consider more attributes.
 
@@ -695,12 +693,10 @@ The R2 is 0.1004 which indicates that a low proportion of prices in the data can
 
 **Justification:**
 
-Graphs used: Scatter plot How these graphs helped us solve the problem: Using a scatter plot for this question again allowed us to see the relationship between the two variables. With that we can come up with a solution to the question.
-
 To begin answering this question it was natural to use scatterplot (using 2 continuous attributes) to gain an intuitive understanding of any possible relationship.
 
 ```{r upCounterPlot, fig.height = 10, fig.width = 10}
-#Regression analysis
+# Regression analysis
 ggplot(cars_edited, aes( x =up_counter, y=price_usd)) + geom_hex() + stat_smooth(color = "red")
 ```
 
@@ -714,8 +710,8 @@ H~a~ = There does exist a correlation between number of up counts and vehicle pr
 
 We will use 0.05 as our significance level. The results are the following:
 
-```{r upCountCor}
-#Correlation
+```{r UpCountCor}
+# UpCounterCorrelation
 cor.test(cars_edited$up_counter, cars_edited$price_usd)
 ```
 
@@ -728,6 +724,7 @@ Nevertheless, we will use linear regression to see how poor of an indicator numb
 ```{r UpCounterLM/Accuracy/Plot, fig.height = 10, fig.width = 10}
 # Create LM
 up_counter_on_price <- lm (price_usd ~ up_counter, data = cars_edited)
+
 #Finding how well this line fits the data
 summary(up_counter_on_price)
 
@@ -973,11 +970,11 @@ Our prediction error rate is lower than for other attributes (60.12396%) which c
 
 #### Exploring Exchangeability using a Decision Tree
 
-To create a good exploratory model for exchangeability we will deploy a Decision tree. The model will be running the train function with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate) l. These settings should prune our tree and ensured an optimal decision tree.
+To create a good exploratory model for exchangeability we will deploy a Decision tree. The model will be running the train function with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate). These settings should prune our tree and ensured an optimal decision tree.
 
 ```{r DTExploratoryRegressionExchangeability, eval=FALSE, include=TRUE}
 ## Using Decision Tree to create an exploratory model for exchangeability
-model_DT_Exchangeable <-  train(is_exchangeable ~ . -model_name, data = train.data, method = "rpart",
+model_DT_Exchangeable <-  train(is_exchangeable ~ . -mod, del_nameata = train.data, method = "rpart",
                                 trControl = trainControl("cv",number = 10),
                                 preProcess = c("center","scale"),
                                 tuneLength = 10)
@@ -1078,7 +1075,7 @@ In this graph the AUC is 0.653, which i relatively good. Remember that a classif
 
 #### Exploring Exchangeability using Logistic Classification
 
-We attempted to create a more accurate exploratory model for exchangeability by using Logistic Classification. The model will be running the train function with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate) l. These settings should optimally model.
+We attempted to create a more accurate exploratory model for exchangeability by using Logistic Classification. The model will be running the train function with 10-fold cross-validation and a tune-length of 10(number of cp values to evaluate). These settings should produce an optimal model.
 
 ```{r LRExploratoryClassificationExchangeability, eval=FALSE, include=TRUE}
 ## Using Logistic Classfication to create an exploratory model for exchangeability
@@ -1223,7 +1220,7 @@ step.LM <- LM %>% stepAIC(trace = FALSE)
 vif(step.LM)
 ```
 
-The VIF tells us that there is not significant multi-collinearity between any of the categorical attributes.
+The VIF tells us that there is not significant multi-collinearity between any of the continious attributes.
 
 Now that the model is created and optimized it is vital to check the accuracy of the model. To do this we will employ our test.data to test how accurately the Linear Regression model can predict the price of a vehicle.
 
@@ -1245,7 +1242,7 @@ RMSE(LMPrediction,test.data$price_usd)
 R2(LMPrediction,test.data$price_usd)
 ```
 
-From the code above we see that our **rmse is 4470.274 which represents an error rate of 4470.274/mean(test.data\$price_usd) = 67.57975** which is not good at all. Meanwhile, the **R-Squared is 0.5190641**, meaning that the observed and predicted outcome values are not very correlated, which is not good. These results are not surprising and inform us that the price of a vehicle in Belarus is dependent on more attributes than simply our continuous attributes. We shall proceed with more robust models to achieve a better result.
+From the code above we see that our **rmse is 4470.274 which represents an error rate of 4470.274/mean(test.data\$price_usd) = 67.57975** which is not good. Meanwhile, the **R-Squared is 0.5190641**, meaning that the observed and predicted outcome values are not very correlated, which is not good. These results are not surprising and inform us that the price of a vehicle in Belarus is dependent on more attributes than simply our continuous attributes. We shall proceed with more robust models to achieve a better result.
 
 note: A logarithmic transformation was done on the price and achieved an even worse result. Given the poor quality of this model we continued with SVR to get a more robust and accurate predictive model.
 
@@ -1350,6 +1347,8 @@ R2(modelSVRRadialTrainPrediction,test.data$price_usd)
 ```
 
 **From the RMSE(4752.231) we calculated our error rate as 4752.231/mean(test.data\$price_usd) \*100 = 71.28478.** This is even worse than the results we had from the Linear Regression Model. Not surprisingly our R2 was also quite poor. **The R-Squared was 0.5937837** which again is not a good value. We know that around 59.4% of our prices can be explained by our model. These results convince us that radial basis functions are not the optimal function to be used with SVR for our model.
+
+Given the result one can conclude that the data may have to be scaled to optimize the results of the model. Given more time it may be beneficial rerun the model with the scaled dataset to see if a better result could be achieved.
 
 Even though the SVR model did much better as a whole than the Linear Regression Model it was vital to investigate more models to create an even more accurate model. The Decision Tree was a perfect candidate since it is incredibly robust and relies on very few assumptions. Its simpler nature also makes it a model that would be preferred over other models (such as Random Forest Regression).
 
@@ -1549,6 +1548,8 @@ R2(knn_predictions,test.data$price_usd)
 ```
 
 Given the RMSE being 3693.127 we calculated our error rate as 3693.127/mean(test.data\$price_usd) \*100 = 55.39793. **This is better than SVR with Radial Kernel and puts it at our second lowest performing model. The R-Squared at 0.6802895** tells us that around 68.02% of our prices can be explained by our model.
+
+Given the result of the KNN model one can conclude that more may have to be done to optimize the results of the model. Given more time it may be beneficial to scale the data and rerun the model to see if a better result could be achieved.
 
 ## Results obtained using different ML methods
 
