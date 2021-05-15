@@ -34,7 +34,7 @@ Vehicles are essential to transportation as a society, and one of the main metho
 | SVR Radial                    | **4752.231** | **71.28478** | **0.5937837** |
 | Decision Tree Regression      | **3245.413** | **48.68209** | **0.7529956** |
 | Random Forest Tree Regression | **1879.884** | **28.19878** | **0.9184761** |
-| KNN(K Nearest Neighbor)       | **3693.127** | **55.39793** | **0.6802895** |
+| KNN(K Nearest Neighbor)       | **3693.939** | **55.41011** |  **0.680185** |
 
 Lastly, we employed used two different models to test whether the vehicle owner was willing to exchange his vehicle. The two models that were used were the decision tree and logistic classification. Both trees were very similar; however, the decision tree was determined to perform slightly better as an exploratory and predictive model. The results of the models are as follows:
 
@@ -1536,18 +1536,18 @@ With optimization for our KNN model complete we now direct our attention to eval
 # Make predictions on the test data
 knn_predictions <- model_knn %>% predict(test.data)
 head(knn_predictions)
-#[1] 9560.000 9000.000 4580.000 5648.494 8575.200 7720.000
+#[1] 9560.000 8540.000 3210.000 5648.494 8575.200 7720.000
 
 # Compute the prediction error RMSE
 RMSE(knn_predictions,test.data$price_usd)
-#[1] 3693.127
+#[1] 3693.939
 
 # Compute R-square
 R2(knn_predictions,test.data$price_usd)
-#[1] 0.6802895
+#[1] 0.680185
 ```
 
-Given the RMSE being 3693.127 we calculated our error rate as 3693.127/mean(test.data\$price_usd) \*100 = 55.39793. **This is better than SVR with Radial Kernel and puts it at our second lowest performing model. The R-Squared at 0.6802895** tells us that around 68.02% of our prices can be explained by our model.
+Given the RMSE being 3693.939 we calculated our error rate as 3693.939/mean(test.data\$price_usd) \*100 = 55.41011. **This is better than SVR with Radial Kernel and puts it at our second lowest performing model. The R-Squared at 0.680185** tells us that around 68.02% of our prices can be explained by our model.
 
 Given the result of the KNN model one can conclude that more may have to be done to optimize the results of the model. Given more time it may be beneficial to scale the data and rerun the model to see if a better result could be achieved.
 
@@ -1560,7 +1560,7 @@ Given the result of the KNN model one can conclude that more may have to be done
 | SVR Radial                              | **4752.231** | **71.28478** | **0.5937837** |
 | Decision Tree Regression                | **3245.413** | **48.68209** | **0.7529956** |
 | Random Forest Tree Regression           | **1879.884** | **28.19878** | **0.9184761** |
-| KNN(K Nearest Neighbor)                 | **3693.127** | **55.39793** | **0.6802895** |
+| KNN(K Nearest Neighbor)                 | **3693.939** | **55.41011** |  **0.680185** |
 
 ## Conclusion
 
