@@ -150,8 +150,6 @@ Code of project (R code)
 
 Project report 
 
-(Not typed page?)
-
 
 
 
